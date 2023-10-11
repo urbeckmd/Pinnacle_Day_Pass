@@ -1,0 +1,45 @@
+.nav_bar_container {
+    background-color: rgba(255, 255, 255, .75);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.pinnacle_web_link {
+    text-decoration: none;
+}
+
+.nav_bar_arrow {
+    margin-left: 5px;
+}
+
+.nav_bar_title {
+    font-weight: bold;
+    font-size: xx-large !important;
+}
+
+.nav_bar_link {
+    font-size: large !important;
+}
+
+/* Larger than tablet */
+@media only screen and (min-width: 769px) {
+    .nav_bar_container {
+        height: 85px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 25px !important;
+    }
+}
+
+/* Only for tablet */
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+    .nav_bar_container {
+        height: 80px;
+    }
+}
+
+/* Only for phone */
+@media only screen and (max-width: 480px) {
+    .nav_bar_container {
+        display: none !important;
+    }
+}
