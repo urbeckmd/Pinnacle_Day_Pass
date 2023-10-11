@@ -36,6 +36,9 @@
     font-weight: bolder;
     font-size: 56px;
     text-align: left;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 }
 
 .home_page_module_button, .login_module_button {
@@ -57,6 +60,10 @@
 .login_module_back_arrow {
     transform: scale(1.7);
     color: white;
+}
+
+.login_module_back_arrow:hover {
+    cursor: pointer;
 }
 
 .login_module_form_container {
@@ -100,6 +107,13 @@
     position: absolute;
     bottom: 15px;
     left: 70px;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+.login_module_forgot_password:hover {
+    cursor: pointer;
 }
 
 .home_page_module_button:hover, .login_module_button:hover {

@@ -1,6 +1,9 @@
 .nav_bar_container {
     background-color: rgba(255, 255, 255, .75);
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 }
 
 .pinnacle_web_link {

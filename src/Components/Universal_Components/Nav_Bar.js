@@ -8,7 +8,7 @@ function Nav_Bar({ logginIn }) {
     return (
         <Navbar className="bg-body-tertiary nav_bar_container">
             <Container>
-                <Navbar.Brand href="https://www.pinnaclelake.com/" className='nav_bar_title'>
+                <Navbar.Brand href="/" className='nav_bar_title'>
                     {(logginIn) 
                         ? 'Pinnacle Lake Day Passes' 
                         : 'Day Passes'
