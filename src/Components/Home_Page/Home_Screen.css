@@ -4,6 +4,9 @@
     max-width: 1200px;
     margin: auto;
     height: 100vh;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 }
 
 .home_screen_module_container {
@@ -36,9 +39,6 @@
     font-weight: bolder;
     font-size: 56px;
     text-align: left;
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
 }
 
 .home_page_module_button, .login_module_button {
@@ -64,6 +64,7 @@
 
 .login_module_back_arrow:hover {
     cursor: pointer;
+    transform: scale(1.9);
 }
 
 .login_module_form_container {
