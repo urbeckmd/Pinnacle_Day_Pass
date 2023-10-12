@@ -20,6 +20,27 @@
     font-size: large !important;
 }
 
+.nav_bar_logout_container {
+    display: flex;
+    color: black;
+    width: 90px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav_bar_logout_container:hover {
+    cursor: pointer;
+}
+
+.nav_bar_home_icon {
+    transform: scale(1.2);
+}
+
+.nav_bar_logout_text {
+    font-size: 20px;
+    font-weight: bold;
+}
+
 /* Larger than tablet */
 @media only screen and (min-width: 769px) {
     .nav_bar_container {

@@ -3,10 +3,18 @@ import "./Home_Screen.css";
 import { Form } from 'react-bootstrap';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import Button from 'react-bootstrap/Button';
+import { useNavigate } from 'react-router-dom';
 
-function Login_Module( { handleLoginClick }) {
+function Login_Module( { handleLoginClick, setUserLoggedIn }) {
+    const navigate = useNavigate();
+
+    const handleLoginRedirect = () => {
+        console.log("redirect clicked");
+        navigate("/add_guest");
+    }
+
     return (
-        <div className='login_module_container'>
+        <div className='login_module_container' >
             <ArrowBackRoundedIcon className='float-start login_module_back_arrow' onClick={handleLoginClick}/>
             <div className="login_module_form_container">
                 <Form>
@@ -19,7 +27,7 @@ function Login_Module( { handleLoginClick }) {
                         <Form.Control className='login_module_input_field' type="password" />
                     </Form.Group>
                 </Form>
-                <Button className='float-end login_module_button' size='lg'>Login</Button>
+                <Button className='float-end login_module_button' size='lg' onClick={handleLoginRedirect}>Login</Button>
             </div>
             <hr className='login_module_line_break' size="13"/>
             <div className="login_module_forgot_password">Forgot Password</div>

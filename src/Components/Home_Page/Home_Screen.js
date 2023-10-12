@@ -5,8 +5,10 @@ import "../../index.css"
 import Home_Page_Module from './Home_Page_Module';
 import Login_Module from './Login_Module';
 
+
 function Home_Screen() {
-    const [loginScreen, setLoginScreen] = useState(false)
+    const [loginScreen, setLoginScreen] = useState(false);
+
 
     const handleLoginClick = () => {
         setLoginScreen(!loginScreen)
@@ -14,9 +16,11 @@ function Home_Screen() {
 
     return (
         <div className='home_screen_container'>
-            <Nav_Bar logginIn={true} navHeader={'Pinnacle Lake Day Passes'} />
+            <Nav_Bar loggedIn={false} navHeader={'Pinnacle Lake Day Passes'} />
             <div className="home_screen_module_container">
-                {(loginScreen) ? <Login_Module handleLoginClick={handleLoginClick} /> : <Home_Page_Module handleLoginClick={handleLoginClick}/>}
+                {(loginScreen) 
+                    ? <Login_Module className="home_screen_home_module" handleLoginClick={handleLoginClick} /> 
+                    : <Home_Page_Module className="home_screen_login_module" handleLoginClick={handleLoginClick}/>}
             </div>
         </div>
     )

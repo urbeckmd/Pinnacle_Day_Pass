@@ -7,11 +7,13 @@
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
+    overflow: hidden;
 }
 
 .home_screen_module_container {
     position: relative;
     height: 100%;
+    width: 100%;
 }
 
 
