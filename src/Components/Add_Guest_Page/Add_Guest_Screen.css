@@ -5,7 +5,12 @@
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
-    /* overflow: hidden; */
+    position: relative;
+}
+
+.add_guest_screen_module_container {
+    width: 80%;
+    height: 90%;
 }
 
 /* Larger than tablet */
@@ -15,95 +20,76 @@
     }
 }
 
-.mobile_add_guest_module {
-    background-color: red;
+
+
+
+
+
+/* For Tablet only */
+
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+    .mobile_add_guest_module {
+        background-color: rgba(240, 240, 240, 0.4);
+        border-radius: 20px;
+        width: 80%;
+        height: 55%;
+        position: absolute;
+        padding: 50px 40px;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-65%);
+    }
+    
+    .mobile_add_guest_input_field {
+        height: 50px;
+        font-size: 25px !important;
+    }
+
+    .mobile_add_guest_input_field:focus {
+        border-color: #6e5329;
+        box-shadow: 0 0 0 0.25rem #6e532952;
+    }
+    
+    
+    .add_guest_screen_module_container {
+        width: 80%;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+    }
+    
+    
+    .mobile_add_guest_input_label {
+        font-size: 23px;
+        margin: 0px !important;
+    }
+    
+    .mobile_add_guest_button {
+        width: 160px;
+        height: 50px;
+        background-color: #816336 !important;
+        border: none !important;
+        border-radius: 30px !important;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 20px 40px -12px inset, rgba(0, 0, 0, 0.3) 0px 8px 26px -18px inset;
+        font-size: 24px !important;
+        margin-top: 18px;
+        margin-right: 50px;
+    }
+    
+    .mobile_add_guest_button:hover {
+        background-color: #6e5329 !important;
+    }
+    
+    .mobile_add_guest_button:focus-visible {
+            box-shadow: 0 0 0 0.15rem #64491d7c;
+    }
+    
+    .mobile_add_guest_checkbox {
+        width: 32%;
+        margin-top: 20px;
+    }
+    
+    
+    
 }
-
-
-.login_module_button {
-    width: 150px;
-    height: 60px;
-    background-color: #816336 !important;
-    border: none !important;
-    border-radius: 30px !important;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 20px 40px -12px inset, rgba(0, 0, 0, 0.3) 0px 8px 26px -18px inset;
-    font-size: 30px !important;
-    letter-spacing: 1px;
-}
-
-.login_module_input_field:focus {
-    border-color: #6e5329;
-    box-shadow: 0 0 0 0.25rem #6e532952;
-}
-
-.login_module_back_arrow {
-    transform: scale(1.7);
-    color: white;
-}
-
-.login_module_back_arrow:hover {
-    cursor: pointer;
-    transform: scale(1.9);
-}
-
-.login_module_form_container {
-    margin-top: 45px;
-    width: 80%;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    color: white;
-}
-
-
-.login_module_input_field_title {
-    font-size: 23px;
-    margin: 0px !important;
-}
-
-.login_module_line_break {
-    width: 80%;
-    height: 3px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgb(129,99,54);
-    background: radial-gradient(circle, rgba(129,99,54,1) 0%, rgba(72,45,4,1) 100%);
-    opacity: 1;
-    bottom: 38px;
-    border: none;
-    border-radius: 10px;
-}
-
-.login_module_button {
-    margin-top: 15px;
-    height: 50px;
-    width: 120px;
-    font-size: 25px !important;
-}
-
-.login_module_forgot_password {
-    color: white;
-    position: absolute;
-    bottom: 15px;
-    left: 70px;
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
-}
-
-.login_module_forgot_password:hover {
-    cursor: pointer;
-}
-
-.home_page_module_button:hover, .login_module_button:hover {
-    background-color: #6e5329 !important;
-}
-
-.home_page_module_button:focus-visible, .login_module_button:focus-visible {
-        box-shadow: 0 0 0 0.15rem #64491d7c;
-}
-
-
-
-

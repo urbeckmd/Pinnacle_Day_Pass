@@ -6,12 +6,14 @@
   background-size: cover;
   background-position: center;
   font-family: 'Cabin', sans-serif;
+  overflow: hidden;
 }
 
 /* smaller than laptop */
 @media only screen and (max-width: 768px) {
   .App {
-      background-position: 58%;      
+      background-position: 58%; 
+      height: 100svh !important;     
   }
 }
 
