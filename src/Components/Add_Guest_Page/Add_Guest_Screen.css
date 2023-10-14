@@ -143,6 +143,81 @@
         display: none !important;
     }
 
+    .mobile_add_guest_dropdown {
+        position: absolute;
+        width: 100%;
+    }
+
+    .mobile_add_guest_dropdown_toggle {
+        position: absolute;
+        height: 25px;
+        width: 25px;
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        top: -35px;
+        right: 10px;
+        border: none !important;
+    }
+
+    .dropdown-toggle:empty::after {
+        transform: scale(1.5);
+    }
+
+    .dropdown-menu {
+        max-height: 262px;
+        overflow-y: scroll;
+        padding: 0px !important;
+        padding-top: 5px !important;
+        width: 95%;
+        left: 20px !important;
+    }
+
+    .mobile_add_guest_dropdown_option_name {
+        pointer-events: none;
+    }
+
+    .mobile_add_guest_dropdown_option_number {
+        font-size: 12px;
+        position: relative;
+        top: -5px;
+        color: rgb(145, 145, 145);
+        pointer-events: none;
+    }
+
+    .dropdown-divider {
+        margin: 0 !important;
+    }
+
+    .btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
+        color: var(--bs-btn-active-color);
+        background-color: #816336 !important;
+        border-color: var(--bs-btn-active-border-color);
+    }
+
+    .btn:focus-visible {
+        color: var(--bs-btn-hover-color);
+        background-color: #816336 !important;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem #8163367a !important;
+    }
+
+    .btn:hover {
+        color: var(--bs-btn-active-color);
+        background-color: #816336 !important;
+        border-color: var(--bs-btn-active-border-color);
+    }
+
+    .dropdown-item.active, .dropdown-item:active {
+        color: white;
+        text-decoration: none;
+        background-color: #b69058 !important;
+    }
+
+    .dropdown-item:active .mobile_add_guest_dropdown_option_container .mobile_add_guest_dropdown_option_number {
+        color: white !important;
+    }
+
 }
 
 
@@ -152,7 +227,7 @@
     .laptop_add_guest_module {
         display: none !important;
     }
-    
+
     .mobile_add_guest_module {
         background-color: rgba(240, 240, 240, 0.4);
         border-radius: 20px;
@@ -296,4 +371,78 @@
         transform: rotate(-180deg) !important
     }
 
+    .mobile_add_guest_dropdown {
+        position: absolute;
+        width: 100%;
+    }
+
+    .mobile_add_guest_dropdown_toggle {
+        position: absolute;
+        height: 25px;
+        width: 25px;
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        top: -35px;
+        right: 10px;
+        border: none !important;
+    }
+
+    .dropdown-toggle:empty::after {
+        transform: scale(1.5);
+    }
+
+    .dropdown-menu {
+        max-height: 262px;
+        overflow-y: scroll;
+        padding: 0px !important;
+        padding-top: 5px !important;
+        width: 93%;
+        left: 18px !important;
+    }
+
+    .mobile_add_guest_dropdown_option_name {
+        pointer-events: none;
+    }
+
+    .mobile_add_guest_dropdown_option_number {
+        font-size: 12px;
+        position: relative;
+        top: -5px;
+        color: rgb(145, 145, 145);
+        pointer-events: none;
+    }
+
+    .dropdown-divider {
+        margin: 0 !important;
+    }
+
+    .btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
+        color: var(--bs-btn-active-color);
+        background-color: #816336 !important;
+        border-color: var(--bs-btn-active-border-color);
+    }
+
+    .btn:focus-visible {
+        color: var(--bs-btn-hover-color);
+        background-color: #816336 !important;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem #8163367a !important;
+    }
+
+    .btn:hover {
+        color: var(--bs-btn-active-color);
+        background-color: #816336 !important;
+        border-color: var(--bs-btn-active-border-color);
+    }
+
+    .dropdown-item.active, .dropdown-item:active {
+        color: white;
+        text-decoration: none;
+        background-color: #b69058 !important;
+    }
+
+    .dropdown-item:active .mobile_add_guest_dropdown_option_container .mobile_add_guest_dropdown_option_number {
+        color: white !important;
+    }
 }

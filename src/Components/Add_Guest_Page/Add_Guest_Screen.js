@@ -6,6 +6,8 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import Accordion from 'react-bootstrap/Accordion';
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import { useNavigate } from 'react-router-dom';
+import Dropdown from 'react-bootstrap/Dropdown';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 
 
 function Add_Guest_Screen() {
@@ -29,29 +31,88 @@ function Add_Guest_Screen() {
     navigate("/");
   }
 
+  const handleDropdownSelect = (e) => {
+    setGuestName(e.target.childNodes[0].innerHTML)
+    setGuestNumber(e.target.childNodes[1].innerHTML)
+  }
 
   return (
     <div className='add_guest_screen_container'>
       <Nav_Bar loggedIn={true} navHeader={'Pinnacle Lake Day Passes'} />
       <div className="add_guest_screen_module_container">
-        
+
         <div className="laptop_add_guest_module"></div>
 
         <div className="mobile_add_guest_module">
           <Button className='phone_logout_button' onClick={handleLogout}>
             <div className="phone_logout_button_container">
-            <ArrowBackIosRoundedIcon className='phone_logout_arrow'/>
-            <p className="phone_logout_button_text">Logout</p>
+              <ArrowBackIosRoundedIcon className='phone_logout_arrow' />
+              <p className="phone_logout_button_text">Logout</p>
             </div>
           </Button>
           <Form className='mobile_add_guest_form'>
             <Form.Group className="mb-3">
-              <Form.Label className='mobile_add_guest_input_label float-start'>First and Last Name</Form.Label>
+              <Form.Label className='mobile_add_guest_input_label mobile_add_guest_input_label_name float-start'>First and Last Name</Form.Label>
               <Form.Control className='mobile_add_guest_input_field' type="text" value={guestName} onChange={(e) => setGuestName(e.target.value)} />
+              <Dropdown className='mobile_add_guest_dropdown'>
+                <Dropdown.Toggle className='mobile_add_guest_dropdown_toggle' variant="outline-secondary" id="dropdown-basic">
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
+                    <div className="mobile_add_guest_dropdown_option_container">
+                      <div className="mobile_add_guest_dropdown_option_name">Matt Urbeck</div>
+                      <div className="mobile_add_guest_dropdown_option_number">(636) 439-9972</div>
+                    </div>
+                  </Dropdown.Item>
+                  <NavDropdown.Divider />
+                  <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
+                    <div className="mobile_add_guest_dropdown_option_container">
+                      <div className="mobile_add_guest_dropdown_option_name">Adam Osvath</div>
+                      <div className="mobile_add_guest_dropdown_option_number">(636) 240-5332</div>
+                    </div>
+                  </Dropdown.Item>
+                  <NavDropdown.Divider />
+                  <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
+                    <div className="mobile_add_guest_dropdown_option_container">
+                      <div className="mobile_add_guest_dropdown_option_name">Tim Mehegan</div>
+                      <div className="mobile_add_guest_dropdown_option_number">(314) 640-0239</div>
+                    </div>
+                  </Dropdown.Item>
+                  <NavDropdown.Divider />
+                  <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
+                    <div className="mobile_add_guest_dropdown_option_container">
+                      <div className="mobile_add_guest_dropdown_option_name">Adam Osvath</div>
+                      <div className="mobile_add_guest_dropdown_option_number">(636) 240-5332</div>
+                    </div>
+                  </Dropdown.Item>
+                  <NavDropdown.Divider />
+                  <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
+                    <div className="mobile_add_guest_dropdown_option_container">
+                      <div className="mobile_add_guest_dropdown_option_name">Adam Osvath</div>
+                      <div className="mobile_add_guest_dropdown_option_number">(636) 240-5332</div>
+                    </div>
+                  </Dropdown.Item>
+                  <NavDropdown.Divider />
+                  <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
+                    <div className="mobile_add_guest_dropdown_option_container">
+                      <div className="mobile_add_guest_dropdown_option_name">Adam Osvath</div>
+                      <div className="mobile_add_guest_dropdown_option_number">(636) 240-5332</div>
+                    </div>
+                  </Dropdown.Item>
+                  <NavDropdown.Divider />
+                  <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
+                    <div className="mobile_add_guest_dropdown_option_container">
+                      <div className="mobile_add_guest_dropdown_option_name">Adam Osvath</div>
+                      <div className="mobile_add_guest_dropdown_option_number">(636) 240-5332</div>
+                    </div>
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label className='mobile_add_guest_input_label float-start'>Phone Number</Form.Label>
-              <Form.Control className='mobile_add_guest_input_field' type="number" value={guestNumber} onChange={(e) => setGuestNumber(e.target.value)} />
+              <Form.Control className='mobile_add_guest_input_field' type="text" value={guestNumber} onChange={(e) => setGuestNumber(e.target.value)} />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label className='mobile_add_guest_input_label float-start'>Date of Visit</Form.Label>
