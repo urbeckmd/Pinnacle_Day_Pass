@@ -48,7 +48,7 @@ function Add_Guest_Screen() {
                 <Accordion.Header>Saturday, June 6, 2023</Accordion.Header>
                 <Accordion.Body>
                   <Form>
-                    <Form.Check type='radio' className='radio_button' label="Matt Urbeck" defaultChecked />
+                    <Form.Check type='radio' className='radio_button laptop_radio_button'  label="Matt Urbeck" defaultChecked />
                     <hr />
                     <Form.Check type='radio' className='radio_button' label="Tim Mehegan" defaultChecked />
                     <hr />

@@ -21,8 +21,47 @@
     color: white;
 }
 
+.accordion-button:not(.collapsed) {
+    color: white !important;
+    background-color: rgb(150, 120, 55) !important;
+}
 
-/* Small laptop */
+.accordion-button:focus {
+    z-index: 3;
+    box-shadow: none !important;
+}
+
+.accordion-button::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000000%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z%27/%3e%3c/svg%3e") !important;
+}
+
+.accordion-button:not(.collapsed)::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23ffffff%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z%27/%3e%3c/svg%3e") !important;
+    transform: rotate(-180deg) !important;
+}
+
+.form-control:focus {
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    border-color: #b69058 !important;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem #dbc39fa1 !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Laptop */
 @media only screen and (min-width: 769px) {
     .mobile_add_guest_module {
         display: none !important;
@@ -38,7 +77,6 @@
         display: flex;
         border-radius: 30px;
         overflow: hidden;
-        /* min-height: 440px; */
     }
 
     .laptop_add_guest_invites_container {
@@ -123,6 +161,11 @@
     }
 
     .form-check-input:checked {
+        background-color: #816336 !important;
+        border-color: whitesmoke !important;
+    }
+
+    .laptop_add_guest_checkbox .form-check-input:checked {
         background-color: white !important;
         border-color: whitesmoke !important;
     }
@@ -145,7 +188,7 @@
 
     .invite_new_guests_button {
         border-radius: 40px !important;
-        background-color: #4B3007 !important;
+        background-color: #6e5329 !important;
         border: none !important;
         color: #ECECEC !important;
         font-weight: 500 !important;
@@ -156,7 +199,47 @@
         height: 40px !important;
         transform: translateX(-50%);
     }
+
+    .radio_button {
+        text-align: left;
+    }
+
+    .form-check-label {
+        padding-left: 5px;
+    }
+
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -259,25 +342,6 @@
         border-color: #6e5329 !important;
     }
 
-    .accordion-button:not(.collapsed) {
-        color: white !important;
-        background-color: rgb(150, 120, 55) !important;
-    }
-
-    .accordion-button:focus {
-        z-index: 3;
-        box-shadow: 0 0 0 0.25rem #96783798 !important;
-    }
-
-    .accordion-button::after {
-        background-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000000%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z%27/%3e%3c/svg%3e") !important;
-    }
-
-    .accordion-button:not(.collapsed)::after {
-        background-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23ffffff%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z%27/%3e%3c/svg%3e") !important;
-        transform: rotate(-180deg) !important;
-    }
-
     .phone_logout_button {
         display: none !important;
     }
@@ -363,6 +427,37 @@
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* For Phone only */
@@ -487,32 +582,12 @@
         border-color: #6e5329 !important;
     }
 
-    .accordion-button:not(.collapsed) {
-        color: white !important;
-        background-color: rgb(150, 120, 55) !important;
-    }
-
     .mobile_add_guest_send_new_invites_button {
         width: 80%;
         position: absolute;
         left: 50%;
         bottom: 25px;
         transform: translateX(-50%);
-    }
-
-    .accordion-button:focus {
-        z-index: 3;
-        /* border-color: var(--bs-accordion-btn-focus-border-color); */
-        box-shadow: 0 0 0 0.25rem #96783798 !important;
-    }
-
-    .accordion-button::after {
-        background-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000000%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z%27/%3e%3c/svg%3e") !important;
-    }
-
-    .accordion-button:not(.collapsed)::after {
-        background-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23ffffff%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z%27/%3e%3c/svg%3e") !important;
-        transform: rotate(-180deg) !important
     }
 
     .mobile_add_guest_dropdown {
