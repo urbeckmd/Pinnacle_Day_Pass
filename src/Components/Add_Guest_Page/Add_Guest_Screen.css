@@ -2,21 +2,159 @@
     max-width: 1200px;
     margin: auto;
     height: 100vh;
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    user-select: none;
+    /* Standard syntax */
     position: relative;
 }
 
 .add_guest_screen_module_container {
     width: 80%;
-    height: 90%;
+    height: 80%;
+    /* background-color: blue; */
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
 }
 
-/* Larger than tablet */
+
+/* Small laptop */
 @media only screen and (min-width: 769px) {
     .mobile_add_guest_module {
         display: none !important;
+    }
+
+    .laptop_add_guest_module {
+        width: 100%;
+        height: 440px;
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        max-height: 700px;
+        display: flex;
+        border-radius: 30px;
+        overflow: hidden;
+        /* min-height: 440px; */
+    }
+
+    .laptop_add_guest_invites_container {
+        flex: 0.60;
+        height: 100%;
+        background-color: #ECECEC;
+        padding: 60px 40px;
+        position: relative;
+    }
+
+    .laptop_add_guest_invites_guest_info_container {
+        flex: 0.4;
+        height: 100%;
+        background: rgb(129, 99, 54);
+        background: linear-gradient(180deg, rgba(129, 99, 54, 1) 0%, rgba(73, 46, 5, 1) 100%);
+        padding: 60px 40px;
+    }
+
+    .laptop_add_guest_dropdown {
+        position: absolute;
+        width: 100%;
+    }
+
+    .laptop_add_guest_dropdown_toggle {
+        position: absolute;
+        height: 25px;
+        width: 25px;
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        top: -32px !important;
+        right: 10px;
+        border: none !important;
+    }
+
+    .dropdown-toggle:empty::after {
+        transform: scale(2);
+    }
+
+    .dropdown-item.active,
+    .dropdown-item:active {
+        color: white;
+        text-decoration: none;
+        background-color: #b69058 !important;
+    }
+
+    .dropdown-item:active .mobile_add_guest_dropdown_option_container .mobile_add_guest_dropdown_option_number {
+        color: white !important;
+    }
+
+    .dropdown-menu {
+        max-height: 262px;
+        overflow-y: scroll;
+        padding: 0px !important;
+        /* padding-top: 5px !important; */
+        width: 93%;
+        left: 18px !important;
+    }
+
+    .laptop_add_guest_dropdown_option_name {
+        pointer-events: none;
+    }
+
+    .laptop_add_guest_dropdown_option_number {
+        font-size: 12px;
+        position: relative;
+        top: -5px;
+        color: rgb(145, 145, 145);
+        pointer-events: none;
+    }
+
+    .dropdown-divider {
+        margin: 0 !important;
+    }
+    
+    .laptop_add_guest_checkbox {
+        text-align: left;
+        width: 55%;
+        margin-top: 20px;
+        left: 10px;
+        position: relative;
+    }
+
+    .form-check-input:checked {
+        background-color: white !important;
+        border-color: whitesmoke !important;
+    }
+
+    .form-check-input:checked[type=checkbox] {
+        --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 20%27%3e%3cpath fill=%27none%27 stroke=%27%23000%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%273%27 d=%27m6 10 3 3 6-6%27/%3e%3c/svg%3e") !important;
+    }
+
+    .laptop_add_guest_button {
+        border-radius: 40px !important;
+        background-color: #ECECEC !important;
+        border: none !important;
+        color: #6e5329 !important;
+        font-weight: 500 !important;
+        position: relative !important;
+        bottom: -30px !important;
+        width: 130px !important;
+        height: 40px !important;
+    }
+
+    .invite_new_guests_button {
+        border-radius: 40px !important;
+        background-color: #4B3007 !important;
+        border: none !important;
+        color: #ECECEC !important;
+        font-weight: 500 !important;
+        position: absolute !important;
+        bottom: 22px !important;
+        left: 50% !important;
+        width: 190px !important;
+        height: 40px !important;
+        transform: translateX(-50%);
     }
 }
 
@@ -43,7 +181,7 @@
         left: 50%;
         transform: translateX(-50%) translateY(-65%);
     }
-    
+
     .mobile_add_guest_input_field {
         height: 50px;
         font-size: 25px !important;
@@ -53,8 +191,8 @@
         border-color: #6e5329;
         box-shadow: 0 0 0 0.25rem #6e532952;
     }
-    
-    
+
+
     .add_guest_screen_module_container {
         width: 80%;
         position: relative;
@@ -62,13 +200,13 @@
         transform: translateX(-50%);
         color: white;
     }
-    
-    
+
+
     .mobile_add_guest_input_label {
         font-size: 23px;
         margin: 0px !important;
     }
-    
+
     .mobile_add_guest_button {
         width: 160px;
         height: 50px;
@@ -80,15 +218,15 @@
         margin-top: 18px;
         margin-right: 50px;
     }
-    
+
     .mobile_add_guest_button:hover {
         background-color: #6e5329 !important;
     }
-    
+
     .mobile_add_guest_button:focus-visible {
-            box-shadow: 0 0 0 0.15rem #64491d7c;
+        box-shadow: 0 0 0 0.15rem #64491d7c;
     }
-    
+
     .mobile_add_guest_checkbox {
         position: relative;
         left: 15px;
@@ -96,10 +234,11 @@
         margin-top: 20px;
         text-align: left;
     }
+
     .mobile_add_guest_offcanvas {
         height: 90dvh !important;
     }
-    
+
     .mobile_add_guest_offcanvas_button {
         width: 100%;
         position: relative;
@@ -189,7 +328,11 @@
         margin: 0 !important;
     }
 
-    .btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
+    .btn-check:checked+.btn,
+    .btn.active,
+    .btn.show,
+    .btn:first-child:active,
+    :not(.btn-check)+.btn:active {
         color: var(--bs-btn-active-color);
         background-color: #816336 !important;
         border-color: var(--bs-btn-active-border-color);
@@ -208,7 +351,8 @@
         border-color: var(--bs-btn-active-border-color);
     }
 
-    .dropdown-item.active, .dropdown-item:active {
+    .dropdown-item.active,
+    .dropdown-item:active {
         color: white;
         text-decoration: none;
         background-color: #b69058 !important;
@@ -271,7 +415,7 @@
         position: relative;
         left: -10px;
     }
-    
+
     .mobile_add_guest_input_field {
         height: 45px;
         font-size: 20px !important;
@@ -282,8 +426,8 @@
         border-color: #6e5329;
         box-shadow: 0 0 0 0.25rem #6e532952;
     }
-    
-    
+
+
     .add_guest_screen_module_container {
         width: 80%;
         position: relative;
@@ -292,14 +436,14 @@
         transform: translateX(-50%);
         color: white;
     }
-    
-    
+
+
     .mobile_add_guest_input_label {
         font-size: 23px;
         margin: 0px !important;
         margin-left: 6px !important;
     }
-    
+
     .mobile_add_guest_button {
         width: 140px;
         height: 40px;
@@ -310,15 +454,15 @@
         font-size: 20px !important;
         margin-top: 18px;
     }
-    
+
     .mobile_add_guest_button:hover {
         background-color: #6e5329 !important;
     }
-    
+
     .mobile_add_guest_button:focus-visible {
-            box-shadow: 0 0 0 0.15rem #64491d7c;
+        box-shadow: 0 0 0 0.15rem #64491d7c;
     }
-    
+
     .mobile_add_guest_checkbox {
         text-align: left;
         width: 55%;
@@ -326,11 +470,11 @@
         left: 10px;
         position: relative;
     }
-    
+
     .mobile_add_guest_offcanvas {
         height: 90dvh !important;
     }
-    
+
     .mobile_add_guest_offcanvas_button {
         width: 100%;
         position: relative;
@@ -417,7 +561,11 @@
         margin: 0 !important;
     }
 
-    .btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
+    .btn-check:checked+.btn,
+    .btn.active,
+    .btn.show,
+    .btn:first-child:active,
+    :not(.btn-check)+.btn:active {
         color: var(--bs-btn-active-color);
         background-color: #816336 !important;
         border-color: var(--bs-btn-active-border-color);
@@ -436,7 +584,8 @@
         border-color: var(--bs-btn-active-border-color);
     }
 
-    .dropdown-item.active, .dropdown-item:active {
+    .dropdown-item.active,
+    .dropdown-item:active {
         color: white;
         text-decoration: none;
         background-color: #b69058 !important;
