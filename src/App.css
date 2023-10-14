@@ -5,7 +5,8 @@
   background-image: url('C:/Users/urbec/OneDrive/Documents/web_apps/pinnacle_day_passes/public/pinnacle_bkg.jpg');
   background-size: cover;
   background-position: center;
-  font-family: 'Cabin', sans-serif;
+  /* font-family: 'Cabin', sans-serif !important; */
+  font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
   overflow: hidden;
 }
 
@@ -13,7 +14,7 @@
 @media only screen and (max-width: 768px) {
   .App {
       background-position: 58%; 
-      height: 100svh !important;     
+      height: 100dvh !important;     
   }
 }
 
