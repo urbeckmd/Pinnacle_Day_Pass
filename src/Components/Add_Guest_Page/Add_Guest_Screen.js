@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Nav_Bar from '../Universal_Components/Nav_Bar'
 import "./Add_Guest_Screen.css"
 import { Button, Form } from 'react-bootstrap';
@@ -8,15 +8,24 @@ import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import { useNavigate } from 'react-router-dom';
 import Dropdown from 'react-bootstrap/Dropdown';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-
+import axios from 'axios';
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
 function Add_Guest_Screen() {
+  const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
   const [guestName, setGuestName] = useState("");
   const [guestNumber, setGuestNumber] = useState("");
   const [guestDateOfVisit, setGuestDateOfVisit] = useState("");
   const [guestSaved, setGuestSaved] = useState(false);
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(true);
+  var accordianData = {};
   const navigate = useNavigate();
+
+
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -35,6 +44,45 @@ function Add_Guest_Screen() {
     setGuestName(e.target.childNodes[0].innerHTML)
     setGuestNumber(e.target.childNodes[1].innerHTML)
   }
+
+
+
+
+  useEffect(() => {
+    // Get logged in user from cookies
+    const currentUser = cookies.get("EMAIL");
+    console.log(currentUser);
+    // Get Array of Invited Guests for logged in user
+    const configuration = {
+      method: "get",
+      params: {
+        email: currentUser
+      },
+      url: "http://localhost:3000/getInvitedGuests",
+    }
+    axios(configuration)
+      .then((result) => {
+        const invitedGuests = result.data.data;
+        const dateOfVisit = new Date(invitedGuests[0].invitedGuestDateOfVisit);
+        const day = weekday[dateOfVisit.getUTCDay()];
+        const month = months[dateOfVisit.getMonth()];
+        const date  = dateOfVisit.getUTCDate();
+        const year = dateOfVisit.getFullYear();
+        const formattedDate = day+", "+month+" "+date+", "+year;
+        console.log(formattedDate);
+        if (formattedDate in accordianData) {
+          console.log("in data")
+        } else {
+          accordianData[formattedDate] = invitedGuests[0].invitedGuestName;
+        }
+        console.log(accordianData);
+      })
+      .catch((error) => {console.log(error);})
+  },[])
+
+
+
+
 
   return (
     <div className='add_guest_screen_container'>
