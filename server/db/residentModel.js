@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const invitedGuestSchema = new mongoose.Schema({
+const invitedGuestForDateSchema = new mongoose.Schema({
     invitedGuestName: {
         type: String,
         required: [true, "Please provide the guest's name..."],
@@ -11,14 +11,29 @@ const invitedGuestSchema = new mongoose.Schema({
         required: [true, "Please provide the guest's phone number..."],
         unique: [true, "Phone number has already been invited..."]
     },
-    invitedGuestDateOfVisit: {
-        type: Date,
-        required: [true, "Please provide the date of the visit..."],
-        unique: false
-    },
     invitedGuestPassScanned: {
         type: Boolean,
         required: [true, "Please provide if the pass has been scanned..."],
+        unique: false
+    },
+    invitedGuestPassSent: {
+        type: Boolean,
+        required: [true, "Please provide if the pass has been sent..."],
+        unique: false
+    },
+})
+
+
+const invitedGuestSchema = new mongoose.Schema({
+    invitedGuestDate: {
+        type: Date,
+        required: [true, "Please give date of visit..."],
+        unique: false
+    },
+    invitedGuestForDate: {
+        invitedGuestDate: [invitedGuestForDateSchema],
+        type: Array,
+        required: [true, "Please give list of invited guests..."],
         unique: false
     },
 })
@@ -55,7 +70,8 @@ const residentSchema = new mongoose.Schema({
     residentPassword: {
         type: String,
         required: [true, "Please provide a password..."],
-        unique: false},
+        unique: false
+    },
     invitedGuests: {
         invitedGuests: [invitedGuestSchema],
         type: Array,

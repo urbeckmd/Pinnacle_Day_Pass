@@ -13,15 +13,17 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 function Add_Guest_Screen() {
-  const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-  const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const [guestName, setGuestName] = useState("");
   const [guestNumber, setGuestNumber] = useState("");
   const [guestDateOfVisit, setGuestDateOfVisit] = useState("");
   const [guestSaved, setGuestSaved] = useState(false);
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(true);
-  var accordianData = {};
+  const [invitedGuestData, setInvitedGuestData] = useState([]);
+
+  const testData = ['this', 'that', 'third'];
   const navigate = useNavigate();
 
 
@@ -51,7 +53,7 @@ function Add_Guest_Screen() {
   useEffect(() => {
     // Get logged in user from cookies
     const currentUser = cookies.get("EMAIL");
-    console.log(currentUser);
+
     // Get Array of Invited Guests for logged in user
     const configuration = {
       method: "get",
@@ -62,23 +64,12 @@ function Add_Guest_Screen() {
     }
     axios(configuration)
       .then((result) => {
-        const invitedGuests = result.data.data;
-        const dateOfVisit = new Date(invitedGuests[0].invitedGuestDateOfVisit);
-        const day = weekday[dateOfVisit.getUTCDay()];
-        const month = months[dateOfVisit.getMonth()];
-        const date  = dateOfVisit.getUTCDate();
-        const year = dateOfVisit.getFullYear();
-        const formattedDate = day+", "+month+" "+date+", "+year;
-        console.log(formattedDate);
-        if (formattedDate in accordianData) {
-          console.log("in data")
-        } else {
-          accordianData[formattedDate] = invitedGuests[0].invitedGuestName;
-        }
-        console.log(accordianData);
+        setInvitedGuestData(result.data.data)
+        console.log(result.data.data);
+        setLoading(false);
       })
-      .catch((error) => {console.log(error);})
-  },[])
+      .catch((error) => { console.log(error); })
+  }, [])
 
 
 
@@ -88,30 +79,37 @@ function Add_Guest_Screen() {
     <div className='add_guest_screen_container'>
       <Nav_Bar loggedIn={true} navHeader={'Pinnacle Lake Day Passes'} />
       <div className="add_guest_screen_module_container">
-
         <div className="laptop_add_guest_module">
           <div className="laptop_add_guest_invites_container">
             <Accordion>
-              <Accordion.Item eventKey="0">
-                <Accordion.Header>Saturday, June 6, 2023</Accordion.Header>
-                <Accordion.Body>
-                  <Form>
-                    <Form.Check type='radio' className='radio_button laptop_radio_button'  label="Matt Urbeck" defaultChecked />
-                    <hr />
-                    <Form.Check type='radio' className='radio_button' label="Tim Mehegan" defaultChecked />
-                    <hr />
-                    <Form.Check disabled type='radio' className='radio_button' label="Adam Osvath" value={true} />
-                  </Form>
-                </Accordion.Body>
-              </Accordion.Item>
-              <Accordion.Item eventKey="1">
-                <Accordion.Header>Sunday, June 14, 2024</Accordion.Header>
-                <Accordion.Body>
-                  <Form>
-                    <Form.Check type='radio' className='radio_button' label="Dave Urbeck" defaultChecked />
-                  </Form>
-                </Accordion.Body>
-              </Accordion.Item>
+              {(!loading) ? invitedGuestData.map((date, dateIndex) => {
+                const dateObject = new Date(date.date);
+                const day = weekday[dateObject.getUTCDay()];
+                const month = months[dateObject.getMonth()];
+                const dayNumber = dateObject.getDate();
+                const year = dateObject.getFullYear();
+                return (
+                  <>
+                    <Accordion.Item eventKey={dateIndex}>
+                      <Accordion.Header>{day+", "+month+" "+dayNumber+", "+year}</Accordion.Header>
+                      <Accordion.Body>
+                        <Form className='added_guest_form_container'>
+                          {date["invitedGuestsForDate"].map((guest, guestIndex) => {
+                            const name = guest.invitedGuestName;
+                            const invited = guest.invitedGuestPassSent;
+                            return (
+                              <>
+                                <Form.Check type='radio' className='radio_button laptop_radio_button' label={name} checked={invited} />
+                                <hr />
+                              </>
+                            )
+                          })}
+                        </Form>
+                      </Accordion.Body>
+                    </Accordion.Item>
+                  </>)
+              }) : <p>loading</p>}
+
             </Accordion>
             <Button className='invite_new_guests_button'>Invite New Guests</Button>
           </div>
