@@ -72,11 +72,11 @@ app.post("/", (request, response) => {
         });
 });
 
-
+// Retrieve all the invited guests
 app.get("/getInvitedGuests", (request, response) => {
     const currentUser = request.query.email;
     console.log(currentUser);
-    Resident.findOne({residentEmail: currentUser})
+    Resident.findOne({ residentEmail: currentUser })
         .then((result) => {
             const invitedGuests = result.invitedGuests;
             response.status(200).send({
@@ -92,7 +92,97 @@ app.get("/getInvitedGuests", (request, response) => {
 })
 
 app.put("/addGuest", (request, response) => {
+    // if people are already invited on this date, push new guest
+    // else push new date with new guest
     console.log(request.body);
+    if (request.body.dateExists) {
+        Resident.updateOne(
+            { residentEmail: request.body.residentName },
+            {
+                $push: {
+                    "invitedGuests.$[elem].invitedGuestsForDate": {
+                        "invitedGuestName": request.body.guestName,
+                        "invitedGuestNumber": request.body.guestNumber,
+                        "invitedGuestPassScanned": false,
+                        "invitedGuestPassSent": false
+                    }
+                }
+            },
+            { arrayFilters: [{ "elem.date": new Date(new Date(request.body.guestDateOfVisit).toISOString()) }] },
+            { upsert: true }
+        )
+            .then((result) => {
+                response.status(200).send({
+                    message: "Guest was added...",
+                    result,
+                });
+            })
+            .catch((error) => {
+                response.status(400).send({
+                    message: "Guest was not added...",
+                    error,
+                });
+
+            })
+    } else {
+        Resident.updateOne(
+            { residentEmail: request.body.residentName },
+            {
+                $push: {
+                    "invitedGuests": {
+                        'date': new Date(new Date(request.body.guestDateOfVisit).toISOString()),
+                        'invitedGuestsForDate': [{
+                            "invitedGuestName": request.body.guestName,
+                            "invitedGuestNumber": request.body.guestNumber,
+                            "invitedGuestPassScanned": false,
+                            "invitedGuestPassSent": false
+                        }]
+                    }
+                }
+            },
+        )
+            .then((result) => {
+                response.status(200).send({
+                    message: "Guest was added to new date...",
+                    result,
+                });
+            })
+            .catch((error) => {
+                response.status(400).send({
+                    message: "Guest was not added...",
+                    error,
+                });
+            })
+    }
+    // If they want to save guest, update the saved guest array in db
+    if (request.body.guestSaved) {
+        
+
+
+        // Resident.updateOne(
+        //     { residentEmail: request.body.residentName },
+        //     {
+        //         $push: {
+        //             "savedGuests": {
+        //                 "savedGuestName": request.body.guestName,
+        //                 "savedGuestNumber": request.body.guestNumber,
+        //             }
+        //         }
+        //     },
+        // )
+        //     .then((result) => {
+        //         response.status(200).send({
+        //             message: "Guest was added to new saved...",
+        //             result,
+        //         });
+        //     })
+        //     .catch((error) => {
+        //         response.status(400).send({
+        //             message: "Guest was not added...",
+        //             error,
+        //         });
+        //     })
+    }
 })
 
 

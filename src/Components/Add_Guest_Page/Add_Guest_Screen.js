@@ -30,10 +30,10 @@ function Add_Guest_Screen() {
 
   const sortArrayByDate = (dateArray) => {
     // Sort Invited Guests Accordian Object by Date
-    for (let i=0; i<dateArray.length; i++) {
-      for (let j=0; j<dateArray.length-i-1; j++) {
-        if (dateArray[j+1]['date'] < dateArray[j]['date']) {
-          [dateArray[j+1],dateArray[j]] = [dateArray[j],dateArray[j+1]]
+    for (let i = 0; i < dateArray.length; i++) {
+      for (let j = 0; j < dateArray.length - i - 1; j++) {
+        if (dateArray[j + 1]['date'] < dateArray[j]['date']) {
+          [dateArray[j + 1], dateArray[j]] = [dateArray[j], dateArray[j + 1]]
         }
       }
     }
@@ -44,19 +44,19 @@ function Add_Guest_Screen() {
     e.preventDefault();
     // Update the local array of guests
     var updatedInvitedGuestData = [...invitedGuestData];
-    const utcDate = (guestDateOfVisit+"T00:00:00.000Z");
+    const utcDate = (guestDateOfVisit + "T00:00:00.000Z");
     var dateFoundInArray = false;
     updatedInvitedGuestData.forEach((date, index) => {
       // Check if date already exists
       // If so, append guest to list of guests already invited
       if (date.date == utcDate) {
         dateFoundInArray = true;
-        updatedInvitedGuestData[index]['invitedGuestsForDate'].push({"invitedGuestName":guestName, "invitedGuestNumber":guestNumber, "invitedGuestPassScanned":false, "invitedGuestPassSent": false});
-      } 
+        updatedInvitedGuestData[index]['invitedGuestsForDate'].push({ "invitedGuestName": guestName, "invitedGuestNumber": guestNumber, "invitedGuestPassScanned": false, "invitedGuestPassSent": false });
+      }
     })
+    // Create a new accoridan header if date is not already made
     if (!dateFoundInArray) {
-      updatedInvitedGuestData.push({'date':utcDate, 'invitedGuestsForDate':[{"invitedGuestName":guestName, "invitedGuestNumber":guestNumber, "invitedGuestPassScanned":false, "invitedGuestPassSent": false}]})
-      dateFoundInArray = false;
+      updatedInvitedGuestData.push({ 'date': utcDate, 'invitedGuestsForDate': [{ "invitedGuestName": guestName, "invitedGuestNumber": guestNumber, "invitedGuestPassScanned": false, "invitedGuestPassSent": false }] })
       console.log(updatedInvitedGuestData);
     }
     updatedInvitedGuestData = sortArrayByDate(updatedInvitedGuestData);
@@ -71,7 +71,8 @@ function Add_Guest_Screen() {
         guestName: guestName,
         guestNumber: guestNumber,
         guestDateOfVisit: utcDate,
-        guestSaved: guestSaved
+        guestSaved: guestSaved,
+        dateExists: dateFoundInArray,
       }
     }
     axios(configuration)
@@ -133,36 +134,39 @@ function Add_Guest_Screen() {
       <div className="add_guest_screen_module_container">
         <div className="laptop_add_guest_module">
           <div className="laptop_add_guest_invites_container">
-            <Accordion>
-              {(!loading) ? invitedGuestData.map((date, dateIndex) => {
-                const dateObject = new Date(date.date);
-                const day = weekday[dateObject.getUTCDay()];
-                const month = months[dateObject.getMonth()];
-                const dayNumber = dateObject.getUTCDate();
-                const year = dateObject.getFullYear();
-                return (
-                  <>
-                    <Accordion.Item eventKey={dateIndex}>
-                      <Accordion.Header>{day+", "+month+" "+dayNumber+", "+year}</Accordion.Header>
-                      <Accordion.Body>
-                        <Form className='added_guest_form_container'>
-                          {date["invitedGuestsForDate"].map((guest, guestIndex) => {
-                            const name = guest.invitedGuestName;
-                            const invited = guest.invitedGuestPassSent;
-                            return (
-                              <>
-                                <Form.Check type='radio' className='radio_button laptop_radio_button' label={name} checked={invited} />
-                                <hr />
-                              </>
-                            )
-                          })}
-                        </Form>
-                      </Accordion.Body>
-                    </Accordion.Item>
-                  </>)
-              }) : <p>loading</p>}
+            <div className="laptop_add_guest_accordian_container">
+              <Accordion>
+                {(!loading) ? invitedGuestData.map((date, dateIndex) => {
+                  const dateObject = new Date(date.date);
+                  const day = weekday[dateObject.getUTCDay()];
+                  const month = months[dateObject.getMonth()];
+                  const dayNumber = dateObject.getUTCDate();
+                  const year = dateObject.getFullYear();
+                  return (
+                    <>
+                      <Accordion.Item eventKey={dateIndex}>
+                        <Accordion.Header>{day + ", " + month + " " + dayNumber + ", " + year}</Accordion.Header>
+                        <Accordion.Body>
+                          <Form className='added_guest_form_container'>
+                            {date["invitedGuestsForDate"].map((guest, guestIndex) => {
+                              const name = guest.invitedGuestName;
+                              const invited = guest.invitedGuestPassSent;
+                              return (
+                                <>
+                                  <Form.Check type='radio' className='radio_button laptop_radio_button' label={name} checked={invited} />
+                                  <hr />
+                                </>
+                              )
+                            })}
+                          </Form>
+                        </Accordion.Body>
+                      </Accordion.Item>
+                    </>)
+                }) : <p>loading</p>}
 
-            </Accordion>
+              </Accordion>
+            </div>
+
             <Button className='invite_new_guests_button'>Invite New Guests</Button>
           </div>
           <div className="laptop_add_guest_invites_guest_info_container">
@@ -342,36 +346,36 @@ function Add_Guest_Screen() {
               <Offcanvas.Title>Invited Guests</Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-            <Accordion>
-              {(!loading) ? invitedGuestData.map((date, dateIndex) => {
-                const dateObject = new Date(date.date);
-                const day = weekday[dateObject.getUTCDay()];
-                const month = months[dateObject.getMonth()];
-                const dayNumber = dateObject.getUTCDate();
-                const year = dateObject.getFullYear();
-                return (
-                  <>
-                    <Accordion.Item eventKey={dateIndex}>
-                      <Accordion.Header>{day+", "+month+" "+dayNumber+", "+year}</Accordion.Header>
-                      <Accordion.Body>
-                        <Form className='added_guest_form_container'>
-                          {date["invitedGuestsForDate"].map((guest, guestIndex) => {
-                            const name = guest.invitedGuestName;
-                            const invited = guest.invitedGuestPassSent;
-                            return (
-                              <>
-                                <Form.Check type='radio' className='radio_button' label={name} checked={invited} />
-                                <hr />
-                              </>
-                            )
-                          })}
-                        </Form>
-                      </Accordion.Body>
-                    </Accordion.Item>
-                  </>)
-              }) : <p>loading</p>}
+              <Accordion>
+                {(!loading) ? invitedGuestData.map((date, dateIndex) => {
+                  const dateObject = new Date(date.date);
+                  const day = weekday[dateObject.getUTCDay()];
+                  const month = months[dateObject.getMonth()];
+                  const dayNumber = dateObject.getUTCDate();
+                  const year = dateObject.getFullYear();
+                  return (
+                    <>
+                      <Accordion.Item eventKey={dateIndex}>
+                        <Accordion.Header>{day + ", " + month + " " + dayNumber + ", " + year}</Accordion.Header>
+                        <Accordion.Body>
+                          <Form className='added_guest_form_container'>
+                            {date["invitedGuestsForDate"].map((guest, guestIndex) => {
+                              const name = guest.invitedGuestName;
+                              const invited = guest.invitedGuestPassSent;
+                              return (
+                                <>
+                                  <Form.Check type='radio' className='radio_button' label={name} checked={invited} />
+                                  <hr />
+                                </>
+                              )
+                            })}
+                          </Form>
+                        </Accordion.Body>
+                      </Accordion.Item>
+                    </>)
+                }) : <p>loading</p>}
 
-            </Accordion>
+              </Accordion>
               <Button className='mobile_add_guest_button mobile_add_guest_send_new_invites_button'>Send New Invites</Button>
             </Offcanvas.Body>
           </Offcanvas>
