@@ -89,6 +89,11 @@
         position: relative;
     }
 
+    .accordian {
+        max-height: 320px;
+        overflow-y: scroll;
+    }
+
     .laptop_add_guest_invites_guest_info_container {
         flex: 0.4;
         height: 100%;

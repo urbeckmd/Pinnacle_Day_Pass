@@ -91,7 +91,9 @@ app.get("/getInvitedGuests", (request, response) => {
         });
 })
 
-
+app.put("/addGuest", (request, response) => {
+    console.log(request.body);
+})
 
 
 module.exports = app;

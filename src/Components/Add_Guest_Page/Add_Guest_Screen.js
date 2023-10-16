@@ -28,8 +28,21 @@ function Add_Guest_Screen() {
   const handleShow = () => setShow(true);
 
 
+  const sortArrayByDate = (dateArray) => {
+    // Sort Invited Guests Accordian Object by Date
+    for (let i=0; i<dateArray.length; i++) {
+      for (let j=0; j<dateArray.length-i-1; j++) {
+        if (dateArray[j+1]['date'] < dateArray[j]['date']) {
+          [dateArray[j+1],dateArray[j]] = [dateArray[j],dateArray[j+1]]
+        }
+      }
+    }
+    return dateArray;
+  }
+
   const handleAddGuest = (e) => {
     e.preventDefault();
+    // Update the local array of guests
     var updatedInvitedGuestData = [...invitedGuestData];
     const utcDate = (guestDateOfVisit+"T00:00:00.000Z");
     var dateFoundInArray = false;
@@ -37,18 +50,44 @@ function Add_Guest_Screen() {
       // Check if date already exists
       // If so, append guest to list of guests already invited
       if (date.date == utcDate) {
-        console.log(date.date);
         dateFoundInArray = true;
         updatedInvitedGuestData[index]['invitedGuestsForDate'].push({"invitedGuestName":guestName, "invitedGuestNumber":guestNumber, "invitedGuestPassScanned":false, "invitedGuestPassSent": false});
       } 
     })
-    console.log(updatedInvitedGuestData);
     if (!dateFoundInArray) {
-      console.log("date not found in array");
+      updatedInvitedGuestData.push({'date':utcDate, 'invitedGuestsForDate':[{"invitedGuestName":guestName, "invitedGuestNumber":guestNumber, "invitedGuestPassScanned":false, "invitedGuestPassSent": false}]})
+      dateFoundInArray = false;
+      console.log(updatedInvitedGuestData);
     }
-    setInvitedGuestData(updatedInvitedGuestData)
-    // console.log(guestName, guestNumber, guestDateOfVisit, guestSaved);
+    updatedInvitedGuestData = sortArrayByDate(updatedInvitedGuestData);
+    setInvitedGuestData(updatedInvitedGuestData);
+
+    // Update the array in the database
+    const configuration = {
+      method: "put",
+      url: "http://localhost:3000/addGuest",
+      data: {
+        residentName: cookies.get("EMAIL"),
+        guestName: guestName,
+        guestNumber: guestNumber,
+        guestDateOfVisit: utcDate,
+        guestSaved: guestSaved
+      }
+    }
+    axios(configuration)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        alert(error)
+        console.log(error);
+      })
+
   }
+
+
+
+
 
   const handleLogout = () => {
     console.log("logout out of phone");
@@ -59,8 +98,6 @@ function Add_Guest_Screen() {
     setGuestName(e.target.childNodes[0].innerHTML)
     setGuestNumber(e.target.childNodes[1].innerHTML)
   }
-
-
 
 
   useEffect(() => {
@@ -78,16 +115,10 @@ function Add_Guest_Screen() {
     axios(configuration)
       .then((result) => {
         var invitedGuestList = result.data.data;
-        for (let i=0; i<invitedGuestList.length; i++) {
-          for (let j=0; j<invitedGuestList.length-i-1; j++) {
-            if (invitedGuestList[j+1]['date'] < invitedGuestList[j]['date']) {
-              [invitedGuestList[j+1],invitedGuestList[j]] = [invitedGuestList[j],invitedGuestList[j+1]]
-            }
-          }
-        }
-        setInvitedGuestData(invitedGuestList)
+        invitedGuestList = sortArrayByDate(invitedGuestList);
+        setInvitedGuestData(invitedGuestList);
         setLoading(false);
-        console.log(invitedGuestList);
+        // console.log(invitedGuestList);
       })
       .catch((error) => { console.log(error); })
   }, [])
