@@ -154,35 +154,34 @@ app.put("/addGuest", (request, response) => {
                 });
             })
     }
-    // If they want to save guest, update the saved guest array in db
-    if (request.body.guestSaved) {
-        
+})
 
 
-        // Resident.updateOne(
-        //     { residentEmail: request.body.residentName },
-        //     {
-        //         $push: {
-        //             "savedGuests": {
-        //                 "savedGuestName": request.body.guestName,
-        //                 "savedGuestNumber": request.body.guestNumber,
-        //             }
-        //         }
-        //     },
-        // )
-        //     .then((result) => {
-        //         response.status(200).send({
-        //             message: "Guest was added to new saved...",
-        //             result,
-        //         });
-        //     })
-        //     .catch((error) => {
-        //         response.status(400).send({
-        //             message: "Guest was not added...",
-        //             error,
-        //         });
-        //     })
-    }
+app.post("/saveGuest", (request, response) => {
+    console.log(request.body);
+    Resident.updateOne(
+        { residentEmail: request.body.residentName },
+        {
+            $addToSet: {
+                "savedGuests": {
+                    "savedGuestName": request.body.guestName,
+                    "savedGuestNumber": request.body.guestNumber,
+                }
+            }
+        },
+    )
+        .then((result) => {
+            response.status(200).send({
+                message: "successfully saved",
+                result
+            })
+        })
+        .catch((error) => {
+            response.status(400).send({
+                message: "not saved",
+                error
+            })
+        })
 })
 
 

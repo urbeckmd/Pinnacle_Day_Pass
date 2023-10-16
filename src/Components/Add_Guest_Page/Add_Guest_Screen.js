@@ -57,12 +57,11 @@ function Add_Guest_Screen() {
     // Create a new accoridan header if date is not already made
     if (!dateFoundInArray) {
       updatedInvitedGuestData.push({ 'date': utcDate, 'invitedGuestsForDate': [{ "invitedGuestName": guestName, "invitedGuestNumber": guestNumber, "invitedGuestPassScanned": false, "invitedGuestPassSent": false }] })
-      console.log(updatedInvitedGuestData);
     }
     updatedInvitedGuestData = sortArrayByDate(updatedInvitedGuestData);
     setInvitedGuestData(updatedInvitedGuestData);
 
-    // Update the array in the database
+    // Update the add guest array in the database
     const configuration = {
       method: "put",
       url: "http://localhost:3000/addGuest",
@@ -71,7 +70,6 @@ function Add_Guest_Screen() {
         guestName: guestName,
         guestNumber: guestNumber,
         guestDateOfVisit: utcDate,
-        guestSaved: guestSaved,
         dateExists: dateFoundInArray,
       }
     }
@@ -83,6 +81,29 @@ function Add_Guest_Screen() {
         alert(error)
         console.log(error);
       })
+
+    // Update the saved guest array in db
+    if (guestSaved) {
+      const configuration = {
+        method: "post",
+        url: "http://localhost:3000/saveGuest",
+        data: {
+          residentName: cookies.get("EMAIL"),
+          guestName: guestName,
+          guestNumber: guestNumber,
+          guestSaved: guestSaved,
+        }
+      }
+      axios(configuration)
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((error) => {
+          alert(error)
+          console.log(error);
+        })
+    }
+
 
   }
 
