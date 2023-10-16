@@ -88,6 +88,10 @@
         position: relative;
     }
 
+    .laptop_add_guest_no_guest_added_label {
+        color: black;
+    }
+
     .laptop_add_guest_accordian_container {
         height: 95% !important;
         width: 100%;
