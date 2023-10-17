@@ -92,9 +92,22 @@ app.get("/getInvitedGuests", (request, response) => {
 })
 
 
-app.get("/getSavedGuests", (request, respons) => {
+app.get("/getSavedGuests", (request, response) => {
     const currentUser = request.query.email;
     console.log(currentUser);
+    Resident.findOne({ residentEmail: currentUser })
+        .then((result) => {
+            const savedGuests = result.savedGuests;
+            response.status(200).send({
+                data: savedGuests
+            })
+        })
+        .catch((e) => {
+            response.status(400).send({
+                message: "Email not found in database...",
+                e,
+            });
+        });
 })
 
 

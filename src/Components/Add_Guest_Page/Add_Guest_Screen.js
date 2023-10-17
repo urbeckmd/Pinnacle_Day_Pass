@@ -22,6 +22,7 @@ function Add_Guest_Screen() {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(true);
   const [invitedGuestData, setInvitedGuestData] = useState([]);
+  const [savedGuestData, setSavedGuestData] = useState([]);
   const navigate = useNavigate();
 
   const handleClose = () => setShow(false);
@@ -54,12 +55,22 @@ function Add_Guest_Screen() {
         updatedInvitedGuestData[index]['invitedGuestsForDate'].push({ "invitedGuestName": guestName, "invitedGuestNumber": guestNumber, "invitedGuestPassScanned": false, "invitedGuestPassSent": false });
       }
     })
-    // Create a new accoridan header if date is not already made
+    // Create a new accordian header if date is not already made
     if (!dateFoundInArray) {
       updatedInvitedGuestData.push({ 'date': utcDate, 'invitedGuestsForDate': [{ "invitedGuestName": guestName, "invitedGuestNumber": guestNumber, "invitedGuestPassScanned": false, "invitedGuestPassSent": false }] })
     }
     updatedInvitedGuestData = sortArrayByDate(updatedInvitedGuestData);
     setInvitedGuestData(updatedInvitedGuestData);
+
+    // Update Saved Guest array locally
+    if (guestSaved) {
+      var updatedSavedGuestData = [...savedGuestData];
+      const newSavedGuest = { 'savedGuestName': guestName, 'savedGuestNumber': guestNumber };
+      
+      
+
+
+    }
 
     // Update the add guest array in the database
     const configuration = {
@@ -103,7 +114,8 @@ function Add_Guest_Screen() {
           console.log(error);
         })
     }
-
+    setGuestName("");
+    setGuestNumber("");
 
   }
 
@@ -153,7 +165,9 @@ function Add_Guest_Screen() {
     }
     axios(addedSavedConfiguration)
       .then((result) => {
-        console.log(result);
+        var savedGuestList = result.data.data;
+        setSavedGuestData(savedGuestList);
+        console.log(savedGuestData);
       })
       .catch((error) => {
         console.log(error);
@@ -202,8 +216,8 @@ function Add_Guest_Screen() {
                   }) : <p>loading</p>}
 
                 </Accordion> : <h1 className='laptop_add_guest_no_guest_added_label'>No guests have been invited yet.</h1>
-            
-            }
+
+              }
 
             </div>
 
@@ -217,56 +231,20 @@ function Add_Guest_Screen() {
                 <Dropdown className='laptop_add_guest_dropdown'>
                   <Dropdown.Toggle className='laptop_add_guest_dropdown_toggle' variant="outline-secondary" id="dropdown-basic">
                   </Dropdown.Toggle>
-
                   <Dropdown.Menu>
-                    <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
-                      <div className="laptop_add_guest_dropdown_option_container">
-                        <div className="laptop_add_guest_dropdown_option_name">Matt Urbeck</div>
-                        <div className="laptop_add_guest_dropdown_option_number">(636) 439-9972</div>
-                      </div>
-                    </Dropdown.Item>
-                    <NavDropdown.Divider />
-                    <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
-                      <div className="laptop_add_guest_dropdown_option_container">
-                        <div className="laptop_add_guest_dropdown_option_name">Adam Osvath</div>
-                        <div className="laptop_add_guest_dropdown_option_number">(636) 240-5332</div>
-                      </div>
-                    </Dropdown.Item>
-                    <NavDropdown.Divider />
-                    <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
-                      <div className="laptop_add_guest_dropdown_option_container">
-                        <div className="laptop_add_guest_dropdown_option_name">Tim Mehegan</div>
-                        <div className="laptop_add_guest_dropdown_option_number">(314) 640-0239</div>
-                      </div>
-                    </Dropdown.Item>
-                    <NavDropdown.Divider />
-                    <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
-                      <div className="laptop_add_guest_dropdown_option_container">
-                        <div className="laptop_add_guest_dropdown_option_name">Adam Osvath</div>
-                        <div className="laptop_add_guest_dropdown_option_number">(636) 240-5332</div>
-                      </div>
-                    </Dropdown.Item>
-                    <NavDropdown.Divider />
-                    <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
-                      <div className="laptop_add_guest_dropdown_option_container">
-                        <div className="laptop_add_guest_dropdown_option_name">Adam Osvath</div>
-                        <div className="laptop_add_guest_dropdown_option_number">(636) 240-5332</div>
-                      </div>
-                    </Dropdown.Item>
-                    <NavDropdown.Divider />
-                    <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
-                      <div className="laptop_add_guest_dropdown_option_container">
-                        <div className="laptop_add_guest_dropdown_option_name">Adam Osvath</div>
-                        <div className="laptop_add_guest_dropdown_option_number">(636) 240-5332</div>
-                      </div>
-                    </Dropdown.Item>
-                    <NavDropdown.Divider />
-                    <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
-                      <div className="laptop_add_guest_dropdown_option_container">
-                        <div className="laptop_add_guest_dropdown_option_name">Adam Osvath</div>
-                        <div className="laptop_add_guest_dropdown_option_number">(636) 240-5332</div>
-                      </div>
-                    </Dropdown.Item>
+                    {savedGuestData.map((guest, index) => {
+                      return (
+                        <>
+                          <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
+                            <div className="laptop_add_guest_dropdown_option_container">
+                              <div className="laptop_add_guest_dropdown_option_name">{guest.savedGuestName}</div>
+                              <div className="laptop_add_guest_dropdown_option_number">{guest.savedGuestNumber}</div>
+                            </div>
+                          </Dropdown.Item>
+                          <NavDropdown.Divider />
+                        </>
+                      )
+                    })}
                   </Dropdown.Menu>
                 </Dropdown>
               </Form.Group>
