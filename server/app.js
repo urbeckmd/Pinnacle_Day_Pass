@@ -91,6 +91,13 @@ app.get("/getInvitedGuests", (request, response) => {
         });
 })
 
+
+app.get("/getSavedGuests", (request, respons) => {
+    const currentUser = request.query.email;
+    console.log(currentUser);
+})
+
+
 app.put("/addGuest", (request, response) => {
     // if people are already invited on this date, push new guest
     // else push new date with new guest
@@ -183,6 +190,7 @@ app.post("/saveGuest", (request, response) => {
             })
         })
 })
+
 
 
 module.exports = app;

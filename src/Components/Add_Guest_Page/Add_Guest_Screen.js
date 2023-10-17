@@ -127,22 +127,37 @@ function Add_Guest_Screen() {
     const currentUser = cookies.get("EMAIL");
 
     // Get Array of Invited Guests for logged in user
-    const configuration = {
+    const invitedGuestConfiguration = {
       method: "get",
       params: {
         email: currentUser
       },
       url: "http://localhost:3000/getInvitedGuests",
     }
-    axios(configuration)
+    axios(invitedGuestConfiguration)
       .then((result) => {
         var invitedGuestList = result.data.data;
         invitedGuestList = sortArrayByDate(invitedGuestList);
         setInvitedGuestData(invitedGuestList);
         setLoading(false);
-        console.log(invitedGuestData.length == 0);
       })
       .catch((error) => { console.log(error); })
+
+    // Get array of saved guests
+    const addedSavedConfiguration = {
+      method: "get",
+      params: {
+        email: currentUser
+      },
+      url: "http://localhost:3000/getSavedGuests"
+    }
+    axios(addedSavedConfiguration)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }, [])
 
 
