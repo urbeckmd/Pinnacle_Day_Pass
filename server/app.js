@@ -204,6 +204,35 @@ app.post("/saveGuest", (request, response) => {
         })
 })
 
+app.post('/deleteOldPasses', (request, response) => {
+    const currentUser = request.body.email;
+    Resident.findOne({ residentEmail: currentUser })
+        .then((result) => {
+            const today = new Date();
+            const todayYear = today.getFullYear();
+            const todayMonth = today.getMonth();
+            const todayDay = today.getDate();
+            result.invitedGuests.forEach((date, index) => {
+                const invitedYear = date.date.getFullYear();
+                const invitedMonth = date.date.getUTCMonth();
+                const invitedDay = date.date.getUTCDate();
 
+                if (new Date(`${todayYear}-${todayMonth}-${todayDay}`).setHours(0,0,0,0) <= new Date(`${invitedYear}-${invitedMonth}-${invitedDay}`).setHours(0,0,0,0)) {
+                    console.log(date.date, "date is valid");
+                } else {
+                    console.log(date.date, "date is invalid");
+                }
+            })
+            response.status(200).send({
+                message: "done"
+            })
+        })
+        .catch((e) => {
+            response.status(400).send({
+                message: "Email not found in database...",
+                e,
+            });
+        });
+})
 
 module.exports = app;

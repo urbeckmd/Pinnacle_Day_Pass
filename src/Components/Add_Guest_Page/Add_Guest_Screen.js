@@ -43,6 +43,16 @@ function Add_Guest_Screen() {
 
   const handleAddGuest = (e) => {
     e.preventDefault();
+    // Make sure date is in future
+    const today = new Date().setHours(0,0,0,0);
+    const inviteDate = new Date(guestDateOfVisit + "T00:00:00.000").setHours(23,0,0,0);
+    if (today > inviteDate) {
+      console.log("Select future date");
+    } else {
+      console.log(inviteDate, "Date is valid");
+    }
+
+
     // Update the local array of guests
     var updatedInvitedGuestData = [...invitedGuestData];
     const utcDate = (guestDateOfVisit + "T00:00:00.000Z");
@@ -66,10 +76,17 @@ function Add_Guest_Screen() {
     if (guestSaved) {
       var updatedSavedGuestData = [...savedGuestData];
       const newSavedGuest = { 'savedGuestName': guestName, 'savedGuestNumber': guestNumber };
-      
-      
-
-
+      const newSavedGuestNumber = Object.values(newSavedGuest)[1]
+      var numberAlreadySaved = false;
+      updatedSavedGuestData.forEach((guest, index) => {
+        if (Object.values(guest)[1] == newSavedGuestNumber) {
+          numberAlreadySaved = true;
+        }
+      })
+      if (!numberAlreadySaved) {
+        updatedSavedGuestData.push(newSavedGuest);
+        setSavedGuestData(updatedSavedGuestData)
+      }
     }
 
     // Update the add guest array in the database
