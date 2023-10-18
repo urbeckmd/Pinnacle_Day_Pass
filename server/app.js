@@ -204,6 +204,9 @@ app.post("/saveGuest", (request, response) => {
         })
 })
 
+
+
+// Convert from endpoint to a find all and loop through each user to clear old passes
 app.post('/deleteOldPasses', (request, response) => {
     const currentUser = request.body.email;
     Resident.findOne({ residentEmail: currentUser })
@@ -218,9 +221,9 @@ app.post('/deleteOldPasses', (request, response) => {
                 const invitedDay = date.date.getUTCDate();
 
                 if (new Date(`${todayYear}-${todayMonth}-${todayDay}`).setHours(0,0,0,0) <= new Date(`${invitedYear}-${invitedMonth}-${invitedDay}`).setHours(0,0,0,0)) {
-                    console.log(date.date, "date is valid");
+                    console.log(date.date, "date is in future");
                 } else {
-                    console.log(date.date, "date is invalid");
+                    console.log(date.date, "date is in past");
                 }
             })
             response.status(200).send({
