@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
-
+const schedule = require("node-schedule");
 
 dbConnect()
 
@@ -206,36 +206,27 @@ app.post("/saveGuest", (request, response) => {
 
 
 
-// Convert from endpoint to a find all and loop through each user to clear old passes
-app.post('/deleteOldPasses', (request, response) => {
-    const currentUser = request.body.email;
-    Resident.findOne({ residentEmail: currentUser })
+// Delete the old passes each morning
+const deleteOldPasses = () => {
+    Resident.updateMany(
+        {},
+        { $pull: { "invitedGuests": { date: { $lt: new Date(new Date().toISOString()) } } } }
+    )
         .then((result) => {
-            const today = new Date();
-            const todayYear = today.getFullYear();
-            const todayMonth = today.getMonth();
-            const todayDay = today.getDate();
-            result.invitedGuests.forEach((date, index) => {
-                const invitedYear = date.date.getFullYear();
-                const invitedMonth = date.date.getUTCMonth();
-                const invitedDay = date.date.getUTCDate();
-
-                if (new Date(`${todayYear}-${todayMonth}-${todayDay}`).setHours(0,0,0,0) <= new Date(`${invitedYear}-${invitedMonth}-${invitedDay}`).setHours(0,0,0,0)) {
-                    console.log(date.date, "date is in future");
-                } else {
-                    console.log(date.date, "date is in past");
-                }
-            })
-            response.status(200).send({
-                message: "done"
-            })
+            const x = new Date(new Date().toISOString());
+            console.log(result);
         })
-        .catch((e) => {
-            response.status(400).send({
-                message: "Email not found in database...",
-                e,
-            });
-        });
-})
+        .catch((error) => {
+            console.log(error);
+        })
+}
+
+const scheduledTask = schedule.scheduleJob('0 20 * * *', () => {
+    console.log('Task executed at 7PM:', new Date().toLocaleTimeString());
+    deleteOldPasses()
+});
+
+
+
 
 module.exports = app;
