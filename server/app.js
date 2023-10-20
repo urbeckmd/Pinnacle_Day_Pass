@@ -32,6 +32,7 @@ app.get("/", (request, response, next) => {
 });
 
 
+// ensure user login  credentials are correct
 app.post("/", (request, response) => {
     Resident.findOne({ residentEmail: request.body.email })
         .then((resident) => {
@@ -72,6 +73,7 @@ app.post("/", (request, response) => {
         });
 });
 
+
 // Retrieve all the invited guests
 app.get("/getInvitedGuests", (request, response) => {
     const currentUser = request.query.email;
@@ -91,7 +93,7 @@ app.get("/getInvitedGuests", (request, response) => {
         });
 })
 
-
+// Retrieve all the saved guests
 app.get("/getSavedGuests", (request, response) => {
     const currentUser = request.query.email;
     console.log(currentUser);
@@ -111,6 +113,7 @@ app.get("/getSavedGuests", (request, response) => {
 })
 
 
+// Add guest to array of invites guests
 app.put("/addGuest", (request, response) => {
     // if people are already invited on this date, push new guest
     // else push new date with new guest
@@ -176,7 +179,7 @@ app.put("/addGuest", (request, response) => {
     }
 })
 
-
+// Add guest to array of saved guests
 app.post("/saveGuest", (request, response) => {
     console.log(request.body);
     Resident.updateOne(
@@ -210,7 +213,7 @@ app.post("/saveGuest", (request, response) => {
 const deleteOldPasses = () => {
     Resident.updateMany(
         {},
-        { $pull: { "invitedGuests": { date: { $lt: new Date(new Date().toISOString()) } } } }
+        { $pull: { "invitedGuests": { date: { $lt: new Date(new Date(new Date().setHours(19,0,0,0)-86400000).toISOString()) } } } }
     )
         .then((result) => {
             const x = new Date(new Date().toISOString());
@@ -221,12 +224,17 @@ const deleteOldPasses = () => {
         })
 }
 
-const scheduledTask = schedule.scheduleJob('0 20 * * *', () => {
-    console.log('Task executed at 7PM:', new Date().toLocaleTimeString());
+const scheduledTask = schedule.scheduleJob('36 21 * * *', () => {
+    console.log('Task executed at 12:10PM:', new Date().toLocaleTimeString());
     deleteOldPasses()
 });
 
 
 
+const findDate = () => {
+    console.log(new Date(new Date(new Date().setHours(19,0,0,0)-86400000).toISOString()));
+}
+
+findDate();
 
 module.exports = app;

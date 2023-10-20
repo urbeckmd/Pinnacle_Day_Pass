@@ -78,7 +78,7 @@
         display: flex;
         border-radius: 30px;
         overflow: hidden;
-    }
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;    }
 
     .laptop_add_guest_invites_container {
         flex: 0.60;
@@ -296,6 +296,7 @@
         top: 50%;
         left: 50%;
         transform: translateX(-50%) translateY(-65%);
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
     }
 
     .mobile_add_guest_input_field {
@@ -510,6 +511,7 @@
         top: 50%;
         left: 50%;
         transform: translateX(-50%) translateY(-60%);
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
     }
 
     .phone_logout_button_container {
