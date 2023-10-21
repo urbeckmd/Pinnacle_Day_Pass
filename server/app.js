@@ -231,96 +231,153 @@ const deleteOldPasses = () => {
 }
 
 // Scheduler to run function that deletes old passes
-const deleteOldPassesWorker = schedule.scheduleJob('0 1 * * *', () => {
-    console.log('Task executed at 1 AM:', new Date().toLocaleTimeString());
+const deleteOldPassesWorker = schedule.scheduleJob('0 11 * * *', () => {
+    console.log('Task executed at 11 AM:', new Date().toLocaleTimeString());
     deleteOldPasses()
 });
 
 
+// Send details of failed emails to me
+const sendFailedEmailsToMe = (fullDate, passId, qr_code_path, guestName, residentFirstName, residentLastName) => {
+    var transporter = nodemailer.createTransport({
+        service: 'gmail.com',
+        auth: {
+            user: 'matt.d.urbeck@gmail.com',
+            pass: 'bwqv frxy suhh uxwf'
+        }
+    });
 
+    var mailOptions = {
+        from: 'matt.d.urbeck@gmail.com',
+        to: 'matt.d.urbeck@gmail.com',
+        subject: `PASS FAILED TO SEND`,
+        attachments: [{
+            filename: `${passId}.png`,
+            path: qr_code_path,
+            cid: 'qr_code' //same cid value as in the html img src
+        }],
+        html: `<p>Resident Name: ${residentFirstName} ${residentLastName}</p><p>Guest Name: ${guestName}</p><p>Date: ${fullDate}</p><p>Pass ID: ${passId}</p><p>${qr_code_path}</p><img src="cid:qr_code"/>`
+    };
 
-
-
-
-const findAllTomorrowsPasses = () => {
-    const monthsList = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-    var daysList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const tomorrow = new Date(new Date().setHours(19, 0, 0, 0)).toISOString()
-    Resident.find(
-        { "invitedGuests.date": new Date(tomorrow), "invitedGuests.invitedGuestsForDate.invitedGuestPassSent": false },
-    )
-        .then((result) => {
-            result.forEach((dates) => {
-                const residentFirstName = dates['residentFirstName'];
-                const residentLastName = dates['residentLastName'];
-                dates["invitedGuests"].forEach((allGuests) => {
-                    if (allGuests['date'].toISOString() == tomorrow) {
-                        const dateOfVisit = allGuests['date'];
-                        const day = dateOfVisit.getDay()+1;
-                        const month = dateOfVisit.getMonth();
-                        const date = dateOfVisit.getDate()+1;
-                        const year = dateOfVisit.getFullYear();
-                        const fullDate = `${daysList[day]}, ${monthsList[month]} ${date}, ${year}`
-                        console.log(fullDate);
-
-                        if (!allGuests['invitedGuestPassSent']) {
-                            allGuests['invitedGuestsForDate'].forEach((invitedGuest) => {
-                                // SEND MESSAGE WITH PASS
-                                const guestName = invitedGuest['invitedGuestName'];
-                                const guestNumber = invitedGuest['invitedGuestNumber'];
-                                const passId = invitedGuest['invitedGuestId'].toString();
-                                QRCode.toFile(`./qr_code_images/${passId}.png`, passId, function (err) {
-                                    if (err) throw err
-                                    var qr_code_path = `./qr_code_images/${passId}.png`
-                                    var transporter = nodemailer.createTransport({
-                                        service: 'gmail.com',
-                                        auth: {
-                                            user: 'matt.d.urbeck@gmail.com',
-                                            pass: 'bwqv frxy suhh uxwf'
-                                        }
-                                    });
-
-                                    var mailOptions = {
-                                        from: 'matt.d.urbeck@gmail.com',
-                                        to: 'matt.d.urbeck@gmail.com',
-                                        subject: `Pinnacle Day Pass: ${fullDate}`,
-                                        attachments: [{
-                                            filename: `${passId}.png`,
-                                            path: qr_code_path,
-                                            cid: 'qr_code' //same cid value as in the html img src
-                                        }],
-                                        html: `<p>Hello ${guestName},</p><p>${residentFirstName} ${residentLastName} invited you to Pinnacle Lake on ${fullDate}. Scan the QR Code at the gate to enter.</p><img src="cid:qr_code"/><p>(This code can only be scanned once. After scanning, it will be disabled and you can't reenter the property using this code)</p>`
-                                    };
-
-                                    transporter.sendMail(mailOptions, function (error, info) {
-                                        if (error) {
-                                            // Send an email to me about details of failed message so I can do it manually
-                                            console.log(error);
-                                        } else {
-                                            // Update the db to change passSent to True
-                                            console.log('Email sent: ' + info.response);
-                                        }
-                                    });
-                                })
-                            })
-                        }
-                    }
-                })
-            })
-        })
-        .catch((error) => {
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            // Send an email to me about details of failed message so I can do it manually
             console.log(error);
-        })
+        } else {
+            // Update the db to change passSent to True
+            console.log('Email sent: ' + info.response);
+        }
+    });
+}
+
+// Update the pass sent field after email is sent
+const updatePassSentField = (residentId, guestId, tomorrow, newDate) => {
+    Resident.updateOne(
+        {"_id": new mongoose.Types.ObjectId(residentId)},
+        {$set : {"invitedGuests.$[elem].invitedGuestsForDate.$[guest]": new Date(new Date(newDate).toISOString())}},
+        {arrayFilters: [{"elem.date": new Date(new Date(tomorrow).toISOString())}, {"guest.invitedGuestId": new mongoose.Types.ObjectId(guestId)}]}
+    )
+    .then((result) => {
+        console.log(result);
+    })
+    .catch((error) => {
+        console.log(error);
+    })
+}
+
+
+updatePassSentField('6530564c31f30a3de8962878', '65333b60eaaeabe37b48a89b', '2023-10-22T00:00:00.000Z', '2057-08-14T00:00:00.000Z')
+
+
+// Send passes to all of tomorrows guests
+const findAllTomorrowsPasses = () => {
+    const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var daysList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const tomorrow = new Date(new Date().setHours(19, 0, 0, 0)).toISOString();
+    console.log(tomorrow);
+    // Resident.find(
+    //     { "invitedGuests.date": new Date(tomorrow), "invitedGuests.invitedGuestsForDate.invitedGuestPassSent": false },
+    // )
+    //     .then((result) => {
+    //         result.forEach((dates) => {
+    //             const residentFirstName = dates['residentFirstName'];
+    //             const residentLastName = dates['residentLastName'];
+    //             const residentId = dates['_id'];
+    //             dates["invitedGuests"].forEach((allGuests) => {
+    //                 if (allGuests['date'].toISOString() == tomorrow) {
+    //                     const dateOfVisit = allGuests['date'];
+    //                     const day = ((dateOfVisit.getDay() + 1) < 7) ? (dateOfVisit.getDay() + 1) : 0 ;
+    //                     const month = dateOfVisit.getMonth();
+    //                     const date = dateOfVisit.getDate() + 1;
+    //                     const year = dateOfVisit.getFullYear();
+    //                     const fullDate = `${daysList[day]}, ${monthsList[month]} ${date}, ${year}`
+
+    //                     if (!allGuests['invitedGuestPassSent']) {
+    //                         allGuests['invitedGuestsForDate'].forEach((invitedGuest) => {
+    //                             // SEND MESSAGE WITH PASS
+    //                             const guestName = invitedGuest['invitedGuestName'];
+    //                             const guestNumber = invitedGuest['invitedGuestNumber'];
+    //                             guestId = invitedGuest['invitedGuestId'];
+    //                             const passId = invitedGuest['invitedGuestId'].toString();
+    //                             QRCode.toFile(`./qr_code_images/${passId}.png`, passId, function (err) {
+    //                                 if (err) throw err
+    //                                 var qr_code_path = `./qr_code_images/${passId}.png`
+    //                                 var transporter = nodemailer.createTransport({
+    //                                     service: 'gmail.com',
+    //                                     auth: {
+    //                                         user: 'matt.d.urbeck@gmail.com',
+    //                                         pass: 'bwqv frxy suhh uxwf'
+    //                                     }
+    //                                 });
+
+    //                                 var mailOptions = {
+    //                                     from: 'matt.d.urbeck@gmail.com',
+    //                                     to: 'matt.d.urbeck@gmail.com',
+    //                                     subject: `Pinnacle Day Pass: ${fullDate}`,
+    //                                     attachments: [{
+    //                                         filename: `${passId}.png`,
+    //                                         path: qr_code_path,
+    //                                         cid: 'qr_code' //same cid value as in the html img src
+    //                                     }],
+    //                                     html: `<p>Hello ${guestName},</p><p>${residentFirstName} ${residentLastName} invited you to Pinnacle Lake on ${fullDate}. Scan the QR Code at the gate to enter.</p><img src="cid:qr_code"/><p>(This code can only be scanned once. After scanning, it will be disabled and you can't reenter the property using this code)</p>`
+    //                                 };
+
+    //                                 transporter.sendMail(mailOptions, function (error, info) {
+    //                                     if (error) {
+    //                                         // Send an email to me about details of failed message so I can do it manually
+    //                                         sendFailedEmailsToMe(fullDate, passId, qr_code_path, guestName, residentFirstName, residentLastName);
+    //                                         console.log(error);
+    //                                     } else {
+    //                                         // Update the db to change passSent to True
+    //                                         try {
+    //                                             updatePassSentField(residentId, guestId, tomorrow)
+    //                                         } catch (e) {
+    //                                             console.log(`unable to update sent passes field for ${guestName} from ${residentFirstName} ${residentLastName}`);
+    //                                         }
+                                            
+    //                                         console.log('Email sent: ' + info.response);
+    //                                     }
+    //                                 });
+    //                             })
+    //                         })
+    //                     }
+    //                 }
+    //             })
+    //         })
+    //     })
+    //     .catch((error) => {
+    //         console.log(error);
+    //     })
 }
 
 
 // Scheduler to run function that deletes old passes
 const sendTomorrowsPassesWorker = schedule.scheduleJob('0 12 * * *', () => {
     console.log('Task executed at 12:00PM:', new Date().toLocaleTimeString());
-    findAllTomorrowsPasses()
+    findAllTomorrowsPasses();
 });
 
-
+findAllTomorrowsPasses();
 
 
 module.exports = app;
