@@ -6,6 +6,9 @@ const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
 const schedule = require("node-schedule");
+const mongoose = require("mongoose");
+var QRCode = require('qrcode');
+var nodemailer = require('nodemailer');
 
 dbConnect()
 
@@ -124,6 +127,7 @@ app.put("/addGuest", (request, response) => {
             {
                 $push: {
                     "invitedGuests.$[elem].invitedGuestsForDate": {
+                        "invitedGuestId": new mongoose.Types.ObjectId(),
                         "invitedGuestName": request.body.guestName,
                         "invitedGuestNumber": request.body.guestNumber,
                         "invitedGuestPassScanned": false,
@@ -155,6 +159,7 @@ app.put("/addGuest", (request, response) => {
                     "invitedGuests": {
                         'date': new Date(new Date(request.body.guestDateOfVisit).toISOString()),
                         'invitedGuestsForDate': [{
+                            "invitedGuestId": new mongoose.Types.ObjectId(),
                             "invitedGuestName": request.body.guestName,
                             "invitedGuestNumber": request.body.guestNumber,
                             "invitedGuestPassScanned": false,
@@ -187,6 +192,7 @@ app.post("/saveGuest", (request, response) => {
         {
             $addToSet: {
                 "savedGuests": {
+                    "savedGuestId": new mongoose.Types.ObjectId(),
                     "savedGuestName": request.body.guestName,
                     "savedGuestNumber": request.body.guestNumber,
                 }
@@ -213,7 +219,7 @@ app.post("/saveGuest", (request, response) => {
 const deleteOldPasses = () => {
     Resident.updateMany(
         {},
-        { $pull: { "invitedGuests": { date: { $lt: new Date(new Date(new Date().setHours(19,0,0,0)-86400000).toISOString()) } } } }
+        { $pull: { "invitedGuests": { date: { $lt: new Date(new Date(new Date().setHours(19, 0, 0, 0) - 86400000).toISOString()) } } } }
     )
         .then((result) => {
             const x = new Date(new Date().toISOString());
@@ -224,17 +230,68 @@ const deleteOldPasses = () => {
         })
 }
 
-const scheduledTask = schedule.scheduleJob('36 21 * * *', () => {
+// Scheduler to run function that deletes old passes
+const scheduledTask = schedule.scheduleJob('0 1 * * *', () => {
     console.log('Task executed at 12:10PM:', new Date().toLocaleTimeString());
     deleteOldPasses()
 });
 
 
 
-const findDate = () => {
-    console.log(new Date(new Date(new Date().setHours(19,0,0,0)-86400000).toISOString()));
+
+
+
+
+const findAllTomorrowsPasses = () => {
+    const tomorrow = new Date(new Date().setHours(19, 0, 0, 0)).toISOString()
+    Resident.find(
+        { "invitedGuests.date": new Date(tomorrow), "invitedGuests.invitedGuestsForDate.invitedGuestPassSent": false },
+    )
+        .then((result) => {
+            result.forEach((dates) => {
+                dates["invitedGuests"].forEach((allGuests) => {
+                    if (allGuests['date'].toISOString() == tomorrow) {
+                        if (!allGuests['invitedGuestPassSent']) {
+                            allGuests['invitedGuestsForDate'].forEach((invitedGuest) => {
+                                // SEND MESSAGE WITH PASS
+                                const passId = invitedGuest['invitedGuestId'].toString();
+                                QRCode.toFile(`./qr_code_images/${passId}.png`, passId, function (err) {
+                                    if (err) throw err
+                                    var transporter = nodemailer.createTransport({
+                                        service: 'gmail.com',
+                                        auth: {
+                                          user: 'matt.d.urbeck@gmail.com',
+                                          pass: 'bwqv frxy suhh uxwf'
+                                        }
+                                      });
+                                      
+                                      var mailOptions = {
+                                        from: 'matt.d.urbeck@gmail.com',
+                                        to: 'matt.d.urbeck@gmail.com',
+                                        subject: 'Sending Email using Node.js',
+                                        html: `<h1>Welcome</h1><p>That was easy!</p><img src=${"./qr_code_images/${passId}.png"}>`
+                                      };
+                                      
+                                      transporter.sendMail(mailOptions, function(error, info){
+                                        if (error) {
+                                          console.log(error);
+                                        } else {
+                                          console.log('Email sent: ' + info.response);
+                                        }
+                                      });
+                                })
+                            })
+                        }
+                    }
+                })
+            })
+        })
+        .catch((error) => {
+            console.log(error);
+        })
 }
 
-findDate();
+findAllTomorrowsPasses();
+
 
 module.exports = app;

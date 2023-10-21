@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const invitedGuestForDateSchema = new mongoose.Schema({
+    invitedGuestId: {
+        type: mongoose.ObjectId,
+        required: [true, "Please provide and ID..."],
+        unique: [true, "Please provide a unique ID..."]
+    },
     invitedGuestName: {
         type: String,
         required: [true, "Please provide the guest's name..."],
@@ -39,6 +44,11 @@ const invitedGuestSchema = new mongoose.Schema({
 })
 
 const savedGuestSchema = new mongoose.Schema({
+    savedGuestId: {
+        type: mongoose.ObjectId,
+        required: [true, "Please provide and ID..."],
+        unique: [true, "Please provide a unique ID..."]
+    },
     savedGuestName: {
         type: String,
         required: [true, "Please provide the saved guest's name..."],
