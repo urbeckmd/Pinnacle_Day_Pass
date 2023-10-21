@@ -231,8 +231,8 @@ const deleteOldPasses = () => {
 }
 
 // Scheduler to run function that deletes old passes
-const scheduledTask = schedule.scheduleJob('0 1 * * *', () => {
-    console.log('Task executed at 12:10PM:', new Date().toLocaleTimeString());
+const deleteOldPassesWorker = schedule.scheduleJob('0 1 * * *', () => {
+    console.log('Task executed at 1 AM:', new Date().toLocaleTimeString());
     deleteOldPasses()
 });
 
@@ -313,7 +313,14 @@ const findAllTomorrowsPasses = () => {
         })
 }
 
-findAllTomorrowsPasses();
+
+// Scheduler to run function that deletes old passes
+const sendTomorrowsPassesWorker = schedule.scheduleJob('0 12 * * *', () => {
+    console.log('Task executed at 12:00PM:', new Date().toLocaleTimeString());
+    findAllTomorrowsPasses()
+});
+
+
 
 
 module.exports = app;
