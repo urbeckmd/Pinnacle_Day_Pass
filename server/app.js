@@ -266,7 +266,6 @@ const findAllTomorrowsPasses = () => {
                         if (!allGuests['invitedGuestPassSent']) {
                             allGuests['invitedGuestsForDate'].forEach((invitedGuest) => {
                                 // SEND MESSAGE WITH PASS
-                                console.log(invitedGuest);
                                 const guestName = invitedGuest['invitedGuestName'];
                                 const guestNumber = invitedGuest['invitedGuestNumber'];
                                 const passId = invitedGuest['invitedGuestId'].toString();
@@ -290,13 +289,15 @@ const findAllTomorrowsPasses = () => {
                                             path: qr_code_path,
                                             cid: 'qr_code' //same cid value as in the html img src
                                         }],
-                                        html: `<p>Hello ${guestName},</p><p>${residentFirstName} ${residentLastName} invited you to Pinnacle Lake on ${fullDate}. Scan the QR Code at the gate to enter.</p><img src="cid:qr_code"/>`
+                                        html: `<p>Hello ${guestName},</p><p>${residentFirstName} ${residentLastName} invited you to Pinnacle Lake on ${fullDate}. Scan the QR Code at the gate to enter.</p><img src="cid:qr_code"/><p>(This code can only be scanned once. After scanning, it will be disabled and you can't reenter the property using this code)</p>`
                                     };
 
                                     transporter.sendMail(mailOptions, function (error, info) {
                                         if (error) {
+                                            // Send an email to me about details of failed message so I can do it manually
                                             console.log(error);
                                         } else {
+                                            // Update the db to change passSent to True
                                             console.log('Email sent: ' + info.response);
                                         }
                                     });
