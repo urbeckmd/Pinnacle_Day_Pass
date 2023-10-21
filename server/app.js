@@ -243,42 +243,63 @@ const scheduledTask = schedule.scheduleJob('0 1 * * *', () => {
 
 
 const findAllTomorrowsPasses = () => {
+    const monthsList = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    var daysList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const tomorrow = new Date(new Date().setHours(19, 0, 0, 0)).toISOString()
     Resident.find(
         { "invitedGuests.date": new Date(tomorrow), "invitedGuests.invitedGuestsForDate.invitedGuestPassSent": false },
     )
         .then((result) => {
             result.forEach((dates) => {
+                const residentFirstName = dates['residentFirstName'];
+                const residentLastName = dates['residentLastName'];
                 dates["invitedGuests"].forEach((allGuests) => {
                     if (allGuests['date'].toISOString() == tomorrow) {
+                        const dateOfVisit = allGuests['date'];
+                        const day = dateOfVisit.getDay()+1;
+                        const month = dateOfVisit.getMonth();
+                        const date = dateOfVisit.getDate()+1;
+                        const year = dateOfVisit.getFullYear();
+                        const fullDate = `${daysList[day]}, ${monthsList[month]} ${date}, ${year}`
+                        console.log(fullDate);
+
                         if (!allGuests['invitedGuestPassSent']) {
                             allGuests['invitedGuestsForDate'].forEach((invitedGuest) => {
                                 // SEND MESSAGE WITH PASS
+                                console.log(invitedGuest);
+                                const guestName = invitedGuest['invitedGuestName'];
+                                const guestNumber = invitedGuest['invitedGuestNumber'];
                                 const passId = invitedGuest['invitedGuestId'].toString();
                                 QRCode.toFile(`./qr_code_images/${passId}.png`, passId, function (err) {
                                     if (err) throw err
+                                    var qr_code_path = `./qr_code_images/${passId}.png`
                                     var transporter = nodemailer.createTransport({
                                         service: 'gmail.com',
                                         auth: {
-                                          user: 'matt.d.urbeck@gmail.com',
-                                          pass: 'bwqv frxy suhh uxwf'
+                                            user: 'matt.d.urbeck@gmail.com',
+                                            pass: 'bwqv frxy suhh uxwf'
                                         }
-                                      });
-                                      
-                                      var mailOptions = {
+                                    });
+
+                                    var mailOptions = {
                                         from: 'matt.d.urbeck@gmail.com',
                                         to: 'matt.d.urbeck@gmail.com',
-                                        subject: 'Sending Email using Node.js',
-                                        html: `<h1>Welcome</h1><p>That was easy!</p><img src=${"./qr_code_images/${passId}.png"}>`
-                                      };
-                                      
-                                      transporter.sendMail(mailOptions, function(error, info){
+                                        subject: `Pinnacle Day Pass: ${fullDate}`,
+                                        attachments: [{
+                                            filename: `${passId}.png`,
+                                            path: qr_code_path,
+                                            cid: 'qr_code' //same cid value as in the html img src
+                                        }],
+                                        html: `<p>Hello ${guestName},</p><p>${residentFirstName} ${residentLastName} invited you to Pinnacle Lake on ${fullDate}. Scan the QR Code at the gate to enter.</p><img src="cid:qr_code"/>`
+                                    };
+
+                                    transporter.sendMail(mailOptions, function (error, info) {
                                         if (error) {
-                                          console.log(error);
+                                            console.log(error);
                                         } else {
-                                          console.log('Email sent: ' + info.response);
+                                            console.log('Email sent: ' + info.response);
                                         }
-                                      });
+                                    });
                                 })
                             })
                         }
