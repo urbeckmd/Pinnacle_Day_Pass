@@ -272,18 +272,52 @@ const sendFailedEmailsToMe = (fullDate, passId, qr_code_path, guestName, residen
 
 // Update the pass sent field after email is sent
 const updatePassSentField = (residentId, guestId, tomorrow) => {
-    Resident.updateOne(
-        {"_id": new mongoose.Types.ObjectId(residentId)},
-        {$set : {"invitedGuests.$[elem].invitedGuestsForDate.$[guest].invitedGuestPassSent": true}},
-        {arrayFilters: [{"elem.date": new Date(new Date(tomorrow).toISOString())}, {"guest.invitedGuestId": new mongoose.Types.ObjectId(guestId)}]}
+    // Resident.updateOne(
+    //     {"_id": new mongoose.Types.ObjectId(residentId)},
+    //     {$set : {"invitedGuests.0.invitedGuestsForDate.0.invitedGuestPassSent": true}},
+    // )
+    // .then((result) => {
+    //     console.log(result);
+    // })
+    // .catch((error) => {
+    //     console.log(error);
+    // })
+    Resident.findOne(
+        {"_id": new mongoose.Types.ObjectId(residentId)}
     )
     .then((result) => {
-        console.log(result);
+        const invitedGuestResult = result.invitedGuests
+        // console.log(invitedGuestResult);
+        invitedGuestResult.forEach((date, index) => {
+            if (date['date'].toISOString() == new Date(tomorrow).toISOString()) {
+                date_index = index;
+                // console.log(date['invitedGuestsForDate']);
+                date['invitedGuestsForDate'].forEach((guest, guestIndex) => {
+                    if (guest['invitedGuestId'].toString() == guestId) {
+                        // console.log(guest, guestIndex);
+                        var query = `invitedGuests.${date_index}.invitedGuestsForDate.${guestIndex}.invitedGuestPassSent`
+                        var updateObj = {$set : {}};
+                        updateObj.$set[query] = false;
+                        Resident.updateOne(
+                            {"_id": new mongoose.Types.ObjectId(residentId)},
+                            updateObj
+                        )
+                        .then((result2) => {
+                            console.log(result2);
+                        })
+                        .catch((error2) => {
+                            console.log(error2);
+                        })
+                    }
+                })
+            }
+        })
     })
     .catch((error) => {
         console.log(error);
     })
 }
+
 
 updatePassSentField('6530689631f30a3de8962879', '6537304e3efbb75aa5a7d06c', '2023-10-20T00:00:00.000Z')
 
