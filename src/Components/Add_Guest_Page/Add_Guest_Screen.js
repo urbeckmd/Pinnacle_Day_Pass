@@ -41,18 +41,7 @@ function Add_Guest_Screen() {
     return dateArray;
   }
 
-  const handleAddGuest = (e) => {
-    e.preventDefault();
-    // Make sure date is in future
-    const today = new Date().setHours(0,0,0,0);
-    const inviteDate = new Date(guestDateOfVisit + "T00:00:00.000").setHours(23,0,0,0);
-    if (today > inviteDate) {
-      console.log("Select future date");
-    } else {
-      console.log(inviteDate, "Date is valid");
-    }
-
-
+  const updateInvitedGuest = () => {
     // Update the local array of guests
     var updatedInvitedGuestData = [...invitedGuestData];
     const utcDate = (guestDateOfVisit + "T00:00:00.000Z");
@@ -71,24 +60,6 @@ function Add_Guest_Screen() {
     }
     updatedInvitedGuestData = sortArrayByDate(updatedInvitedGuestData);
     setInvitedGuestData(updatedInvitedGuestData);
-
-    // Update Saved Guest array locally
-    if (guestSaved) {
-      var updatedSavedGuestData = [...savedGuestData];
-      const newSavedGuest = { 'savedGuestName': guestName, 'savedGuestNumber': guestNumber };
-      const newSavedGuestNumber = Object.values(newSavedGuest)[1]
-      var numberAlreadySaved = false;
-      updatedSavedGuestData.forEach((guest, index) => {
-        if (Object.values(guest)[1] == newSavedGuestNumber) {
-          numberAlreadySaved = true;
-        }
-      })
-      if (!numberAlreadySaved) {
-        updatedSavedGuestData.push(newSavedGuest);
-        setSavedGuestData(updatedSavedGuestData)
-      }
-    }
-
     // Update the add guest array in the database
     const configuration = {
       method: "put",
@@ -109,7 +80,26 @@ function Add_Guest_Screen() {
         alert(error)
         console.log(error);
       })
+  }
 
+
+  const updateSavedGuest = () => {
+    // Update Saved Guest array locally
+    if (guestSaved) {
+      var updatedSavedGuestData = [...savedGuestData];
+      const newSavedGuest = { 'savedGuestName': guestName, 'savedGuestNumber': guestNumber };
+      const newSavedGuestNumber = Object.values(newSavedGuest)[1]
+      var numberAlreadySaved = false;
+      updatedSavedGuestData.forEach((guest, index) => {
+        if (Object.values(guest)[1] == newSavedGuestNumber) {
+          numberAlreadySaved = true;
+        }
+      })
+      if (!numberAlreadySaved) {
+        updatedSavedGuestData.push(newSavedGuest);
+        setSavedGuestData(updatedSavedGuestData)
+      }
+    }
     // Update the saved guest array in db
     if (guestSaved) {
       const configuration = {
@@ -131,13 +121,24 @@ function Add_Guest_Screen() {
           console.log(error);
         })
     }
-    setGuestName("");
-    setGuestNumber("");
-
   }
 
 
-
+  const handleAddGuest = (e) => {
+    e.preventDefault();
+    // Make sure date is in future
+    const today = new Date().setHours(0, 0, 0, 0);
+    const inviteDate = new Date(guestDateOfVisit + "T00:00:00.000").setHours(23, 0, 0, 0);
+    if (today > inviteDate) {
+      alert("select future date")
+    } else {
+      updateInvitedGuest()
+      updateSavedGuest()
+      // Clear input fields
+      setGuestName("");
+      setGuestNumber("");
+    }
+  }
 
 
   const handleLogout = () => {
@@ -151,10 +152,7 @@ function Add_Guest_Screen() {
   }
 
 
-  useEffect(() => {
-    // Get logged in user from cookies
-    const currentUser = cookies.get("EMAIL");
-
+  const getInvitedGuests = (currentUser) => {
     // Get Array of Invited Guests for logged in user
     const invitedGuestConfiguration = {
       method: "get",
@@ -171,7 +169,12 @@ function Add_Guest_Screen() {
         setLoading(false);
       })
       .catch((error) => { console.log(error); })
+  }
 
+
+
+
+  const getSavedGuests = (currentUser) => {
     // Get array of saved guests
     const addedSavedConfiguration = {
       method: "get",
@@ -189,6 +192,13 @@ function Add_Guest_Screen() {
       .catch((error) => {
         console.log(error);
       })
+  }
+
+  useEffect(() => {
+    // Get logged in user from cookies and list of saved guests and invited guests
+    const currentUser = cookies.get("EMAIL");
+    getInvitedGuests(currentUser);
+    getSavedGuests(currentUser);
   }, [])
 
 

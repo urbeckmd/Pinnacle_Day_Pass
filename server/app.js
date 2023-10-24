@@ -285,7 +285,7 @@ const updatePassSentField = (residentId, guestId, tomorrow) => {
     })
 }
 
-// updatePassSentField('6530689631f30a3de8962879', '6537065629a9b687895307a8', '2023-10-21T00:00:00.000Z')
+updatePassSentField('6530689631f30a3de8962879', '6537304e3efbb75aa5a7d06c', '2023-10-20T00:00:00.000Z')
 
 // Send passes to all of tomorrows guests
 const findAllTomorrowsPasses = () => {

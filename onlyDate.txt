@@ -1,0 +1,73 @@
+SchemaArray {
+  schemaOptions: {
+    typeKey: 'type',
+    id: true,
+    _id: true,
+    validateModifiedOnly: false,
+    validateBeforeSave: true,
+    read: null,
+    shardKey: null,
+    discriminatorKey: '__t',
+    autoIndex: null,
+    minimize: true,
+    optimisticConcurrency: false,
+    versionKey: '__v',
+    capped: false,
+    bufferCommands: true,
+    strictQuery: false,
+    strict: true,
+    pluralization: true
+  },
+  casterConstructor: [Function: Mixed] {    
+    schemaName: 'Mixed',
+    defaultOptions: {},
+    get: [Function (anonymous)],
+    set: [Function: set],
+    setters: []
+  },
+  caster: Mixed {
+    path: 'invitedGuests',
+    instance: 'Mixed',
+    validators: [],
+    getters: [],
+    setters: [],
+    _presplitPath: [ 'invitedGuests' ],     
+    options: SchemaTypeOptions {},
+    _index: null,
+    _arrayPath: 'invitedGuests.$',
+    _arrayParentPath: 'invitedGuests',      
+    [Symbol(mongoose#schemaType)]: true,    
+    [Symbol(mongoose:schema_mixed)]: true   
+  },
+  '$embeddedSchemaType': Mixed {
+    path: 'invitedGuests',
+    instance: 'Mixed',
+    validators: [],
+    getters: [],
+    setters: [],
+    _presplitPath: [ 'invitedGuests' ],     
+    options: SchemaTypeOptions {},
+    _index: null,
+    _arrayPath: 'invitedGuests.$',
+    _arrayParentPath: 'invitedGuests',      
+    [Symbol(mongoose#schemaType)]: true,    
+    [Symbol(mongoose:schema_mixed)]: true   
+  },
+  '$isMongooseArray': true,
+  path: 'invitedGuests',
+  instance: 'Array',
+  validators: [],
+  getters: [],
+  setters: [],
+  _presplitPath: [ 'invitedGuests' ],       
+  options: SchemaArrayOptions {
+    invitedGuests: [ [Schema] ],
+    type: [Function: Array],
+    required: false,
+    unique: false
+  },
+  _index: null,
+  isRequired: false,
+  defaultValue: [Function: defaultFn] { '$runBeforeSetters': true },
+  [Symbol(mongoose#schemaType)]: true       
+}
