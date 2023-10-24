@@ -272,16 +272,6 @@ const sendFailedEmailsToMe = (fullDate, passId, qr_code_path, guestName, residen
 
 // Update the pass sent field after email is sent
 const updatePassSentField = (residentId, guestId, tomorrow) => {
-    // Resident.updateOne(
-    //     {"_id": new mongoose.Types.ObjectId(residentId)},
-    //     {$set : {"invitedGuests.0.invitedGuestsForDate.0.invitedGuestPassSent": true}},
-    // )
-    // .then((result) => {
-    //     console.log(result);
-    // })
-    // .catch((error) => {
-    //     console.log(error);
-    // })
     Resident.findOne(
         {"_id": new mongoose.Types.ObjectId(residentId)}
     )
@@ -291,13 +281,11 @@ const updatePassSentField = (residentId, guestId, tomorrow) => {
         invitedGuestResult.forEach((date, index) => {
             if (date['date'].toISOString() == new Date(tomorrow).toISOString()) {
                 date_index = index;
-                // console.log(date['invitedGuestsForDate']);
                 date['invitedGuestsForDate'].forEach((guest, guestIndex) => {
                     if (guest['invitedGuestId'].toString() == guestId) {
-                        // console.log(guest, guestIndex);
                         var query = `invitedGuests.${date_index}.invitedGuestsForDate.${guestIndex}.invitedGuestPassSent`
                         var updateObj = {$set : {}};
-                        updateObj.$set[query] = false;
+                        updateObj.$set[query] = true;
                         Resident.updateOne(
                             {"_id": new mongoose.Types.ObjectId(residentId)},
                             updateObj
@@ -319,7 +307,7 @@ const updatePassSentField = (residentId, guestId, tomorrow) => {
 }
 
 
-updatePassSentField('6530689631f30a3de8962879', '6537304e3efbb75aa5a7d06c', '2023-10-20T00:00:00.000Z')
+// updatePassSentField('6530689631f30a3de8962879', '653730b33efbb75aa5a7d07c', '2023-10-07T00:00:00.000Z')
 
 // Send passes to all of tomorrows guests
 const findAllTomorrowsPasses = () => {
