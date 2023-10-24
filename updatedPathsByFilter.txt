@@ -1,0 +1,4 @@
+{
+  elem: 'invitedGuests',
+  guest: 'invitedGuests.0.invitedGuestsForDate'
+}

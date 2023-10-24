@@ -271,10 +271,10 @@ const sendFailedEmailsToMe = (fullDate, passId, qr_code_path, guestName, residen
 }
 
 // Update the pass sent field after email is sent
-const updatePassSentField = (residentId, guestId, tomorrow, newDate) => {
+const updatePassSentField = (residentId, guestId, tomorrow) => {
     Resident.updateOne(
         {"_id": new mongoose.Types.ObjectId(residentId)},
-        {$set : {"invitedGuests.$[elem].invitedGuestsForDate.$[guest]": new Date(new Date(newDate).toISOString())}},
+        {$set : {"invitedGuests.$[elem].invitedGuestsForDate.$[guest].invitedGuestPassSent": true}},
         {arrayFilters: [{"elem.date": new Date(new Date(tomorrow).toISOString())}, {"guest.invitedGuestId": new mongoose.Types.ObjectId(guestId)}]}
     )
     .then((result) => {
@@ -285,9 +285,7 @@ const updatePassSentField = (residentId, guestId, tomorrow, newDate) => {
     })
 }
 
-
-updatePassSentField('6530564c31f30a3de8962878', '65333b60eaaeabe37b48a89b', '2023-10-22T00:00:00.000Z', '2057-08-14T00:00:00.000Z')
-
+// updatePassSentField('6530689631f30a3de8962879', '6537065629a9b687895307a8', '2023-10-21T00:00:00.000Z')
 
 // Send passes to all of tomorrows guests
 const findAllTomorrowsPasses = () => {
@@ -296,7 +294,7 @@ const findAllTomorrowsPasses = () => {
     const tomorrow = new Date(new Date().setHours(19, 0, 0, 0)).toISOString();
     console.log(tomorrow);
     // Resident.find(
-    //     { "invitedGuests.date": new Date(tomorrow), "invitedGuests.invitedGuestsForDate.invitedGuestPassSent": false },
+        // { "invitedGuests.date": new Date(tomorrow), "invitedGuests.invitedGuestsForDate.invitedGuestPassSent": false },
     // )
     //     .then((result) => {
     //         result.forEach((dates) => {
@@ -377,7 +375,7 @@ const sendTomorrowsPassesWorker = schedule.scheduleJob('0 12 * * *', () => {
     findAllTomorrowsPasses();
 });
 
-findAllTomorrowsPasses();
+// findAllTomorrowsPasses();
 
 
 module.exports = app;

@@ -1,0 +1,1190 @@
+undefineday {
+  schemaOptions: {
+    typeKey: 'type',
+    id: true,
+    _id: true,
+    validateModifiedOnly: false,
+    validateBeforeSave: true,
+    read: null,
+    shardKey: null,
+    discriminatorKey: '__t',
+    autoIndex: null,
+    minimize: true,
+    optimisticConcurrency: false,
+    versionKey: '__v',
+    capped: false,
+    bufferCommands: true,
+    strictQuery: false,
+    strict: true,
+    pluralization: true
+  },
+  casterConstructor: [Function: Mixed] {
+    schemaName: 'Mixed',
+    defaultOptions: {},
+    get: [Function (anonymous)],
+    set: [Function: set],
+    setters: []
+  },
+  caster: Mixed {
+    path: 'invitedGuests',
+    instance: 'Mixed',
+    validators: [],
+    getters: [],
+    setters: [],
+    _presplitPath: [ 'invitedGuests' ],
+    options: SchemaTypeOptions {},
+    _index: null,
+    _arrayPath: 'invitedGuests.$',
+    _arrayParentPath: 'invitedGuests',
+    [Symbol(mongoose#schemaType)]: true,
+    [Symbol(mongoose:schema_mixed)]: true
+  },
+  '$embeddedSchemaType': Mixed {
+    path: 'invitedGuests',
+    instance: 'Mixed',
+    validators: [],
+    getters: [],
+    setters: [],
+    _presplitPath: [ 'invitedGuests' ],
+    options: SchemaTypeOptions {},
+    _index: null,
+    _arrayPath: 'invitedGuests.$',
+    _arrayParentPath: 'invitedGuests',
+    [Symbol(mongoose#schemaType)]: true,
+    [Symbol(mongoose:schema_mixed)]: true
+  },
+  '$isMongooseArray': true,
+  path: 'invitedGuests',
+  instance: 'Array',
+  validators: [],
+  getters: [],
+  setters: [],
+  _presplitPath: [ 'invitedGuests' ],
+  options: SchemaArrayOptions {
+    invitedGuests: [
+      Schema {
+        obj: {
+          invitedGuestDate: {
+            type: [Function: Date],
+            required: [ true, 'Please give date of visit...' ],
+            unique: false
+          },
+          invitedGuestForDate: {
+            invitedGuestForDate: [
+              Schema {
+                obj: {
+                  invitedGuestId: {
+                    type: [Function: ObjectId] {
+                      schemaName: 'ObjectId',
+                      defaultOptions: {},
+                      get: [Function (anonymous)],
+                      set: [Function: set],
+                      setters: [],
+                      _checkRequired: [Function (anonymous)],
+                      _cast: [Function: castObjectId],
+                      cast: [Function: cast],
+                      _defaultCaster: [Function (anonymous)],
+                      checkRequired: [Function (anonymous)]
+                    },
+                    required: [ true, 'Please provide and ID...' ],
+                    unique: [ true, 'Please provide a unique ID...' ]
+                  },
+                  invitedGuestName: {
+                    type: [Function: String],
+                    required: [ true, "Please provide the guest's name..." ],
+                    unique: false
+                  },
+                  invitedGuestNumber: {
+                    type: [Function: String],
+                    required: [
+                      true,
+                      "Please provide the guest's phone number..."
+                    ],
+                    unique: [
+                      true,
+                      'Phone number has already been invited...'
+                    ]
+                  },
+                  invitedGuestPassScanned: {
+                    type: [Function: Boolean],
+                    required: [
+                      true,
+                      'Please provide if the pass has been scanned...'
+                    ],
+                    unique: false
+                  },
+                  invitedGuestPassSent: {
+                    type: [Function: Boolean],
+                    required: [
+                      true,
+                      'Please provide if the pass has been sent...'
+                    ],
+                    unique: false
+                  }
+                },
+                paths: {
+                  invitedGuestId: ObjectId {
+                    path: 'invitedGuestId',
+                    instance: 'ObjectId',
+                    validators: [
+                      {
+                        validator: [Function (anonymous)],
+                        message: 'Please provide and ID...',
+                        type: 'required'
+                      }
+                    ],
+                    getters: [],
+                    setters: [],
+                    _presplitPath: [ 'invitedGuestId' ],
+                    options: SchemaObjectIdOptions {
+                      type: [Function: ObjectId] {
+                        schemaName: 'ObjectId',
+                        defaultOptions: {},
+                        get: [Function (anonymous)],
+                        set: [Function: set],
+                        setters: [],
+                        _checkRequired: [Function (anonymous)],
+                        _cast: [Function: castObjectId],
+                        cast: [Function: cast],
+                        _defaultCaster: [Function (anonymous)],
+                        checkRequired: [Function (anonymous)]
+                      },
+                      required: [ true, 'Please provide and ID...' ],
+                      unique: [ true, 'Please provide a unique ID...' ]
+                    },
+                    _index: { unique: true },
+                    isRequired: true,
+                    requiredValidator: [Function (anonymous)],
+                    originalRequiredValue: true,
+                    [Symbol(mongoose#schemaType)]: true
+                  },
+                  invitedGuestName: SchemaString {
+                    enumValues: [],
+                    regExp: null,
+                    path: 'invitedGuestName',
+                    instance: 'String',
+                    validators: [
+                      {
+                        validator: [Function (anonymous)],
+                        message: "Please provide the guest's name...",
+                        type: 'required'
+                      }
+                    ],
+                    getters: [],
+                    setters: [],
+                    _presplitPath: [ 'invitedGuestName' ],
+                    options: SchemaStringOptions {
+                      type: [Function: String],
+                      required: [ true, "Please provide the guest's name..." ],
+                      unique: false
+                    },
+                    _index: null,
+                    isRequired: true,
+                    requiredValidator: [Function (anonymous)],
+                    originalRequiredValue: true,
+                    [Symbol(mongoose#schemaType)]: true
+                  },
+                  invitedGuestNumber: SchemaString {
+                    enumValues: [],
+                    regExp: null,
+                    path: 'invitedGuestNumber',
+                    instance: 'String',
+                    validators: [
+                      {
+                        validator: [Function (anonymous)],
+                        message: "Please provide the guest's phone number...",
+                        type: 'required'
+                      }
+                    ],
+                    getters: [],
+                    setters: [],
+                    _presplitPath: [ 'invitedGuestNumber' ],
+                    options: SchemaStringOptions {
+                      type: [Function: String],
+                      required: [
+                        true,
+                        "Please provide the guest's phone number..."
+                      ],
+                      unique: [
+                        true,
+                        'Phone number has already been invited...'
+                      ]
+                    },
+                    _index: { unique: true },
+                    isRequired: true,
+                    requiredValidator: [Function (anonymous)],
+                    originalRequiredValue: true,
+                    [Symbol(mongoose#schemaType)]: true
+                  },
+                  invitedGuestPassScanned: SchemaBoolean {
+                    path: 'invitedGuestPassScanned',
+                    instance: 'Boolean',
+                    validators: [
+                      {
+                        validator: [Function (anonymous)],
+                        message: 'Please provide if the pass has been scanned...',
+                        type: 'required'
+                      }
+                    ],
+                    getters: [],
+                    setters: [],
+                    _presplitPath: [ 'invitedGuestPassScanned' ],
+                    options: SchemaTypeOptions {
+                      type: [Function: Boolean],
+                      required: [
+                        true,
+                        'Please provide if the pass has been scanned...'
+                      ],
+                      unique: false
+                    },
+                    _index: null,
+                    isRequired: true,
+                    requiredValidator: [Function (anonymous)],
+                    originalRequiredValue: true,
+                    [Symbol(mongoose#schemaType)]: true
+                  },
+                  invitedGuestPassSent: SchemaBoolean {
+                    path: 'invitedGuestPassSent',
+                    instance: 'Boolean',
+                    validators: [
+                      {
+                        validator: [Function (anonymous)],
+                        message: 'Please provide if the pass has been sent...',
+                        type: 'required'
+                      }
+                    ],
+                    getters: [],
+                    setters: [],
+                    _presplitPath: [ 'invitedGuestPassSent' ],
+                    options: SchemaTypeOptions {
+                      type: [Function: Boolean],
+                      required: [
+                        true,
+                        'Please provide if the pass has been sent...'
+                      ],
+                      unique: false
+                    },
+                    _index: null,
+                    isRequired: true,
+                    requiredValidator: [Function (anonymous)],
+                    originalRequiredValue: true,
+                    [Symbol(mongoose#schemaType)]: true
+                  },
+                  _id: ObjectId {
+                    path: '_id',
+                    instance: 'ObjectId',
+                    validators: [],
+                    getters: [],
+                    setters: [ [Function: resetId] ],
+                    _presplitPath: [ '_id' ],
+                    options: SchemaObjectIdOptions {
+                      auto: true,
+                      type: 'ObjectId'
+                    },
+                    _index: null,
+                    defaultValue: [Function: defaultId] { '$runBeforeSetters': true },
+                    [Symbol(mongoose#schemaType)]: true
+                  }
+                },
+                aliases: {},
+                subpaths: {},
+                virtuals: {},
+                singleNestedPaths: {},
+                nested: {},
+                inherits: {},
+                callQueue: [],
+                _indexes: [],
+                methods: {},
+                methodOptions: {},
+                statics: {},
+                tree: {
+                  invitedGuestId: {
+                    type: [Function: ObjectId] {
+                      schemaName: 'ObjectId',
+                      defaultOptions: {},
+                      get: [Function (anonymous)],
+                      set: [Function: set],
+                      setters: [],
+                      _checkRequired: [Function (anonymous)],
+                      _cast: [Function: castObjectId],
+                      cast: [Function: cast],
+                      _defaultCaster: [Function (anonymous)],
+                      checkRequired: [Function (anonymous)]
+                    },
+                    required: [ true, 'Please provide and ID...' ],
+                    unique: [ true, 'Please provide a unique ID...' ]
+                  },
+                  invitedGuestName: {
+                    type: [Function: String],
+                    required: [ true, "Please provide the guest's name..." ],
+                    unique: false
+                  },
+                  invitedGuestNumber: {
+                    type: [Function: String],
+                    required: [
+                      true,
+                      "Please provide the guest's phone number..."
+                    ],
+                    unique: [
+                      true,
+                      'Phone number has already been invited...'
+                    ]
+                  },
+                  invitedGuestPassScanned: {
+                    type: [Function: Boolean],
+                    required: [
+                      true,
+                      'Please provide if the pass has been scanned...'
+                    ],
+                    unique: false
+                  },
+                  invitedGuestPassSent: {
+                    type: [Function: Boolean],
+                    required: [
+                      true,
+                      'Please provide if the pass has been sent...'
+                    ],
+                    unique: false
+                  },
+                  _id: { auto: true, type: 'ObjectId' }
+                },
+                query: {},
+                childSchemas: [],
+                plugins: [],
+                '$id': 1,
+                mapPaths: [],
+                s: {
+                  hooks: Kareem { _pres: Map(0) {}, _posts: Map(0) {} }
+                },
+                _userProvidedOptions: {},
+                options: {
+                  typeKey: 'type',
+                  id: true,
+                  _id: true,
+                  validateModifiedOnly: false,
+                  validateBeforeSave: true,
+                  read: null,
+                  shardKey: null,
+                  discriminatorKey: '__t',
+                  autoIndex: null,
+                  minimize: true,
+                  optimisticConcurrency: false,
+                  versionKey: '__v',
+                  capped: false,
+                  bufferCommands: true,
+                  strictQuery: false,
+                  strict: true
+                }
+              }
+            ],
+            type: [Function: Array],
+            required: [ true, 'Please give list of invited guests...' ],
+            unique: false
+          }
+        },
+        paths: {
+          invitedGuestDate: SchemaDate {
+            path: 'invitedGuestDate',
+            instance: 'Date',
+            validators: [
+              {
+                validator: [Function (anonymous)],
+                message: 'Please give date of visit...',
+                type: 'required'
+              }
+            ],
+            getters: [],
+            setters: [],
+            _presplitPath: [ 'invitedGuestDate' ],
+            options: SchemaDateOptions {
+              type: [Function: Date],
+              required: [ true, 'Please give date of visit...' ],
+              unique: false
+            },
+            _index: null,
+            isRequired: true,
+            requiredValidator: [Function (anonymous)],
+            originalRequiredValue: true,
+            [Symbol(mongoose#schemaType)]: true
+          },
+          invitedGuestForDate: SchemaArray {
+            schemaOptions: {
+              typeKey: 'type',
+              id: true,
+              _id: true,
+              validateModifiedOnly: false,
+              validateBeforeSave: true,
+              read: null,
+              shardKey: null,
+              discriminatorKey: '__t',
+              autoIndex: null,
+              minimize: true,
+              optimisticConcurrency: false,
+              versionKey: '__v',
+              capped: false,
+              bufferCommands: true,
+              strictQuery: false,
+              strict: true
+            },
+            casterConstructor: [Function: Mixed] {
+              schemaName: 'Mixed',
+              defaultOptions: {},
+              get: [Function (anonymous)],
+              set: [Function: set],
+              setters: []
+            },
+            caster: Mixed {
+              path: 'invitedGuestForDate',
+              instance: 'Mixed',
+              validators: [],
+              getters: [],
+              setters: [],
+              _presplitPath: [ 'invitedGuestForDate' ],
+              options: SchemaTypeOptions {},
+              _index: null,
+              _arrayPath: 'invitedGuestForDate.$',
+              _arrayParentPath: 'invitedGuestForDate',
+              [Symbol(mongoose#schemaType)]: true,
+              [Symbol(mongoose:schema_mixed)]: true
+            },
+            '$embeddedSchemaType': Mixed {
+              path: 'invitedGuestForDate',
+              instance: 'Mixed',
+              validators: [],
+              getters: [],
+              setters: [],
+              _presplitPath: [ 'invitedGuestForDate' ],
+              options: SchemaTypeOptions {},
+              _index: null,
+              _arrayPath: 'invitedGuestForDate.$',
+              _arrayParentPath: 'invitedGuestForDate',
+              [Symbol(mongoose#schemaType)]: true,
+              [Symbol(mongoose:schema_mixed)]: true
+            },
+            '$isMongooseArray': true,
+            path: 'invitedGuestForDate',
+            instance: 'Array',
+            validators: [
+              {
+                validator: [Function (anonymous)],
+                message: 'Please give list of invited guests...',
+                type: 'required'
+              }
+            ],
+            getters: [],
+            setters: [],
+            _presplitPath: [ 'invitedGuestForDate' ],
+            options: SchemaArrayOptions {
+              invitedGuestForDate: [
+                Schema {
+                  obj: {
+                    invitedGuestId: {
+                      type: [Function: ObjectId] {
+                        schemaName: 'ObjectId',
+                        defaultOptions: {},
+                        get: [Function (anonymous)],
+                        set: [Function: set],
+                        setters: [],
+                        _checkRequired: [Function (anonymous)],
+                        _cast: [Function: castObjectId],
+                        cast: [Function: cast],
+                        _defaultCaster: [Function (anonymous)],
+                        checkRequired: [Function (anonymous)]
+                      },
+                      required: [ true, 'Please provide and ID...' ],
+                      unique: [ true, 'Please provide a unique ID...' ]
+                    },
+                    invitedGuestName: {
+                      type: [Function: String],
+                      required: [ true, "Please provide the guest's name..." ],
+                      unique: false
+                    },
+                    invitedGuestNumber: {
+                      type: [Function: String],
+                      required: [
+                        true,
+                        "Please provide the guest's phone number..."
+                      ],
+                      unique: [
+                        true,
+                        'Phone number has already been invited...'
+                      ]
+                    },
+                    invitedGuestPassScanned: {
+                      type: [Function: Boolean],
+                      required: [
+                        true,
+                        'Please provide if the pass has been scanned...'
+                      ],
+                      unique: false
+                    },
+                    invitedGuestPassSent: {
+                      type: [Function: Boolean],
+                      required: [
+                        true,
+                        'Please provide if the pass has been sent...'
+                      ],
+                      unique: false
+                    }
+                  },
+                  paths: {
+                    invitedGuestId: ObjectId {
+                      path: 'invitedGuestId',
+                      instance: 'ObjectId',
+                      validators: [
+                        {
+                          validator: [Function (anonymous)],
+                          message: 'Please provide and ID...',
+                          type: 'required'
+                        }
+                      ],
+                      getters: [],
+                      setters: [],
+                      _presplitPath: [ 'invitedGuestId' ],
+                      options: SchemaObjectIdOptions {
+                        type: [Function: ObjectId] {
+                          schemaName: 'ObjectId',
+                          defaultOptions: {},
+                          get: [Function (anonymous)],
+                          set: [Function: set],
+                          setters: [],
+                          _checkRequired: [Function (anonymous)],
+                          _cast: [Function: castObjectId],
+                          cast: [Function: cast],
+                          _defaultCaster: [Function (anonymous)],
+                          checkRequired: [Function (anonymous)]
+                        },
+                        required: [ true, 'Please provide and ID...' ],
+                        unique: [ true, 'Please provide a unique ID...' ]
+                      },
+                      _index: { unique: true },
+                      isRequired: true,
+                      requiredValidator: [Function (anonymous)],
+                      originalRequiredValue: true,
+                      [Symbol(mongoose#schemaType)]: true
+                    },
+                    invitedGuestName: SchemaString {
+                      enumValues: [],
+                      regExp: null,
+                      path: 'invitedGuestName',
+                      instance: 'String',
+                      validators: [
+                        {
+                          validator: [Function (anonymous)],
+                          message: "Please provide the guest's name...",
+                          type: 'required'
+                        }
+                      ],
+                      getters: [],
+                      setters: [],
+                      _presplitPath: [ 'invitedGuestName' ],
+                      options: SchemaStringOptions {
+                        type: [Function: String],
+                        required: [ true, "Please provide the guest's name..." ],
+                        unique: false
+                      },
+                      _index: null,
+                      isRequired: true,
+                      requiredValidator: [Function (anonymous)],
+                      originalRequiredValue: true,
+                      [Symbol(mongoose#schemaType)]: true
+                    },
+                    invitedGuestNumber: SchemaString {
+                      enumValues: [],
+                      regExp: null,
+                      path: 'invitedGuestNumber',
+                      instance: 'String',
+                      validators: [
+                        {
+                          validator: [Function (anonymous)],
+                          message: "Please provide the guest's phone number...",
+                          type: 'required'
+                        }
+                      ],
+                      getters: [],
+                      setters: [],
+                      _presplitPath: [ 'invitedGuestNumber' ],
+                      options: SchemaStringOptions {
+                        type: [Function: String],
+                        required: [
+                          true,
+                          "Please provide the guest's phone number..."
+                        ],
+                        unique: [
+                          true,
+                          'Phone number has already been invited...'
+                        ]
+                      },
+                      _index: { unique: true },
+                      isRequired: true,
+                      requiredValidator: [Function (anonymous)],
+                      originalRequiredValue: true,
+                      [Symbol(mongoose#schemaType)]: true
+                    },
+                    invitedGuestPassScanned: SchemaBoolean {
+                      path: 'invitedGuestPassScanned',
+                      instance: 'Boolean',
+                      validators: [
+                        {
+                          validator: [Function (anonymous)],
+                          message: 'Please provide if the pass has been scanned...',
+                          type: 'required'
+                        }
+                      ],
+                      getters: [],
+                      setters: [],
+                      _presplitPath: [ 'invitedGuestPassScanned' ],
+                      options: SchemaTypeOptions {
+                        type: [Function: Boolean],
+                        required: [
+                          true,
+                          'Please provide if the pass has been scanned...'
+                        ],
+                        unique: false
+                      },
+                      _index: null,
+                      isRequired: true,
+                      requiredValidator: [Function (anonymous)],
+                      originalRequiredValue: true,
+                      [Symbol(mongoose#schemaType)]: true
+                    },
+                    invitedGuestPassSent: SchemaBoolean {
+                      path: 'invitedGuestPassSent',
+                      instance: 'Boolean',
+                      validators: [
+                        {
+                          validator: [Function (anonymous)],
+                          message: 'Please provide if the pass has been sent...',
+                          type: 'required'
+                        }
+                      ],
+                      getters: [],
+                      setters: [],
+                      _presplitPath: [ 'invitedGuestPassSent' ],
+                      options: SchemaTypeOptions {
+                        type: [Function: Boolean],
+                        required: [
+                          true,
+                          'Please provide if the pass has been sent...'
+                        ],
+                        unique: false
+                      },
+                      _index: null,
+                      isRequired: true,
+                      requiredValidator: [Function (anonymous)],
+                      originalRequiredValue: true,
+                      [Symbol(mongoose#schemaType)]: true
+                    },
+                    _id: ObjectId {
+                      path: '_id',
+                      instance: 'ObjectId',
+                      validators: [],
+                      getters: [],
+                      setters: [ [Function: resetId] ],
+                      _presplitPath: [ '_id' ],
+                      options: SchemaObjectIdOptions {
+                        auto: true,
+                        type: 'ObjectId'
+                      },
+                      _index: null,
+                      defaultValue: [Function: defaultId] {
+                        '$runBeforeSetters': true
+                      },
+                      [Symbol(mongoose#schemaType)]: true
+                    }
+                  },
+                  aliases: {},
+                  subpaths: {},
+                  virtuals: {},
+                  singleNestedPaths: {},
+                  nested: {},
+                  inherits: {},
+                  callQueue: [],
+                  _indexes: [],
+                  methods: {},
+                  methodOptions: {},
+                  statics: {},
+                  tree: {
+                    invitedGuestId: {
+                      type: [Function: ObjectId] {
+                        schemaName: 'ObjectId',
+                        defaultOptions: {},
+                        get: [Function (anonymous)],
+                        set: [Function: set],
+                        setters: [],
+                        _checkRequired: [Function (anonymous)],
+                        _cast: [Function: castObjectId],
+                        cast: [Function: cast],
+                        _defaultCaster: [Function (anonymous)],
+                        checkRequired: [Function (anonymous)]
+                      },
+                      required: [ true, 'Please provide and ID...' ],
+                      unique: [ true, 'Please provide a unique ID...' ]
+                    },
+                    invitedGuestName: {
+                      type: [Function: String],
+                      required: [ true, "Please provide the guest's name..." ],
+                      unique: false
+                    },
+                    invitedGuestNumber: {
+                      type: [Function: String],
+                      required: [
+                        true,
+                        "Please provide the guest's phone number..."
+                      ],
+                      unique: [
+                        true,
+                        'Phone number has already been invited...'
+                      ]
+                    },
+                    invitedGuestPassScanned: {
+                      type: [Function: Boolean],
+                      required: [
+                        true,
+                        'Please provide if the pass has been scanned...'
+                      ],
+                      unique: false
+                    },
+                    invitedGuestPassSent: {
+                      type: [Function: Boolean],
+                      required: [
+                        true,
+                        'Please provide if the pass has been sent...'
+                      ],
+                      unique: false
+                    },
+                    _id: { auto: true, type: 'ObjectId' }
+                  },
+                  query: {},
+                  childSchemas: [],
+                  plugins: [],
+                  '$id': 1,
+                  mapPaths: [],
+                  s: {
+                    hooks: Kareem { _pres: Map(0) {}, _posts: Map(0) {} }
+                  },
+                  _userProvidedOptions: {},
+                  options: {
+                    typeKey: 'type',
+                    id: true,
+                    _id: true,
+                    validateModifiedOnly: false,
+                    validateBeforeSave: true,
+                    read: null,
+                    shardKey: null,
+                    discriminatorKey: '__t',
+                    autoIndex: null,
+                    minimize: true,
+                    optimisticConcurrency: false,
+                    versionKey: '__v',
+                    capped: false,
+                    bufferCommands: true,
+                    strictQuery: false,
+                    strict: true
+                  }
+                }
+              ],
+              type: [Function: Array],
+              required: [ true, 'Please give list of invited guests...' ],
+              unique: false
+            },
+            _index: null,
+            isRequired: true,
+            requiredValidator: [Function (anonymous)],
+            originalRequiredValue: true,
+            defaultValue: [Function: defaultFn] { '$runBeforeSetters': true },
+            [Symbol(mongoose#schemaType)]: true
+          },
+          _id: ObjectId {
+            path: '_id',
+            instance: 'ObjectId',
+            validators: [],
+            getters: [],
+            setters: [ [Function: resetId] ],
+            _presplitPath: [ '_id' ],
+            options: SchemaObjectIdOptions { auto: true, type: 'ObjectId' },
+            _index: null,
+            defaultValue: [Function: defaultId] { '$runBeforeSetters': true },
+            [Symbol(mongoose#schemaType)]: true
+          }
+        },
+        aliases: {},
+        subpaths: {
+          'invitedGuestForDate.$': Mixed {
+            path: 'invitedGuestForDate.$',
+            instance: 'Mixed',
+            validators: [],
+            getters: [],
+            setters: [],
+            _presplitPath: [ 'invitedGuestForDate' ],
+            options: SchemaTypeOptions {},
+            _index: null,
+            [Symbol(mongoose#schemaType)]: true,
+            [Symbol(mongoose:schema_mixed)]: true
+          }
+        },
+        virtuals: {},
+        singleNestedPaths: {},
+        nested: {},
+        inherits: {},
+        callQueue: [],
+        _indexes: [],
+        methods: {},
+        methodOptions: {},
+        statics: {},
+        tree: {
+          invitedGuestDate: {
+            type: [Function: Date],
+            required: [ true, 'Please give date of visit...' ],
+            unique: false
+          },
+          invitedGuestForDate: {
+            invitedGuestForDate: [
+              Schema {
+                obj: {
+                  invitedGuestId: {
+                    type: [Function: ObjectId] {
+                      schemaName: 'ObjectId',
+                      defaultOptions: {},
+                      get: [Function (anonymous)],
+                      set: [Function: set],
+                      setters: [],
+                      _checkRequired: [Function (anonymous)],
+                      _cast: [Function: castObjectId],
+                      cast: [Function: cast],
+                      _defaultCaster: [Function (anonymous)],
+                      checkRequired: [Function (anonymous)]
+                    },
+                    required: [ true, 'Please provide and ID...' ],
+                    unique: [ true, 'Please provide a unique ID...' ]
+                  },
+                  invitedGuestName: {
+                    type: [Function: String],
+                    required: [ true, "Please provide the guest's name..." ],
+                    unique: false
+                  },
+                  invitedGuestNumber: {
+                    type: [Function: String],
+                    required: [
+                      true,
+                      "Please provide the guest's phone number..."
+                    ],
+                    unique: [
+                      true,
+                      'Phone number has already been invited...'
+                    ]
+                  },
+                  invitedGuestPassScanned: {
+                    type: [Function: Boolean],
+                    required: [
+                      true,
+                      'Please provide if the pass has been scanned...'
+                    ],
+                    unique: false
+                  },
+                  invitedGuestPassSent: {
+                    type: [Function: Boolean],
+                    required: [
+                      true,
+                      'Please provide if the pass has been sent...'
+                    ],
+                    unique: false
+                  }
+                },
+                paths: {
+                  invitedGuestId: ObjectId {
+                    path: 'invitedGuestId',
+                    instance: 'ObjectId',
+                    validators: [
+                      {
+                        validator: [Function (anonymous)],
+                        message: 'Please provide and ID...',
+                        type: 'required'
+                      }
+                    ],
+                    getters: [],
+                    setters: [],
+                    _presplitPath: [ 'invitedGuestId' ],
+                    options: SchemaObjectIdOptions {
+                      type: [Function: ObjectId] {
+                        schemaName: 'ObjectId',
+                        defaultOptions: {},
+                        get: [Function (anonymous)],
+                        set: [Function: set],
+                        setters: [],
+                        _checkRequired: [Function (anonymous)],
+                        _cast: [Function: castObjectId],
+                        cast: [Function: cast],
+                        _defaultCaster: [Function (anonymous)],
+                        checkRequired: [Function (anonymous)]
+                      },
+                      required: [ true, 'Please provide and ID...' ],
+                      unique: [ true, 'Please provide a unique ID...' ]
+                    },
+                    _index: { unique: true },
+                    isRequired: true,
+                    requiredValidator: [Function (anonymous)],
+                    originalRequiredValue: true,
+                    [Symbol(mongoose#schemaType)]: true
+                  },
+                  invitedGuestName: SchemaString {
+                    enumValues: [],
+                    regExp: null,
+                    path: 'invitedGuestName',
+                    instance: 'String',
+                    validators: [
+                      {
+                        validator: [Function (anonymous)],
+                        message: "Please provide the guest's name...",
+                        type: 'required'
+                      }
+                    ],
+                    getters: [],
+                    setters: [],
+                    _presplitPath: [ 'invitedGuestName' ],
+                    options: SchemaStringOptions {
+                      type: [Function: String],
+                      required: [ true, "Please provide the guest's name..." ],
+                      unique: false
+                    },
+                    _index: null,
+                    isRequired: true,
+                    requiredValidator: [Function (anonymous)],
+                    originalRequiredValue: true,
+                    [Symbol(mongoose#schemaType)]: true
+                  },
+                  invitedGuestNumber: SchemaString {
+                    enumValues: [],
+                    regExp: null,
+                    path: 'invitedGuestNumber',
+                    instance: 'String',
+                    validators: [
+                      {
+                        validator: [Function (anonymous)],
+                        message: "Please provide the guest's phone number...",
+                        type: 'required'
+                      }
+                    ],
+                    getters: [],
+                    setters: [],
+                    _presplitPath: [ 'invitedGuestNumber' ],
+                    options: SchemaStringOptions {
+                      type: [Function: String],
+                      required: [
+                        true,
+                        "Please provide the guest's phone number..."
+                      ],
+                      unique: [
+                        true,
+                        'Phone number has already been invited...'
+                      ]
+                    },
+                    _index: { unique: true },
+                    isRequired: true,
+                    requiredValidator: [Function (anonymous)],
+                    originalRequiredValue: true,
+                    [Symbol(mongoose#schemaType)]: true
+                  },
+                  invitedGuestPassScanned: SchemaBoolean {
+                    path: 'invitedGuestPassScanned',
+                    instance: 'Boolean',
+                    validators: [
+                      {
+                        validator: [Function (anonymous)],
+                        message: 'Please provide if the pass has been scanned...',
+                        type: 'required'
+                      }
+                    ],
+                    getters: [],
+                    setters: [],
+                    _presplitPath: [ 'invitedGuestPassScanned' ],
+                    options: SchemaTypeOptions {
+                      type: [Function: Boolean],
+                      required: [
+                        true,
+                        'Please provide if the pass has been scanned...'
+                      ],
+                      unique: false
+                    },
+                    _index: null,
+                    isRequired: true,
+                    requiredValidator: [Function (anonymous)],
+                    originalRequiredValue: true,
+                    [Symbol(mongoose#schemaType)]: true
+                  },
+                  invitedGuestPassSent: SchemaBoolean {
+                    path: 'invitedGuestPassSent',
+                    instance: 'Boolean',
+                    validators: [
+                      {
+                        validator: [Function (anonymous)],
+                        message: 'Please provide if the pass has been sent...',
+                        type: 'required'
+                      }
+                    ],
+                    getters: [],
+                    setters: [],
+                    _presplitPath: [ 'invitedGuestPassSent' ],
+                    options: SchemaTypeOptions {
+                      type: [Function: Boolean],
+                      required: [
+                        true,
+                        'Please provide if the pass has been sent...'
+                      ],
+                      unique: false
+                    },
+                    _index: null,
+                    isRequired: true,
+                    requiredValidator: [Function (anonymous)],
+                    originalRequiredValue: true,
+                    [Symbol(mongoose#schemaType)]: true
+                  },
+                  _id: ObjectId {
+                    path: '_id',
+                    instance: 'ObjectId',
+                    validators: [],
+                    getters: [],
+                    setters: [ [Function: resetId] ],
+                    _presplitPath: [ '_id' ],
+                    options: SchemaObjectIdOptions {
+                      auto: true,
+                      type: 'ObjectId'
+                    },
+                    _index: null,
+                    defaultValue: [Function: defaultId] { '$runBeforeSetters': true },
+                    [Symbol(mongoose#schemaType)]: true
+                  }
+                },
+                aliases: {},
+                subpaths: {},
+                virtuals: {},
+                singleNestedPaths: {},
+                nested: {},
+                inherits: {},
+                callQueue: [],
+                _indexes: [],
+                methods: {},
+                methodOptions: {},
+                statics: {},
+                tree: {
+                  invitedGuestId: {
+                    type: [Function: ObjectId] {
+                      schemaName: 'ObjectId',
+                      defaultOptions: {},
+                      get: [Function (anonymous)],
+                      set: [Function: set],
+                      setters: [],
+                      _checkRequired: [Function (anonymous)],
+                      _cast: [Function: castObjectId],
+                      cast: [Function: cast],
+                      _defaultCaster: [Function (anonymous)],
+                      checkRequired: [Function (anonymous)]
+                    },
+                    required: [ true, 'Please provide and ID...' ],
+                    unique: [ true, 'Please provide a unique ID...' ]
+                  },
+                  invitedGuestName: {
+                    type: [Function: String],
+                    required: [ true, "Please provide the guest's name..." ],
+                    unique: false
+                  },
+                  invitedGuestNumber: {
+                    type: [Function: String],
+                    required: [
+                      true,
+                      "Please provide the guest's phone number..."
+                    ],
+                    unique: [
+                      true,
+                      'Phone number has already been invited...'
+                    ]
+                  },
+                  invitedGuestPassScanned: {
+                    type: [Function: Boolean],
+                    required: [
+                      true,
+                      'Please provide if the pass has been scanned...'
+                    ],
+                    unique: false
+                  },
+                  invitedGuestPassSent: {
+                    type: [Function: Boolean],
+                    required: [
+                      true,
+                      'Please provide if the pass has been sent...'
+                    ],
+                    unique: false
+                  },
+                  _id: { auto: true, type: 'ObjectId' }
+                },
+                query: {},
+                childSchemas: [],
+                plugins: [],
+                '$id': 1,
+                mapPaths: [],
+                s: {
+                  hooks: Kareem { _pres: Map(0) {}, _posts: Map(0) {} }
+                },
+                _userProvidedOptions: {},
+                options: {
+                  typeKey: 'type',
+                  id: true,
+                  _id: true,
+                  validateModifiedOnly: false,
+                  validateBeforeSave: true,
+                  read: null,
+                  shardKey: null,
+                  discriminatorKey: '__t',
+                  autoIndex: null,
+                  minimize: true,
+                  optimisticConcurrency: false,
+                  versionKey: '__v',
+                  capped: false,
+                  bufferCommands: true,
+                  strictQuery: false,
+                  strict: true
+                }
+              }
+            ],
+            type: [Function: Array],
+            required: [ true, 'Please give list of invited guests...' ],
+            unique: false
+          },
+          _id: { auto: true, type: 'ObjectId' }
+        },
+        query: {},
+        childSchemas: [],
+        plugins: [],
+        '$id': 2,
+        mapPaths: [],
+        s: { hooks: Kareem { _pres: Map(0) {}, _posts: Map(0) {} } },
+        _userProvidedOptions: {},
+        options: {
+          typeKey: 'type',
+          id: true,
+          _id: true,
+          validateModifiedOnly: false,
+          validateBeforeSave: true,
+          read: null,
+          shardKey: null,
+          discriminatorKey: '__t',
+          autoIndex: null,
+          minimize: true,
+          optimisticConcurrency: false,
+          versionKey: '__v',
+          capped: false,
+          bufferCommands: true,
+          strictQuery: false,
+          strict: true
+        }
+      }
+    ],
+    type: [Function: Array],
+    required: false,
+    unique: false
+  },
+  _index: null,
+  isRequired: false,
+  defaultValue: [Function: defaultFn] { '$runBeforeSetters': true },
+  [Symbol(mongoose#schemaType)]: true
+}

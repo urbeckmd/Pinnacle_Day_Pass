@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const invitedGuestForDateSchema = new mongoose.Schema({
     invitedGuestId: {
-        type: mongoose.ObjectId,
+        type: mongoose.Schema.ObjectId,
         required: [true, "Please provide and ID..."],
         unique: [true, "Please provide a unique ID..."]
     },
@@ -36,7 +36,7 @@ const invitedGuestSchema = new mongoose.Schema({
         unique: false
     },
     invitedGuestForDate: {
-        invitedGuestDate: [invitedGuestForDateSchema],
+        invitedGuestForDate: [invitedGuestForDateSchema],
         type: Array,
         required: [true, "Please give list of invited guests..."],
         unique: false
