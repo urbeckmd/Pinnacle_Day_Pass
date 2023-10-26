@@ -10,6 +10,7 @@ const mongoose = require("mongoose");
 var QRCode = require('qrcode');
 var nodemailer = require('nodemailer');
 
+
 dbConnect()
 
 app.use((req, res, next) => {
@@ -478,9 +479,15 @@ const findAllTomorrowsPasses = () => {
 }
 
 
-// Scheduler to run function that deletes old passes
-const sendTomorrowsPassesWorker = schedule.scheduleJob('0 12 * * *', () => {
+// Scheduler to run function that sends tomorrows passes as noon
+const sendTomorrowsPassesWorkerMorning = schedule.scheduleJob('0 12 * * *', () => {
     console.log('Task executed at 12:00PM:', new Date().toLocaleTimeString());
+    findAllTomorrowsPasses();
+});
+
+// Scheduler to run function that sends tomorrows passes before midnight
+const sendTomorrowsPassesWorkerNight = schedule.scheduleJob('55 59 23 * * *', () => {
+    console.log('Task executed at 11:59PM:', new Date().toLocaleTimeString());
     findAllTomorrowsPasses();
 });
 
