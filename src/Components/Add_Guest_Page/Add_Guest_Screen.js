@@ -312,56 +312,20 @@ function Add_Guest_Screen() {
               <Dropdown className='mobile_add_guest_dropdown'>
                 <Dropdown.Toggle className='mobile_add_guest_dropdown_toggle' variant="outline-secondary" id="dropdown-basic">
                 </Dropdown.Toggle>
-
                 <Dropdown.Menu>
-                  <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
-                    <div className="mobile_add_guest_dropdown_option_container">
-                      <div className="mobile_add_guest_dropdown_option_name">Matt Urbeck</div>
-                      <div className="mobile_add_guest_dropdown_option_number">(636) 439-9972</div>
-                    </div>
-                  </Dropdown.Item>
-                  <NavDropdown.Divider />
-                  <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
-                    <div className="mobile_add_guest_dropdown_option_container">
-                      <div className="mobile_add_guest_dropdown_option_name">Adam Osvath</div>
-                      <div className="mobile_add_guest_dropdown_option_number">(636) 240-5332</div>
-                    </div>
-                  </Dropdown.Item>
-                  <NavDropdown.Divider />
-                  <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
-                    <div className="mobile_add_guest_dropdown_option_container">
-                      <div className="mobile_add_guest_dropdown_option_name">Tim Mehegan</div>
-                      <div className="mobile_add_guest_dropdown_option_number">(314) 640-0239</div>
-                    </div>
-                  </Dropdown.Item>
-                  <NavDropdown.Divider />
-                  <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
-                    <div className="mobile_add_guest_dropdown_option_container">
-                      <div className="mobile_add_guest_dropdown_option_name">Adam Osvath</div>
-                      <div className="mobile_add_guest_dropdown_option_number">(636) 240-5332</div>
-                    </div>
-                  </Dropdown.Item>
-                  <NavDropdown.Divider />
-                  <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
-                    <div className="mobile_add_guest_dropdown_option_container">
-                      <div className="mobile_add_guest_dropdown_option_name">Adam Osvath</div>
-                      <div className="mobile_add_guest_dropdown_option_number">(636) 240-5332</div>
-                    </div>
-                  </Dropdown.Item>
-                  <NavDropdown.Divider />
-                  <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
-                    <div className="mobile_add_guest_dropdown_option_container">
-                      <div className="mobile_add_guest_dropdown_option_name">Adam Osvath</div>
-                      <div className="mobile_add_guest_dropdown_option_number">(636) 240-5332</div>
-                    </div>
-                  </Dropdown.Item>
-                  <NavDropdown.Divider />
-                  <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
-                    <div className="mobile_add_guest_dropdown_option_container">
-                      <div className="mobile_add_guest_dropdown_option_name">Adam Osvath</div>
-                      <div className="mobile_add_guest_dropdown_option_number">(636) 240-5332</div>
-                    </div>
-                  </Dropdown.Item>
+                  {savedGuestData.map((guest, index) => {
+                    return (
+                      <>
+                        <Dropdown.Item onClick={(e) => handleDropdownSelect(e)}>
+                          <div className="mobile_add_guest_dropdown_option_container">
+                            <div className="mobile_add_guest_dropdown_option_name">{guest.savedGuestName}</div>
+                            <div className="mobile_add_guest_dropdown_option_number">{guest.savedGuestNumber}</div>
+                          </div>
+                        </Dropdown.Item>
+                        <NavDropdown.Divider />
+                      </>
+                    )
+                  })}
                 </Dropdown.Menu>
               </Dropdown>
             </Form.Group>
