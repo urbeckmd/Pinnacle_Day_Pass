@@ -116,18 +116,67 @@ app.get("/getSavedGuests", (request, response) => {
 })
 
 
+const sendTodaysInvite = (request, guestId) => {
+    const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var daysList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const today = new Date(new Date(request.body.guestDateOfVisit).toISOString())
+    console.log('today', today);
+    Resident.find(
+        { "residentEmail": request.body.residentName, "invitedGuests.date": new Date(today), "invitedGuests.invitedGuestsForDate.invitedGuestPassSent": false },
+    )
+        .then((result2) => {
+            const residentResult = result2[0]
+            console.log('residentresult', residentResult);
+            const residentFirstName = residentResult['residentFirstName'];
+            const residentLastName = residentResult['residentLastName'];
+            const residentId = residentResult['_id'].toString();
+            residentResult["invitedGuests"].forEach((allGuests, dateIndex) => {
+                if (allGuests['date'].toISOString() == today.toISOString()) {
+                    console.log('dateindex', dateIndex);
+                    const dateOfVisit = allGuests['date'];
+                    const day = ((dateOfVisit.getDay() + 1) < 7) ? (dateOfVisit.getDay() + 1) : 0;
+                    const month = dateOfVisit.getMonth();
+                    const date = dateOfVisit.getDate() + 1;
+                    const year = dateOfVisit.getFullYear();
+                    const fullDate = `${daysList[day]}, ${monthsList[month]} ${date}, ${year}`
+                    console.log(fullDate);
+                    allGuests['invitedGuestsForDate'].forEach((invitedGuest, guestIndex) => {
+                        if (invitedGuest['invitedGuestId'].toString() == guestId.toString()) {
+                            console.log(invitedGuest, guestIndex);
+                            // SEND MESSAGE WITH PASS
+                            const guestName = invitedGuest['invitedGuestName'];
+                            const guestNumber = invitedGuest['invitedGuestNumber'];
+                            const passId = guestId.toString();
+                            makeQRCodeAndSendEmail(passId, guestName, residentFirstName, residentLastName, fullDate, residentId, dateIndex, guestIndex);
+
+                        }
+                    })
+                }
+            })
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+}
+
+
 // Add guest to array of invites guests
 app.put("/addGuest", (request, response) => {
+    const guestId = new mongoose.Types.ObjectId();
+    const date = new Date(request.body.guestDateOfVisit);
+    const day = date.getUTCDate();
+    const month = date.getUTCMonth() + 1;
+    const year = date.getFullYear();
+    const dbDateString = `${month}/${day}/${year}`
     // if people are already invited on this date, push new guest
     // else push new date with new guest
-    console.log(request.body);
     if (request.body.dateExists) {
-        Resident.updateOne(
+        Resident.findOneAndUpdate(
             { residentEmail: request.body.residentName },
             {
                 $push: {
                     "invitedGuests.$[elem].invitedGuestsForDate": {
-                        "invitedGuestId": new mongoose.Types.ObjectId(),
+                        "invitedGuestId": guestId,
                         "invitedGuestName": request.body.guestName,
                         "invitedGuestNumber": request.body.guestNumber,
                         "invitedGuestPassScanned": false,
@@ -136,13 +185,17 @@ app.put("/addGuest", (request, response) => {
                 }
             },
             { arrayFilters: [{ "elem.date": new Date(new Date(request.body.guestDateOfVisit).toISOString()) }] },
-            { upsert: true }
         )
             .then((result) => {
+                // If they add the guest for today, send invite immediately
+                if (dbDateString == new Date().toLocaleDateString()) {
+                    sendTodaysInvite(request, guestId)
+                }
                 response.status(200).send({
                     message: "Guest was added...",
                     result,
                 });
+
             })
             .catch((error) => {
                 response.status(400).send({
@@ -151,15 +204,16 @@ app.put("/addGuest", (request, response) => {
                 });
 
             })
-    } else {
-        Resident.updateOne(
+    }
+    else {
+        Resident.findOneAndUpdate(
             { residentEmail: request.body.residentName },
             {
                 $push: {
                     "invitedGuests": {
                         'date': new Date(new Date(request.body.guestDateOfVisit).toISOString()),
                         'invitedGuestsForDate': [{
-                            "invitedGuestId": new mongoose.Types.ObjectId(),
+                            "invitedGuestId": guestId,
                             "invitedGuestName": request.body.guestName,
                             "invitedGuestNumber": request.body.guestNumber,
                             "invitedGuestPassScanned": false,
@@ -170,6 +224,10 @@ app.put("/addGuest", (request, response) => {
             },
         )
             .then((result) => {
+                // If they add the guest for today, send invite immediately
+                if (dbDateString == new Date().toLocaleDateString()) {
+                    sendTodaysInvite(request, guestId)
+                }
                 response.status(200).send({
                     message: "Guest was added to new date...",
                     result,
@@ -183,6 +241,7 @@ app.put("/addGuest", (request, response) => {
             })
     }
 })
+
 
 // Add guest to array of saved guests
 app.post("/saveGuest", (request, response) => {
@@ -270,15 +329,15 @@ const sendFailedEmailsToMe = (fullDate, passId, qr_code_path, guestName, residen
     });
 }
 
-// Update the pass sent field after email is sent
-// const updatePassSentField = (residentId, guestId, tomorrow) => {
+// // Update the pass sent field after email is sent
+// const updateTodayPassSentField = (residentId, guestId, today) => {
 //     Resident.findOne(
 //         {"_id": new mongoose.Types.ObjectId(residentId)}
 //     )
 //     .then((result) => {
 //         const invitedGuestResult = result.invitedGuests
 //         invitedGuestResult.forEach((date, date_index) => {
-//             if (date['date'].toISOString() == new Date(tomorrow).toISOString()) {
+//             if (date['date'].toISOString() == new Date(today).toISOString()) {
 //                 date['invitedGuestsForDate'].forEach((guest, guestIndex) => {
 //                     console.log(guest);
 //                     if (guest['invitedGuestId'].toString() == guestId) {
@@ -319,16 +378,58 @@ const updatePassSentField = (residentId, date_index, guest_index) => {
         { "_id": new mongoose.Types.ObjectId(residentId) },
         updateObj
     )
-    .then((result) => {
-        console.log(result);
-    })
-    .catch((error) => {
-        console.log(error);
-    })
+        .then((result) => {
+            console.log(result);
+        })
+        .catch((error) => {
+            console.log(error);
+        })
 }
 
+// Make QR Code and send Email for guests coming tomorrow
+const makeQRCodeAndSendEmail = (passId, guestName, residentFirstName, residentLastName, fullDate, residentId, dateIndex, guestIndex) => {
+    QRCode.toFile(`./qr_code_images/${passId}.png`, passId, function (err) {
+        if (err) throw err
+        var qr_code_path = `./qr_code_images/${passId}.png`
+        var transporter = nodemailer.createTransport({
+            service: 'gmail.com',
+            auth: {
+                user: 'matt.d.urbeck@gmail.com',
+                pass: 'bwqv frxy suhh uxwf'
+            }
+        });
 
+        var mailOptions = {
+            from: 'matt.d.urbeck@gmail.com',
+            to: 'matt.d.urbeck@gmail.com',
+            subject: `Pinnacle Day Pass: ${fullDate}`,
+            attachments: [{
+                filename: `${passId}.png`,
+                path: qr_code_path,
+                cid: 'qr_code' //same cid value as in the html img src
+            }],
+            html: `<p>Hello ${guestName},</p><p>${residentFirstName} ${residentLastName} invited you to Pinnacle Lake on ${fullDate}. Scan the QR Code at the gate to enter.</p><img src="cid:qr_code"/><p>(This code can only be scanned once. After scanning, it will be disabled and you can't reenter the property using this code)</p>`
+        };
 
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                // Send an email to me about details of failed message so I can do it manually
+                sendFailedEmailsToMe(fullDate, passId, qr_code_path, guestName, residentFirstName, residentLastName);
+                console.log(error);
+            } else {
+                // Update the db to change passSent to True
+                try {
+                    console.log(dateIndex, guestIndex);
+                    updatePassSentField(residentId.toString(), dateIndex, guestIndex)
+                } catch (e) {
+                    console.log(`unable to update sent passes field for ${guestName} from ${residentFirstName} ${residentLastName}`);
+                }
+
+                console.log('Email sent: ' + info.response);
+            }
+        });
+    })
+}
 
 // updatePassSentField('6530689631f30a3de8962879', 0, 0)
 
@@ -337,6 +438,7 @@ const findAllTomorrowsPasses = () => {
     const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     var daysList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const tomorrow = new Date(new Date().setHours(19, 0, 0, 0)).toISOString();
+    console.log(tomorrow);
     Resident.find(
         { "invitedGuests.date": new Date(tomorrow), "invitedGuests.invitedGuestsForDate.invitedGuestPassSent": false },
     )
@@ -363,46 +465,7 @@ const findAllTomorrowsPasses = () => {
                                 guestId = invitedGuest['invitedGuestId'];
                                 const passId = invitedGuest['invitedGuestId'].toString();
                                 console.log(guestIndex);
-                                QRCode.toFile(`./qr_code_images/${passId}.png`, passId, function (err) {
-                                    if (err) throw err
-                                    var qr_code_path = `./qr_code_images/${passId}.png`
-                                    var transporter = nodemailer.createTransport({
-                                        service: 'gmail.com',
-                                        auth: {
-                                            user: 'matt.d.urbeck@gmail.com',
-                                            pass: 'bwqv frxy suhh uxwf'
-                                        }
-                                    });
-
-                                    var mailOptions = {
-                                        from: 'matt.d.urbeck@gmail.com',
-                                        to: 'matt.d.urbeck@gmail.com',
-                                        subject: `Pinnacle Day Pass: ${fullDate}`,
-                                        attachments: [{
-                                            filename: `${passId}.png`,
-                                            path: qr_code_path,
-                                            cid: 'qr_code' //same cid value as in the html img src
-                                        }],
-                                        html: `<p>Hello ${guestName},</p><p>${residentFirstName} ${residentLastName} invited you to Pinnacle Lake on ${fullDate}. Scan the QR Code at the gate to enter.</p><img src="cid:qr_code"/><p>(This code can only be scanned once. After scanning, it will be disabled and you can't reenter the property using this code)</p>`
-                                    };
-
-                                    transporter.sendMail(mailOptions, function (error, info) {
-                                        if (error) {
-                                            // Send an email to me about details of failed message so I can do it manually
-                                            sendFailedEmailsToMe(fullDate, passId, qr_code_path, guestName, residentFirstName, residentLastName);
-                                            console.log(error);
-                                        } else {
-                                            // Update the db to change passSent to True
-                                            try {
-                                                updatePassSentField(residentId.toString(), dateIndex, guestIndex)
-                                            } catch (e) {
-                                                console.log(`unable to update sent passes field for ${guestName} from ${residentFirstName} ${residentLastName}`);
-                                            }
-
-                                            console.log('Email sent: ' + info.response);
-                                        }
-                                    });
-                                })
+                                makeQRCodeAndSendEmail(passId, guestName, residentFirstName, residentLastName, fullDate, residentId, dateIndex, guestIndex);
                             })
                         }
                     }
@@ -421,9 +484,7 @@ const sendTomorrowsPassesWorker = schedule.scheduleJob('0 12 * * *', () => {
     findAllTomorrowsPasses();
 });
 
-findAllTomorrowsPasses();
-
-
+// findAllTomorrowsPasses();
 
 
 module.exports = app;

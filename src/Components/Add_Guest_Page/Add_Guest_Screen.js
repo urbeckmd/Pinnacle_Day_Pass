@@ -248,7 +248,7 @@ function Add_Guest_Screen() {
 
             </div>
 
-            <Button className='invite_new_guests_button'>Invite New Guests</Button>
+            {/* <Button className='invite_new_guests_button'>Invite New Guests</Button> */}
           </div>
           <div className="laptop_add_guest_invites_guest_info_container">
             <Form className='laptop_add_guest_form'>
@@ -421,7 +421,7 @@ function Add_Guest_Screen() {
                 }) : <p>loading</p>}
 
               </Accordion>
-              <Button className='mobile_add_guest_button mobile_add_guest_send_new_invites_button'>Send New Invites</Button>
+              {/* <Button className='mobile_add_guest_button mobile_add_guest_send_new_invites_button'>Send New Invites</Button> */}
             </Offcanvas.Body>
           </Offcanvas>
         </div>
