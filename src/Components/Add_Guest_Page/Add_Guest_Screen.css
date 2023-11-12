@@ -97,6 +97,7 @@
         width: 100%;
         overflow-y: auto !important;
         border-radius: 7px;
+        scrollbar-gutter: stable;
     }
 
     .laptop_add_guest_accordian_container::-webkit-scrollbar {

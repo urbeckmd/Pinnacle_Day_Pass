@@ -187,7 +187,7 @@ function Add_Guest_Screen() {
       .then((result) => {
         var savedGuestList = result.data.data;
         setSavedGuestData(savedGuestList);
-        console.log(savedGuestData);
+        // console.log(savedGuestData);
       })
       .catch((error) => {
         console.log(error);

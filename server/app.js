@@ -121,42 +121,44 @@ const sendTodaysInvite = (request, guestId) => {
     const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     var daysList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const today = new Date(new Date(request.body.guestDateOfVisit).toISOString())
-    console.log('today', today);
-    Resident.find(
-        { "residentEmail": request.body.residentName, "invitedGuests.date": new Date(today), "invitedGuests.invitedGuestsForDate.invitedGuestPassSent": false },
+    console.log('line 124:' , request.body);
+    // SEND AND EMAIL FIRST AND IF RESPONSE IS SUCCESS UPDATE THE DB
+    Resident.findOneAndUpdate(
+        { residentEmail: 'urbeckmd@gmail.com' },
     )
         .then((result2) => {
-            const residentResult = result2[0]
-            console.log('residentresult', residentResult);
-            const residentFirstName = residentResult['residentFirstName'];
-            const residentLastName = residentResult['residentLastName'];
-            const residentId = residentResult['_id'].toString();
-            residentResult["invitedGuests"].forEach((allGuests, dateIndex) => {
-                if (allGuests['date'].toISOString() == today.toISOString()) {
-                    console.log('dateindex', dateIndex);
-                    const dateOfVisit = allGuests['date'];
-                    const day = ((dateOfVisit.getDay() + 1) < 7) ? (dateOfVisit.getDay() + 1) : 0;
-                    const month = dateOfVisit.getMonth();
-                    const date = dateOfVisit.getDate() + 1;
-                    const year = dateOfVisit.getFullYear();
-                    const fullDate = `${daysList[day]}, ${monthsList[month]} ${date}, ${year}`
-                    console.log(fullDate);
-                    allGuests['invitedGuestsForDate'].forEach((invitedGuest, guestIndex) => {
-                        if (invitedGuest['invitedGuestId'].toString() == guestId.toString()) {
-                            console.log(invitedGuest, guestIndex);
-                            // SEND MESSAGE WITH PASS
-                            const guestName = invitedGuest['invitedGuestName'];
-                            const guestNumber = invitedGuest['invitedGuestNumber'];
-                            const passId = guestId.toString();
-                            makeQRCodeAndSendEmail(passId, guestName, residentFirstName, residentLastName, fullDate, residentId, dateIndex, guestIndex);
+            console.log(result2);
+            // const residentResult = result2[0]
+            // console.log('residentresult', residentResult);
+            // const residentFirstName = residentResult['residentFirstName'];
+            // const residentLastName = residentResult['residentLastName'];
+            // const residentId = residentResult['_id'].toString();
+            // residentResult["invitedGuests"].forEach((allGuests, dateIndex) => {
+            //     if (allGuests['date'].toISOString() == today.toISOString()) {
+            //         console.log('dateindex', dateIndex);
+            //         const dateOfVisit = allGuests['date'];
+            //         const day = ((dateOfVisit.getDay() + 1) < 7) ? (dateOfVisit.getDay() + 1) : 0;
+            //         const month = dateOfVisit.getMonth();
+            //         const date = dateOfVisit.getDate() + 1;
+            //         const year = dateOfVisit.getFullYear();
+            //         const fullDate = `${daysList[day]}, ${monthsList[month]} ${date}, ${year}`
+            //         console.log(fullDate);
+            //         allGuests['invitedGuestsForDate'].forEach((invitedGuest, guestIndex) => {
+            //             if (invitedGuest['invitedGuestId'].toString() == guestId.toString()) {
+            //                 console.log(invitedGuest, guestIndex);
+            //                 // SEND MESSAGE WITH PASS
+            //                 const guestName = invitedGuest['invitedGuestName'];
+            //                 const guestNumber = invitedGuest['invitedGuestNumber'];
+            //                 const passId = guestId.toString();
+            //                 makeQRCodeAndSendEmail(passId, guestName, residentFirstName, residentLastName, fullDate, residentId, dateIndex, guestIndex);
 
-                        }
-                    })
-                }
-            })
+            //             }
+            //         })
+            //     }
+            // })
         })
         .catch((error) => {
-            console.log(error);
+            console.log('line 159', error);
         })
 }
 
@@ -169,10 +171,11 @@ app.put("/addGuest", (request, response) => {
     const month = date.getUTCMonth() + 1;
     const year = date.getFullYear();
     const dbDateString = `${month}/${day}/${year}`
+    console.log(request.body);
     // if people are already invited on this date, push new guest
     // else push new date with new guest
     if (request.body.dateExists) {
-        Resident.findOneAndUpdate(
+        Resident.updateOne(
             { residentEmail: request.body.residentName },
             {
                 $push: {
@@ -199,7 +202,7 @@ app.put("/addGuest", (request, response) => {
 
             })
             .catch((error) => {
-                response.status(400).send({
+                response.status(403).send({
                     message: "Guest was not added...",
                     error,
                 });
@@ -207,7 +210,7 @@ app.put("/addGuest", (request, response) => {
             })
     }
     else {
-        Resident.findOneAndUpdate(
+        Resident.updateOne(
             { residentEmail: request.body.residentName },
             {
                 $push: {
@@ -235,7 +238,7 @@ app.put("/addGuest", (request, response) => {
                 });
             })
             .catch((error) => {
-                response.status(400).send({
+                response.status(40).send({
                     message: "Guest was not added...",
                     error,
                 });
@@ -438,8 +441,8 @@ const makeQRCodeAndSendEmail = (passId, guestName, residentFirstName, residentLa
 const findAllTomorrowsPasses = () => {
     const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     var daysList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const tomorrow = new Date(new Date().setHours(19, 0, 0, 0)).toISOString();
-    console.log(tomorrow);
+    const tomorrow = new Date(new Date().setHours(18, 0, 0, 0)).toISOString();
+    console.log('tomoroew',tomorrow);
     Resident.find(
         { "invitedGuests.date": new Date(tomorrow), "invitedGuests.invitedGuestsForDate.invitedGuestPassSent": false },
     )
@@ -480,7 +483,7 @@ const findAllTomorrowsPasses = () => {
 
 
 // Scheduler to run function that sends tomorrows passes as noon
-const sendTomorrowsPassesWorkerMorning = schedule.scheduleJob('0 12 * * *', () => {
+const sendTomorrowsPassesWorkerMorning = schedule.scheduleJob('00 12 * * *', () => {
     console.log('Task executed at 12:00PM:', new Date().toLocaleTimeString());
     findAllTomorrowsPasses();
 });
