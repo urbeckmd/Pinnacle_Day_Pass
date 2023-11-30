@@ -483,7 +483,7 @@ const findAllTomorrowsPasses = () => {
 
 
 // Scheduler to run function that sends tomorrows passes as noon
-const sendTomorrowsPassesWorkerMorning = schedule.scheduleJob('00 12 * * *', () => {
+const sendTomorrowsPassesWorkerMorning = schedule.scheduleJob('30 18 * * *', () => {
     console.log('Task executed at 12:00PM:', new Date().toLocaleTimeString());
     findAllTomorrowsPasses();
 });
@@ -494,7 +494,6 @@ const sendTomorrowsPassesWorkerNight = schedule.scheduleJob('55 59 23 * * *', ()
     findAllTomorrowsPasses();
 });
 
-// findAllTomorrowsPasses();
 
 
 module.exports = app;

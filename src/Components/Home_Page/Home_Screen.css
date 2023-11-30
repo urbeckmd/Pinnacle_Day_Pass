@@ -28,6 +28,7 @@
     padding: 30px 40px;
     aspect-ratio: 1;
     position: absolute;
+    backdrop-filter: blur(3px);
 }
 
 .home_page_module_text {
@@ -39,13 +40,15 @@
 
 .home_page_module_button, .login_module_button {
     width: 150px;
-    height: 60px;
-    background-color: #816336 !important;
+    background-color: #997949 !important;
     border: none !important;
-    border-radius: 30px !important;
+    border-radius: 10px !important;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 20px 40px -12px inset, rgba(0, 0, 0, 0.3) 0px 8px 26px -18px inset;
     font-size: 30px !important;
     letter-spacing: 1px;
+    text-align: center !important;
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
 }
 
 .login_module_input_field:focus {
@@ -84,8 +87,8 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    background: rgb(129,99,54);
-    background: radial-gradient(circle, rgba(129,99,54,1) 0%, rgba(72,45,4,1) 100%);
+    background: rgb(139, 107, 58);
+    /* background: radial-gradient(circle, rgba(129,99,54,1) 0%, rgba(72,45,4,1) 100%); */
     opacity: 1;
     bottom: 38px;
     border: none;
@@ -168,6 +171,7 @@
 
 /* For phones only */
 @media only screen and (max-width: 480px) {
+
     .home_page_module_container, .login_module_container {
         width: 310px;
         height: 380px;

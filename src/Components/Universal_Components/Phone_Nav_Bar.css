@@ -11,13 +11,9 @@
     margin-left: 5px;
 }
 
-.nav_bar_title {
-    font-weight: bold;
-    font-size: xx-large !important;
-}
-
-.nav_bar_link {
-    font-size: large !important;
+.phone_nav_bar_title {
+    font-weight: 500;
+    font-size: x-large !important;
 }
 
 .nav_bar_logout_container {
@@ -36,11 +32,6 @@
     transform: scale(1.2);
 }
 
-.nav_bar_logout_text {
-    font-size: 20px;
-    font-weight: 500;
-}
-
 /* Larger than tablet */
 @media only screen and (min-width: 769px) {
     .nav_bar_container {
@@ -49,6 +40,13 @@
         margin: 0 auto;
         padding: 0 25px !important;
     }
+    .phone_nav_bar_logout_text {
+        font-size: 20px;
+        font-weight: 500;
+    }
+    .phone_nav_bar_link {
+        font-size: large !important;
+    }
 }
 
 /* Only for tablet */
@@ -56,11 +54,27 @@
     .nav_bar_container {
         height: 80px;
     }
+    .phone_nav_bar_logout_text {
+        font-size: 20px;
+        font-weight: 500;
+    }
+    .phone_nav_bar_link {
+        font-size: large !important;
+    }
+    .phone_nav_bar_dropdown > .dropdown-toggle::after { 
+        content: none !important; 
+    } 
+    .phone_nav_bar_dropdown > .dropdown-toggle {
+        border: none;
+    }
 }
 
 /* Only for phone */
-/* @media only screen and (max-width: 480px) {
-    .nav_bar_container {
-        display: none !important;
+@media only screen and (max-width: 480px) {
+    .phone_nav_bar_dropdown > .dropdown-toggle::after { 
+        content: none !important; 
+    } 
+    .phone_nav_bar_dropdown > .dropdown-toggle {
+        border: none;
     }
-} */
+}

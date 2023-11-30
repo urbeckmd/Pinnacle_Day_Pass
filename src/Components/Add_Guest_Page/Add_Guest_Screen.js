@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Nav_Bar from '../Universal_Components/Nav_Bar'
+import Phone_Nav_Bar from '../Universal_Components/Phone_Nav_Bar';
 import "./Add_Guest_Screen.css"
 import { Button, Form } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
@@ -10,6 +11,12 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import axios from 'axios';
 import Cookies from "universal-cookie";
+
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+
+
 const cookies = new Cookies();
 
 function Add_Guest_Screen() {
@@ -23,6 +30,8 @@ function Add_Guest_Screen() {
   const [loading, setLoading] = useState(true);
   const [invitedGuestData, setInvitedGuestData] = useState([]);
   const [savedGuestData, setSavedGuestData] = useState([]);
+  const [showAddedGuestNotification, setShowAddedGuestNotification] = useState(false);
+  const [notificationName, setNotificationName] = useState("");
   const navigate = useNavigate();
 
   const handleClose = () => setShow(false);
@@ -134,9 +143,15 @@ function Add_Guest_Screen() {
     } else {
       updateInvitedGuest()
       updateSavedGuest()
+      setNotificationName(guestName)
       // Clear input fields
       setGuestName("");
       setGuestNumber("");
+      setShowAddedGuestNotification(true)
+      const timer = setTimeout(() => {
+        setShowAddedGuestNotification(false)
+      }, 2000);
+      return () => clearTimeout(timer);
     }
   }
 
@@ -207,7 +222,12 @@ function Add_Guest_Screen() {
 
   return (
     <div className='add_guest_screen_container'>
-      <Nav_Bar loggedIn={true} navHeader={'Pinnacle Lake Day Passes'} />
+      <span className="laptop_nav_bar">
+        <Nav_Bar loggedIn={true} />
+      </span>
+      <span className="phone_nav_bar">
+        <Phone_Nav_Bar loggedIn={true} />
+      </span>
       <div className="add_guest_screen_module_container">
         <div className="laptop_add_guest_module">
           <div className="laptop_add_guest_invites_container">
@@ -299,12 +319,12 @@ function Add_Guest_Screen() {
 
 
         <div className="mobile_add_guest_module">
-          <Button className='phone_logout_button' onClick={handleLogout}>
+          {/* <Button className='phone_logout_button' onClick={handleLogout}>
             <div className="phone_logout_button_container">
               <ArrowBackIosRoundedIcon className='phone_logout_arrow' />
               <p className="phone_logout_button_text">Logout</p>
             </div>
-          </Button>
+          </Button> */}
           <Form className='mobile_add_guest_form'>
             <Form.Group className="mb-3">
               <Form.Label className='mobile_add_guest_input_label mobile_add_guest_input_label_name float-start'>First and Last Name</Form.Label>
@@ -346,9 +366,9 @@ function Add_Guest_Screen() {
             />
             <Button className='mobile_add_guest_button float-end' type='submit' onClick={(e) => handleAddGuest(e)}>Add Guest</Button>
           </Form>
-          <Button variant="primary" onClick={handleShow} className='mobile_add_guest_button mobile_add_guest_offcanvas_button'>
+          {/* <Button variant="primary" onClick={handleShow} className='mobile_add_guest_button mobile_add_guest_offcanvas_button'>
             View Invited Guests
-          </Button>
+          </Button> */}
 
           <Offcanvas show={show} onHide={handleClose} placement='bottom' className='mobile_add_guest_offcanvas'>
             <Offcanvas.Header closeButton>
@@ -365,8 +385,8 @@ function Add_Guest_Screen() {
                   return (
                     <>
                       <Accordion.Item eventKey={dateIndex}>
-                        <Accordion.Header>{day + ", " + month + " " + dayNumber + ", " + year}</Accordion.Header>
-                        <Accordion.Body>
+                        <Accordion.Header className='mobile_accordian_header'>{day + ", " + month + " " + dayNumber + ", " + year}</Accordion.Header>
+                        <Accordion.Body className='mobile_accordian_body'>
                           <Form className='added_guest_form_container'>
                             {date["invitedGuestsForDate"].map((guest, guestIndex) => {
                               const name = guest.invitedGuestName;
@@ -389,6 +409,16 @@ function Add_Guest_Screen() {
             </Offcanvas.Body>
           </Offcanvas>
         </div>
+      </div>
+        {(showAddedGuestNotification) &&
+        <div className="mobile_view_guest_add_notification" onClick={handleShow}>
+          {notificationName} was invited
+        </div>
+        }
+
+
+      <div className="mobile_view_guests_button_container" onClick={handleShow}>
+        View Invited Guests
       </div>
     </div>
 
