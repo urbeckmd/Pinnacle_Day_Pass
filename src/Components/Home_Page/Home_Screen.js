@@ -6,7 +6,6 @@ import Home_Page_Module from './Home_Page_Module';
 import Login_Module from './Login_Module';
 import Phone_Nav_Bar from '../Universal_Components/Phone_Nav_Bar';
 
-
 function Home_Screen() {
     const [loginScreen, setLoginScreen] = useState(false);
 

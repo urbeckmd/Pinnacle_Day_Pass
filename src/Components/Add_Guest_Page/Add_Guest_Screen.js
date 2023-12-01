@@ -23,7 +23,7 @@ function Add_Guest_Screen() {
   const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const [guestName, setGuestName] = useState("");
-  const [guestNumber, setGuestNumber] = useState("");
+  const [guestNumber, setGuestNumber] = useState("(___) ___-____");
   const [guestDateOfVisit, setGuestDateOfVisit] = useState("");
   const [guestSaved, setGuestSaved] = useState(false);
   const [show, setShow] = useState(false);
@@ -209,6 +209,36 @@ function Add_Guest_Screen() {
       })
   }
 
+
+  const handleGuestNumber = (e) => {
+    const isNumber = /^[0-9]$/i.test(e.key);
+    const numberOfInts = guestNumber.replace(/[^0-9]/g, "");
+    console.log(numberOfInts);
+    console.log(isNumber);
+    // Update number if key is a digit
+    if ((isNumber) && (numberOfInts.length < 10)) {
+      const index_of_dash = guestNumber.indexOf('_');
+      const firstPartOfNumber = guestNumber.substring(0, index_of_dash);
+      const lastPartOfNumber = guestNumber.substring(index_of_dash+1);
+      const newNumber = firstPartOfNumber + e.key + lastPartOfNumber;
+      console.log(newNumber);
+      setGuestNumber(newNumber)
+    }
+    // Update number if key is backspace
+    if (e.key == 'Backspace') {
+      console.log('BACKSPACE ENTERED');
+      const index_of_digit = guestNumber.lastIndexOf(/\d+$/);
+      console.log(index_of_digit);
+      // const firstPartOfNumber = guestNumber.substring(0, index_of_dash);
+      // const lastPartOfNumber = guestNumber.substring(index_of_dash+1);
+      // const newNumber = firstPartOfNumber + e.key + lastPartOfNumber;
+      // console.log(newNumber);
+      // setGuestNumber(newNumber)
+    }
+    
+  }
+
+
   useEffect(() => {
     // Get logged in user from cookies and list of saved guests and invited guests
     const currentUser = cookies.get("EMAIL");
@@ -351,7 +381,7 @@ function Add_Guest_Screen() {
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label className='mobile_add_guest_input_label float-start'>Phone Number</Form.Label>
-              <Form.Control className='mobile_add_guest_input_field' type="text" value={guestNumber} onChange={(e) => setGuestNumber(e.target.value)} />
+              <Form.Control className='mobile_add_guest_input_field' type="text" value={guestNumber} onKeyDown={(e) => handleGuestNumber(e)} />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label className='mobile_add_guest_input_label float-start'>Date of Visit</Form.Label>
