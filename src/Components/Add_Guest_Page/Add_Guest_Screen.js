@@ -32,6 +32,7 @@ function Add_Guest_Screen() {
   const [savedGuestData, setSavedGuestData] = useState([]);
   const [showAddedGuestNotification, setShowAddedGuestNotification] = useState(false);
   const [notificationName, setNotificationName] = useState("");
+  const [lastInputNumber, setLastInputNumber] = useState("");
   const navigate = useNavigate();
 
   const handleClose = () => setShow(false);
@@ -222,18 +223,18 @@ function Add_Guest_Screen() {
       const lastPartOfNumber = guestNumber.substring(index_of_dash+1);
       const newNumber = firstPartOfNumber + e.key + lastPartOfNumber;
       console.log(newNumber);
+      setLastInputNumber(e.key)
       setGuestNumber(newNumber)
     }
     // Update number if key is backspace
-    if (e.key == 'Backspace') {
+    if (e.key == 'Backspace' && (/[0-9]/.test(guestNumber))) {
       console.log('BACKSPACE ENTERED');
-      const index_of_digit = guestNumber.lastIndexOf(/\d+$/);
-      console.log(index_of_digit);
-      // const firstPartOfNumber = guestNumber.substring(0, index_of_dash);
-      // const lastPartOfNumber = guestNumber.substring(index_of_dash+1);
-      // const newNumber = firstPartOfNumber + e.key + lastPartOfNumber;
-      // console.log(newNumber);
-      // setGuestNumber(newNumber)
+      const rawNumber = guestNumber.match(/\d+/g).join("");
+      const index_of_last_digit = guestNumber.lastIndexOf(rawNumber.slice(-1));
+      const firstPartOfNumber = guestNumber.substring(0, index_of_last_digit);
+      const lastPartOfNumber = guestNumber.substring(index_of_last_digit+1);
+      const newNumber = firstPartOfNumber + "_" + lastPartOfNumber;
+      setGuestNumber(newNumber);
     }
     
   }
