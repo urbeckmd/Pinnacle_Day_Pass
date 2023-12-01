@@ -32,7 +32,6 @@ function Add_Guest_Screen() {
   const [savedGuestData, setSavedGuestData] = useState([]);
   const [showAddedGuestNotification, setShowAddedGuestNotification] = useState(false);
   const [notificationName, setNotificationName] = useState("");
-  const [lastInputNumber, setLastInputNumber] = useState("");
   const navigate = useNavigate();
 
   const handleClose = () => setShow(false);
@@ -213,23 +212,19 @@ function Add_Guest_Screen() {
 
   const handleGuestNumber = (e) => {
     const isNumber = /^[0-9]$/i.test(e.key);
-    const numberOfInts = guestNumber.replace(/[^0-9]/g, "");
-    console.log(numberOfInts);
-    console.log(isNumber);
+    const rawNumber = guestNumber.replace(/[^0-9]/g, "");
     // Update number if key is a digit
-    if ((isNumber) && (numberOfInts.length < 10)) {
+    if ((isNumber) && (rawNumber.length < 10)) {
       const index_of_dash = guestNumber.indexOf('_');
       const firstPartOfNumber = guestNumber.substring(0, index_of_dash);
       const lastPartOfNumber = guestNumber.substring(index_of_dash+1);
       const newNumber = firstPartOfNumber + e.key + lastPartOfNumber;
       console.log(newNumber);
-      setLastInputNumber(e.key)
       setGuestNumber(newNumber)
     }
     // Update number if key is backspace
     if (e.key == 'Backspace' && (/[0-9]/.test(guestNumber))) {
       console.log('BACKSPACE ENTERED');
-      const rawNumber = guestNumber.match(/\d+/g).join("");
       const index_of_last_digit = guestNumber.lastIndexOf(rawNumber.slice(-1));
       const firstPartOfNumber = guestNumber.substring(0, index_of_last_digit);
       const lastPartOfNumber = guestNumber.substring(index_of_last_digit+1);
@@ -328,7 +323,7 @@ function Add_Guest_Screen() {
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label className='laptop_add_guest_input_label float-start'>Phone Number</Form.Label>
-                <Form.Control className='laptop_add_guest_input_field' type="text" value={guestNumber} onChange={(e) => setGuestNumber(e.target.value)} />
+                <Form.Control className='laptop_add_guest_input_field laptop_add_guest_number_input_field' type="text" value={guestNumber} onKeyDown={(e) => handleGuestNumber(e)} />
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label className='laptop_add_guest_input_label float-start'>Date of Visit</Form.Label>
@@ -382,7 +377,7 @@ function Add_Guest_Screen() {
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label className='mobile_add_guest_input_label float-start'>Phone Number</Form.Label>
-              <Form.Control className='mobile_add_guest_input_field' type="text" value={guestNumber} onKeyDown={(e) => handleGuestNumber(e)} />
+              <Form.Control className='mobile_add_guest_input_field mobile_add_guest_number_input_field' type="text" value={guestNumber} onKeyDown={(e) => handleGuestNumber(e)} />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label className='mobile_add_guest_input_label float-start'>Date of Visit</Form.Label>

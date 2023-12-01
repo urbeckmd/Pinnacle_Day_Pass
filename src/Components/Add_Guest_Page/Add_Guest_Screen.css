@@ -20,6 +20,10 @@
     color: white;
 }
 
+.mobile_add_guest_number_input_field, .laptop_add_guest_number_input_field  {
+    caret-color: transparent;
+}
+
 .accordion-button:not(.collapsed) {
     color: white !important;
     background-color: rgb(150, 120, 55) !important;
