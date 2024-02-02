@@ -55,8 +55,8 @@ const passesSchema = new mongoose.Schema({
         required: [true, "Please give date of visit..."],
         unique: true
     },
-    invitedGuest: {
-        invitedGuest: [invitedGuestPassesSchema],
+    invitedGuests: {
+        invitedGuests: [invitedGuestPassesSchema],
         type: Array,
         required: [true, "Please give list of invited guests..."],
         unique: false

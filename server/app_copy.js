@@ -192,23 +192,17 @@ app.put("/addGuest", (request, response) => {
     const guestId = new mongoose.Types.ObjectId();
     const date = request.body.guestDateOfVisit;
     console.log('looking for this date in DB', date);
-    console.log(request.body);
+    // console.log(request.body);
 
-
-
-    // Update the Passes Collection
-    if (request.body.dateExists) {
-        Resident.findOne({ _id: new mongoose.Types.ObjectId(request.body.residentId) })
-            .then((resident) => {
-                // console.log('FOUND THE RESIDENT ');
-                console.log(resident);
-
-            })
-            .catch((e) => {
-                console.log(e);
-                // console.log('eeeeeee');
-            });
-    }
+    Passes.findOne({ passDate: '2024-02-01' })
+        .then((result) => {
+            // Get list of all guests for day
+            var guests = Object.values(result)[2].invitedGuests
+            console.log(guests);
+        })
+        .catch((e) => {
+            console.log(e);
+        });
 
 
 
@@ -217,7 +211,7 @@ app.put("/addGuest", (request, response) => {
     // else push new date with new guest
     if (request.body.dateExists) {
         Resident.updateOne(
-            { _id: new mongoose.Types.ObjectId(request.body.residentId) },
+            { residentEmail: request.body.residentName },
             {
                 $push: {
                     "invitedGuests.$[elem].invitedGuestsForDate": {
