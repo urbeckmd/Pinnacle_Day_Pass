@@ -31,7 +31,7 @@ const invitedGuestForDateSchema = new mongoose.Schema({
 
 const invitedGuestSchema = new mongoose.Schema({
     invitedGuestDate: {
-        type: Date,
+        type: String,
         required: [true, "Please give date of visit..."],
         unique: false
     },
@@ -95,5 +95,8 @@ const residentSchema = new mongoose.Schema({
         unique: false
     }
 });
+
+
+
 
 module.exports = mongoose.model.Residents || mongoose.model("Residents", residentSchema);

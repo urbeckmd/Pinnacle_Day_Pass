@@ -33,6 +33,9 @@ function Login_Module( { handleLoginClick, setUserLoggedIn }) {
                 cookies.set("EMAIL", result.data.email, {
                     path: "/",
                 })
+                cookies.set("RESIDENT_ID",result.data.residentId ,{
+                    path: "/"
+                })
                 navigate("/add_guest")
             })
             .catch((error) => {

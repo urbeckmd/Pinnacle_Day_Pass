@@ -55,9 +55,15 @@ function Add_Guest_Screen() {
   const updateInvitedGuest = () => {
     // Update the local array of guests
     var updatedInvitedGuestData = [...invitedGuestData];
-    const utcDate = (guestDateOfVisit + "T00:00:00.000Z");
+    const utcDate = (guestDateOfVisit)
+    console.log('utcDate',utcDate);
+    var now = moment().format('YYYY-MM-DD')
+    console.log('moment', now);
+    console.log(utcDate >= now);
+
     var dateFoundInArray = false;
     updatedInvitedGuestData.forEach((date, index) => {
+      console.log('date',date.date);
       // Check if date already exists
       // If so, append guest to list of guests already invited
       if (date.date == utcDate) {
@@ -76,7 +82,7 @@ function Add_Guest_Screen() {
       method: "put",
       url: "http://localhost:3000/addGuest",
       data: {
-        residentName: cookies.get("EMAIL"),
+        residentId: cookies.get("RESIDENT_ID"),
         guestName: guestName,
         guestNumber: guestNumber,
         guestDateOfVisit: utcDate,
@@ -117,7 +123,7 @@ function Add_Guest_Screen() {
         method: "post",
         url: "http://localhost:3000/saveGuest",
         data: {
-          residentName: cookies.get("EMAIL"),
+          residentId: cookies.get("RESIDENT_ID"),
           guestName: guestName,
           guestNumber: guestNumber,
           guestSaved: guestSaved,
@@ -139,9 +145,8 @@ function Add_Guest_Screen() {
     e.preventDefault();
 
     // Make sure date is in future
-    const today = new Date().setHours(0, 0, 0, 0);
-    const inviteDate = new Date(guestDateOfVisit + "T00:00:00.000")//.setHours(23, 0, 0, 0);
-    if (today > inviteDate) {
+    const today = moment().format('YYYY-MM-DD')
+    if (today > guestDateOfVisit) {
       alert("select future date")
     } else {
       updateInvitedGuest()
@@ -264,15 +269,16 @@ function Add_Guest_Screen() {
               {(invitedGuestData.length != 0) ?
                 <Accordion>
                   {(!loading) ? invitedGuestData.map((date, dateIndex) => {
-                    const dateObject = new Date(date.date);
-                    const day = weekday[dateObject.getUTCDay()];
-                    const month = months[dateObject.getMonth()];
-                    const dayNumber = dateObject.getUTCDate();
-                    const year = dateObject.getFullYear();
+                    // const dateObject = new Date(date.date);
+                    // const day = weekday[dateObject.getUTCDay()];
+                    // const month = months[dateObject.getMonth()];
+                    // const dayNumber = dateObject.getUTCDate();
+                    // const year = dateObject.getFullYear();
+                    const invitedDate = moment(date.date, 'YYYY-MM-DD').format("dddd, MMMM D, YYYY")
                     return (
                       <>
                         <Accordion.Item eventKey={dateIndex}>
-                          <Accordion.Header>{day + ", " + month + " " + dayNumber + ", " + year}</Accordion.Header>
+                          <Accordion.Header>{invitedDate}</Accordion.Header>
                           <Accordion.Body>
                             <Form className='added_guest_form_container'>
                               {date["invitedGuestsForDate"].map((guest, guestIndex) => {

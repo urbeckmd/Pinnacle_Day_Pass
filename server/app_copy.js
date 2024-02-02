@@ -10,9 +10,11 @@ const schedule = require("node-schedule");
 const mongoose = require("mongoose");
 var QRCode = require('qrcode');
 var nodemailer = require('nodemailer');
+var moment = require('moment');
 
 
 dbConnect()
+moment().format();
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -43,12 +45,14 @@ app.post("/", (request, response) => {
         .then((resident) => {
             bcrypt.compare(request.body.password, resident.residentPassword)
                 .then((passwordCheck) => {
+                    // if passwords do not match
                     if (!passwordCheck) {
                         return response.status(400).send({
                             message: "Passwords do not match 1",
                             error
                         })
                     }
+                    // if username and password are correct
                     const token = jwt.sign(
                         {
                             residentId: resident._id,
@@ -57,12 +61,15 @@ app.post("/", (request, response) => {
                         "1pn8XwAhk2iapj6ThxzyFHZdZ5eTpuMh",
                         { expiresIn: "12h" }
                     );
+                    // return email, id, and jwt
                     response.status(200).send({
                         message: "Login Successful",
                         email: resident.residentEmail,
+                        residentId: resident._id,
                         token,
                     });
                 })
+                // if passwords do not match
                 .catch((error) => {
                     response.status(400).send({
                         message: "Passwords do not match 2",
@@ -70,6 +77,7 @@ app.post("/", (request, response) => {
                     });
                 })
         })
+        // if email is not in database
         .catch((e) => {
             response.status(404).send({
                 message: "Email not found",
@@ -81,9 +89,9 @@ app.post("/", (request, response) => {
 
 // Retrieve all the invited guests
 app.get("/getInvitedGuests", (request, response) => {
-    const currentUser = request.query.email;
+    const currentUser = request.query.residentId;
     console.log(currentUser);
-    Resident.findOne({ residentEmail: currentUser })
+    Resident.findOne({ _id: new mongoose.Types.ObjectId(currentUser) })
         .then((result) => {
             const invitedGuests = result.invitedGuests;
             response.status(200).send({
@@ -92,7 +100,7 @@ app.get("/getInvitedGuests", (request, response) => {
         })
         .catch((e) => {
             response.status(400).send({
-                message: "Email not found in database...",
+                message: "Resident ID not found in database...",
                 e,
             });
         });
@@ -100,9 +108,9 @@ app.get("/getInvitedGuests", (request, response) => {
 
 // Retrieve all the saved guests
 app.get("/getSavedGuests", (request, response) => {
-    const currentUser = request.query.email;
+    const currentUser = request.query.residentId;
     console.log(currentUser);
-    Resident.findOne({ residentEmail: currentUser })
+    Resident.findOne({ _id: new mongoose.Types.ObjectId(currentUser) })
         .then((result) => {
             const savedGuests = result.savedGuests;
             response.status(200).send({
@@ -133,7 +141,7 @@ const sendTodaysInvite = (request, guestId) => {
     const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     var daysList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const today = new Date(new Date(request.body.guestDateOfVisit).toISOString())
-    console.log('line 124:' , request.body);
+    console.log('line 124:', request.body);
     // SEND AND EMAIL FIRST AND IF RESPONSE IS SUCCESS UPDATE THE DB
     Resident.findOneAndUpdate(
         { residentEmail: 'urbeckmd@gmail.com' },
@@ -175,20 +183,41 @@ const sendTodaysInvite = (request, guestId) => {
 }
 
 
+
+
+
+
 // Add guest to array of invites guests
 app.put("/addGuest", (request, response) => {
     const guestId = new mongoose.Types.ObjectId();
-    const date = new Date(request.body.guestDateOfVisit);
-    const day = date.getUTCDate();
-    const month = date.getUTCMonth() + 1;
-    const year = date.getFullYear();
-    const dbDateString = `${month}/${day}/${year}`
+    const date = request.body.guestDateOfVisit;
+    console.log('looking for this date in DB', date);
     console.log(request.body);
+
+
+
+    // Update the Passes Collection
+    if (request.body.dateExists) {
+        Resident.findOne({ _id: new mongoose.Types.ObjectId(request.body.residentId) })
+            .then((resident) => {
+                // console.log('FOUND THE RESIDENT ');
+                console.log(resident);
+
+            })
+            .catch((e) => {
+                console.log(e);
+                // console.log('eeeeeee');
+            });
+    }
+
+
+
+    // Update the Residents Collection
     // if people are already invited on this date, push new guest
     // else push new date with new guest
     if (request.body.dateExists) {
         Resident.updateOne(
-            { residentEmail: request.body.residentName },
+            { _id: new mongoose.Types.ObjectId(request.body.residentId) },
             {
                 $push: {
                     "invitedGuests.$[elem].invitedGuestsForDate": {
@@ -200,18 +229,13 @@ app.put("/addGuest", (request, response) => {
                     }
                 }
             },
-            { arrayFilters: [{ "elem.date": new Date(new Date(request.body.guestDateOfVisit).toISOString()) }] },
+            { arrayFilters: [{ "elem.date": request.body.guestDateOfVisit }] },
         )
             .then((result) => {
-                // If they add the guest for today, send invite immediately
-                if (dbDateString == new Date().toLocaleDateString()) {
-                    sendTodaysInvite(request, guestId)
-                }
                 response.status(200).send({
                     message: "Guest was added...",
                     result,
                 });
-
             })
             .catch((error) => {
                 response.status(403).send({
@@ -227,7 +251,7 @@ app.put("/addGuest", (request, response) => {
             {
                 $push: {
                     "invitedGuests": {
-                        'date': new Date(new Date(request.body.guestDateOfVisit).toISOString()),
+                        'date': request.body.guestDateOfVisit,
                         'invitedGuestsForDate': [{
                             "invitedGuestId": guestId,
                             "invitedGuestName": request.body.guestName,
@@ -240,10 +264,6 @@ app.put("/addGuest", (request, response) => {
             },
         )
             .then((result) => {
-                // If they add the guest for today, send invite immediately
-                if (dbDateString == new Date().toLocaleDateString()) {
-                    sendTodaysInvite(request, guestId)
-                }
                 response.status(200).send({
                     message: "Guest was added to new date...",
                     result,
@@ -263,7 +283,7 @@ app.put("/addGuest", (request, response) => {
 app.post("/saveGuest", (request, response) => {
     console.log(request.body);
     Resident.updateOne(
-        { residentEmail: request.body.residentName },
+        { _id: new mongoose.Types.ObjectId(request.body.residentId) },
         {
             $addToSet: {
                 "savedGuests": {
@@ -292,21 +312,24 @@ app.post("/saveGuest", (request, response) => {
 
 // Delete the old passes each morning
 const deleteOldPasses = () => {
+    const yesterday = moment().subtract(1, 'days').format('YYYY-MM-DD')
+    console.log(yesterday);
     Resident.updateMany(
         {},
-        { $pull: { "invitedGuests": { date: { $lt: new Date(new Date(new Date().setHours(19, 0, 0, 0) - 86400000).toISOString()) } } } }
+        { $pull: { "invitedGuests": { date: { $lt: yesterday } } } }
     )
         .then((result) => {
-            const x = new Date(new Date().toISOString());
+            console.log('Successfully deleted old passes');
             console.log(result);
         })
         .catch((error) => {
+            console.log('Error deleting old passes');
             console.log(error);
         })
 }
 
 // Scheduler to run function that deletes old passes
-const deleteOldPassesWorker = schedule.scheduleJob('0 11 * * *', () => {
+const deleteOldPassesWorker = schedule.scheduleJob('20 26 21 * * *', () => {
     console.log('Task executed at 11 AM:', new Date().toLocaleTimeString());
     deleteOldPasses()
 });
@@ -454,7 +477,7 @@ const findAllTomorrowsPasses = () => {
     const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     var daysList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const tomorrow = new Date(new Date().setHours(18, 0, 0, 0)).toISOString();
-    console.log('tomorrow',tomorrow);
+    console.log('tomorrow', tomorrow);
     Resident.find(
         { "invitedGuests.date": new Date(tomorrow), "invitedGuests.invitedGuestsForDate.invitedGuestPassSent": false },
     )
