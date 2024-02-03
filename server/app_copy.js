@@ -220,6 +220,10 @@ app.put("/addGuest", (request, response) => {
                     .then((result) => {
                         console.log(result);
                         console.log('Successfully created the new date');
+                        response.status(200).send({
+                            message: "Guest was added...",
+                            result,
+                        });
                     })
                     .catch((error) => {
                         console.log(error);
@@ -229,9 +233,37 @@ app.put("/addGuest", (request, response) => {
             // If date already exists, check if the guest was already added or not, then send invite or not.
             else {
                 // Get list of all guests for day
-                console.log('Date existed. Printing all the current guests...');
-                var guests = Object.values(result)[2].invitedGuestPass
-                console.log(guests);
+                console.log('Date existed. Attempting to add new guest to the date...');
+                Passes.updateOne(
+                    { passDate: date },
+                    {
+                        $push: {
+                            invitedGuestPass: {
+                                residentId: new mongoose.Types.ObjectId(residentId),
+                                residentFirstName: 'Matt',
+                                residentLastName: 'Urbeck',
+                                residentEmail: 'sdfg@gmail.com',
+                                invitedGuestId: guestId,
+                                invitedGuestName: guestName,
+                                invitedGuestNumber: guestNumber,
+                                invitedGuestPassScanned: false,
+                                invitedGuestPassSent: false
+                            }
+                        }
+                    }
+                )
+                    .then((result) => {
+                        console.log(result);
+                        console.log('Successfully added new guest to the date');
+                        response.status(200).send({
+                            message: "Guest was added...",
+                            result,
+                        });
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        console.log('Failed to add new guest to the date');
+                    })
             }
 
         })
