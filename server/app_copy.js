@@ -65,6 +65,8 @@ app.post("/", (request, response) => {
                         message: "Login Successful",
                         email: resident.residentEmail,
                         residentId: resident._id,
+                        residentFirstName: resident.residentFirstName,
+                        residentLastName: resident.residentLastName,
                         token,
                     });
                 })
@@ -190,7 +192,10 @@ const sendTodaysInvite = (request, guestId) => {
 app.put("/addGuest", (request, response) => {
     const guestId = new mongoose.Types.ObjectId();
     const date = request.body.guestDateOfVisit;
+    const residentEmail = request.body.residentEmail;
     const residentId = request.body.residentId;
+    const residentFirstName = request.body.residentFirstName;
+    const residentLastName = request.body.residentLastName;
     const guestName = request.body.guestName;
     const guestNumber = request.body.guestNumber;
     console.log(request.body);
@@ -206,9 +211,9 @@ app.put("/addGuest", (request, response) => {
                         passDate: date,
                         invitedGuestPass: [{
                             residentId: new mongoose.Types.ObjectId(residentId),
-                            residentFirstName: 'Ansdrwe',
-                            residentLastName: 'Never',
-                            residentEmail: 'urbeckm@gmail.com',
+                            residentFirstName: residentFirstName,
+                            residentLastName: residentLastName,
+                            residentEmail: residentEmail,
                             invitedGuestId: guestId,
                             invitedGuestName: guestName,
                             invitedGuestNumber: guestNumber,
@@ -240,9 +245,9 @@ app.put("/addGuest", (request, response) => {
                         $push: {
                             invitedGuestPass: {
                                 residentId: new mongoose.Types.ObjectId(residentId),
-                                residentFirstName: 'Matt',
-                                residentLastName: 'Urbeck',
-                                residentEmail: 'sdfg@gmail.com',
+                                residentFirstName: residentFirstName,
+                                residentLastName: residentLastName,
+                                residentEmail: residentEmail,
                                 invitedGuestId: guestId,
                                 invitedGuestName: guestName,
                                 invitedGuestNumber: guestNumber,

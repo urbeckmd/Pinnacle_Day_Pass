@@ -30,10 +30,16 @@ function Login_Module( { handleLoginClick, setUserLoggedIn }) {
                 cookies.set("TOKEN", result.data.token, {
                     path: "/",
                 })
-                cookies.set("EMAIL", result.data.email, {
+                cookies.set("RESIDENT_EMAIL", result.data.email, {
                     path: "/",
                 })
                 cookies.set("RESIDENT_ID",result.data.residentId ,{
+                    path: "/"
+                })
+                cookies.set("RESIDENT_FIRSTNAME",result.data.residentFirstName, {
+                    path: "/"
+                })
+                cookies.set("RESIDENT_LASTNAME",result.data.residentLastName, {
                     path: "/"
                 })
                 navigate("/add_guest")

@@ -83,6 +83,9 @@ function Add_Guest_Screen() {
       url: "http://localhost:3000/addGuest",
       data: {
         residentId: cookies.get("RESIDENT_ID"),
+        residentEmail: cookies.get("RESIDENT_EMAIL"),
+        residentFirstName: cookies.get("RESIDENT_FIRSTNAME"),
+        residentLastName: cookies.get("RESIDENT_LASTNAME"),
         guestName: guestName,
         guestNumber: guestNumber,
         guestDateOfVisit: utcDate,
