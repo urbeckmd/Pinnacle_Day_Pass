@@ -193,11 +193,12 @@ app.put("/addGuest", (request, response) => {
     const guestId = new mongoose.Types.ObjectId();
     const date = request.body.guestDateOfVisit;
     const residentEmail = request.body.residentEmail;
-    const residentId = request.body.residentId;
+    const residentId = new mongoose.Types.ObjectId(request.body.residentId);
     const residentFirstName = request.body.residentFirstName;
     const residentLastName = request.body.residentLastName;
     const guestName = request.body.guestName;
     const guestNumber = request.body.guestNumber;
+    var noErrors = true;
     console.log(request.body);
 
     // Check if date already exists in Passes 
@@ -210,7 +211,7 @@ app.put("/addGuest", (request, response) => {
                     {
                         passDate: date,
                         invitedGuestPass: [{
-                            residentId: new mongoose.Types.ObjectId(residentId),
+                            residentId: residentId,
                             residentFirstName: residentFirstName,
                             residentLastName: residentLastName,
                             residentEmail: residentEmail,
@@ -225,14 +226,11 @@ app.put("/addGuest", (request, response) => {
                     .then((result) => {
                         console.log(result);
                         console.log('Successfully created the new date');
-                        response.status(200).send({
-                            message: "Guest was added...",
-                            result,
-                        });
                     })
                     .catch((error) => {
                         console.log(error);
                         console.log('Failed to create new date');
+                        noErrors = false;
                     })
             }
             // If date already exists, check if the guest was already added or not, then send invite or not.
@@ -244,7 +242,7 @@ app.put("/addGuest", (request, response) => {
                     {
                         $push: {
                             invitedGuestPass: {
-                                residentId: new mongoose.Types.ObjectId(residentId),
+                                residentId: residentId,
                                 residentFirstName: residentFirstName,
                                 residentLastName: residentLastName,
                                 residentEmail: residentEmail,
@@ -260,20 +258,19 @@ app.put("/addGuest", (request, response) => {
                     .then((result) => {
                         console.log(result);
                         console.log('Successfully added new guest to the date');
-                        response.status(200).send({
-                            message: "Guest was added...",
-                            result,
-                        });
                     })
                     .catch((error) => {
                         console.log(error);
                         console.log('Failed to add new guest to the date');
+                        noErrors = false;
                     })
             }
 
         })
         .catch((e) => {
             console.log(e);
+            console.log("Failed to complete find method");
+            noErrors = false;
         });
 
 
@@ -281,67 +278,65 @@ app.put("/addGuest", (request, response) => {
     // Update the Residents Collection
     // if people are already invited on this date, push new guest
     // else push new date with new guest
-    //     if (request.body.dateExists) {
-    //         Resident.updateOne(
-    //             { residentEmail: request.body.residentName },
-    //             {
-    //                 $push: {
-    //                     "invitedGuests.$[elem].invitedGuestsForDate": {
-    //                         "invitedGuestId": guestId,
-    //                         "invitedGuestName": request.body.guestName,
-    //                         "invitedGuestNumber": request.body.guestNumber,
-    //                         "invitedGuestPassScanned": false,
-    //                         "invitedGuestPassSent": false
-    //                     }
-    //                 }
-    //             },
-    //             { arrayFilters: [{ "elem.date": request.body.guestDateOfVisit }] },
-    //         )
-    //             .then((result) => {
-    //                 response.status(200).send({
-    //                     message: "Guest was added...",
-    //                     result,
-    //                 });
-    //             })
-    //             .catch((error) => {
-    //                 response.status(403).send({
-    //                     message: "Guest was not added...",
-    //                     error,
-    //                 });
+    if (request.body.dateExists) {
+        Resident.updateOne(
+            { _id: residentId },
+            {
+                $push: {
+                    "invitedGuests.$[elem].invitedGuestsForDate": {
+                        "invitedGuestId": guestId,
+                        "invitedGuestName": guestName,
+                        "invitedGuestNumber": guestNumber,
+                        "invitedGuestPassScanned": false,
+                        "invitedGuestPassSent": false
+                    }
+                }
+            },
+            { arrayFilters: [{ "elem.date": request.body.guestDateOfVisit }] },
+        )
+            .then((result) => {
+                console.log("Guest was added to new date in Residents Collections..");
+            })
+            .catch((error) => {
+                noErrors = false
 
-    //             })
-    //     }
-    //     else {
-    //         Resident.updateOne(
-    //             { residentEmail: request.body.residentName },
-    //             {
-    //                 $push: {
-    //                     "invitedGuests": {
-    //                         'date': request.body.guestDateOfVisit,
-    //                         'invitedGuestsForDate': [{
-    //                             "invitedGuestId": guestId,
-    //                             "invitedGuestName": request.body.guestName,
-    //                             "invitedGuestNumber": request.body.guestNumber,
-    //                             "invitedGuestPassScanned": false,
-    //                             "invitedGuestPassSent": false
-    //                         }]
-    //                     }
-    //                 }
-    //             },
-    //         )
-    //             .then((result) => {
-    //                 response.status(200).send({
-    //                     message: "Guest was added to new date...",
-    //                     result,
-    //                 });
-    //             })
-    //             .catch((error) => {
-    //                 response.status(40).send({
-    //                     message: "Guest was not added...",
-    //                     error,
-    //                 });
-    //             })
-    //     }
+            })
+    }
+    else {
+        Resident.updateOne(
+            { residentEmail: request.body.residentName },
+            {
+                $push: {
+                    "invitedGuests": {
+                        'date': request.body.guestDateOfVisit,
+                        'invitedGuestsForDate': [{
+                            "invitedGuestId": guestId,
+                            "invitedGuestName": guestName,
+                            "invitedGuestNumber": guestNumber,
+                            "invitedGuestPassScanned": false,
+                            "invitedGuestPassSent": false
+                        }]
+                    }
+                }
+            },
+        )
+            .then((result) => {
+                console.log("Guest was added to new date in Residents Collections..");
+            })
+            .catch((error) => {
+                noErrors = false
+            })
+    }
+    if (noErrors) {
+        response.status(200).send({
+            message: "Guest was added to all collections..."
+        });
+    } else {
+        response.status(403).send({
+            message: "Guest was not added to all collections...",
+            error,
+        });
+    }
 })
 
 
@@ -378,11 +373,23 @@ app.post("/saveGuest", (request, response) => {
 
 // Delete the old passes each morning
 const deleteOldPasses = () => {
-    const yesterday = moment().subtract(1, 'days').format('YYYY-MM-DD')
-    console.log(yesterday);
+    const previousDays = moment().subtract(2, 'days').format('YYYY-MM-DD')
+    console.log(previousDays);
+
+    Passes.deleteOne(
+        { passDate: previousDays }
+    )
+        .then((result) => {
+            console.log('successfully deleted old passes from Passes collection...');
+        })
+        .catch((error) => {
+            console.log('failed to delete old passes from Passes collection...');
+        })
+
+    // THis didnt work, but the one above did
     Resident.updateMany(
         {},
-        { $pull: { "invitedGuests": { date: { $lt: yesterday } } } }
+        { $pull: { "invitedGuests": { date: { $lt: previousDays } } } }
     )
         .then((result) => {
             console.log('Successfully deleted old passes');
@@ -395,7 +402,7 @@ const deleteOldPasses = () => {
 }
 
 // Scheduler to run function that deletes old passes
-const deleteOldPassesWorker = schedule.scheduleJob('20 26 21 * * *', () => {
+const deleteOldPassesWorker = schedule.scheduleJob('00 53 22 * * *', () => {
     console.log('Task executed at 11 AM:', new Date().toLocaleTimeString());
     deleteOldPasses()
 });
