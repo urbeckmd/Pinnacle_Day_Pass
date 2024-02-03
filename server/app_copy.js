@@ -295,16 +295,16 @@ app.put("/addGuest", (request, response) => {
             { arrayFilters: [{ "elem.date": request.body.guestDateOfVisit }] },
         )
             .then((result) => {
-                console.log("Guest was added to new date in Residents Collections..");
+                console.log("Guest was added to existing date in Residents Collections..");
             })
             .catch((error) => {
                 noErrors = false
-
+                console.log('Guest was not added to existing date in the Resident Collections...');
             })
     }
     else {
         Resident.updateOne(
-            { residentEmail: request.body.residentName },
+            { _id: residentId },
             {
                 $push: {
                     "invitedGuests": {
@@ -325,6 +325,7 @@ app.put("/addGuest", (request, response) => {
             })
             .catch((error) => {
                 noErrors = false
+                console.log("Guest was not added to new date in Residents Collections..");
             })
     }
     if (noErrors) {
@@ -357,13 +358,13 @@ app.post("/saveGuest", (request, response) => {
     )
         .then((result) => {
             response.status(200).send({
-                message: "successfully saved",
+                message: "successfully saved the guest",
                 result
             })
         })
         .catch((error) => {
             response.status(400).send({
-                message: "not saved",
+                message: "failed to save the guest",
                 error
             })
         })
@@ -373,7 +374,7 @@ app.post("/saveGuest", (request, response) => {
 
 // Delete the old passes each morning
 const deleteOldPasses = () => {
-    const previousDays = moment().subtract(2, 'days').format('YYYY-MM-DD')
+    const previousDays = moment().add(14, 'days').format('YYYY-MM-DD')
     console.log(previousDays);
 
     Passes.deleteOne(
@@ -386,23 +387,22 @@ const deleteOldPasses = () => {
             console.log('failed to delete old passes from Passes collection...');
         })
 
-    // THis didnt work, but the one above did
     Resident.updateMany(
         {},
-        { $pull: { "invitedGuests": { date: { $lt: previousDays } } } }
+        { $pull: { "invitedGuests": { "date": previousDays } } },
     )
         .then((result) => {
-            console.log('Successfully deleted old passes');
+            console.log('Successfully deleted old passes from Resident Collection');
             console.log(result);
         })
         .catch((error) => {
-            console.log('Error deleting old passes');
+            console.log('Error deleting old passes from Resident collection');
             console.log(error);
         })
 }
 
 // Scheduler to run function that deletes old passes
-const deleteOldPassesWorker = schedule.scheduleJob('00 53 22 * * *', () => {
+const deleteOldPassesWorker = schedule.scheduleJob('00 32 16 * * *', () => {
     console.log('Task executed at 11 AM:', new Date().toLocaleTimeString());
     deleteOldPasses()
 });
