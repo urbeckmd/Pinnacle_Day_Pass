@@ -4,7 +4,7 @@ const invitedGuestPassesSchema = new mongoose.Schema({
     residentId: {
         type: mongoose.Schema.ObjectId,
         required: [true, "Please provide and ID..."],
-        unique: [true, "Please provide a unique ID..."]
+        unique: false
     },
     residentFirstName: {
         type: String,
@@ -19,12 +19,12 @@ const invitedGuestPassesSchema = new mongoose.Schema({
     residentEmail: {
         type: String,
         required: [true, "Please provide the resident's email..."],
-        unique: [true, "Email exists..."]
+        unique: false
     },
     invitedGuestId: {
         type: mongoose.Schema.ObjectId,
         required: [true, "Please provide and ID..."],
-        unique: [true, "Please provide a unique ID..."]
+        unique: false
     },
     invitedGuestName: {
         type: String,
@@ -34,7 +34,7 @@ const invitedGuestPassesSchema = new mongoose.Schema({
     invitedGuestNumber: {
         type: String,
         required: [true, "Please provide the guest's phone number..."],
-        unique: [true, "Phone number has already been invited..."]
+        unique: false
     },
     invitedGuestPassScanned: {
         type: Boolean,
@@ -55,8 +55,8 @@ const passesSchema = new mongoose.Schema({
         required: [true, "Please give date of visit..."],
         unique: true
     },
-    invitedGuests: {
-        invitedGuests: [invitedGuestPassesSchema],
+    invitedGuestPass: {
+        invitedGuestPass: [invitedGuestPassesSchema],
         type: Array,
         required: [true, "Please give list of invited guests..."],
         unique: false

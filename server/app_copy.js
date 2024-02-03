@@ -12,7 +12,6 @@ var QRCode = require('qrcode');
 var nodemailer = require('nodemailer');
 var moment = require('moment');
 
-
 dbConnect()
 moment().format();
 
@@ -191,14 +190,50 @@ const sendTodaysInvite = (request, guestId) => {
 app.put("/addGuest", (request, response) => {
     const guestId = new mongoose.Types.ObjectId();
     const date = request.body.guestDateOfVisit;
-    console.log('looking for this date in DB', date);
-    // console.log(request.body);
+    const residentId = request.body.residentId;
+    const guestName = request.body.guestName;
+    const guestNumber = request.body.guestNumber;
+    console.log(request.body);
 
-    Passes.findOne({ passDate: '2024-02-01' })
+    // Check if date already exists in Passes 
+    Passes.findOne({ passDate: date })
         .then((result) => {
-            // Get list of all guests for day
-            var guests = Object.values(result)[2].invitedGuests
-            console.log(guests);
+            // If date doesnt exist yet, insert the document into the collection
+            if (result == null) {
+                console.log('Date it not made yet. Creating it now...');
+                Passes.create(
+                    {
+                        passDate: date,
+                        invitedGuestPass: [{
+                            residentId: new mongoose.Types.ObjectId(residentId),
+                            residentFirstName: 'Ansdrwe',
+                            residentLastName: 'Never',
+                            residentEmail: 'urbeckm@gmail.com',
+                            invitedGuestId: guestId,
+                            invitedGuestName: guestName,
+                            invitedGuestNumber: guestNumber,
+                            invitedGuestPassScanned: false,
+                            invitedGuestPassSent: false
+                        }]
+                    }
+                )
+                    .then((result) => {
+                        console.log(result);
+                        console.log('Successfully created the new date');
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        console.log('Failed to create new date');
+                    })
+            }
+            // If date already exists, check if the guest was already added or not, then send invite or not.
+            else {
+                // Get list of all guests for day
+                console.log('Date existed. Printing all the current guests...');
+                var guests = Object.values(result)[2].invitedGuestPass
+                console.log(guests);
+            }
+
         })
         .catch((e) => {
             console.log(e);
@@ -209,67 +244,67 @@ app.put("/addGuest", (request, response) => {
     // Update the Residents Collection
     // if people are already invited on this date, push new guest
     // else push new date with new guest
-    if (request.body.dateExists) {
-        Resident.updateOne(
-            { residentEmail: request.body.residentName },
-            {
-                $push: {
-                    "invitedGuests.$[elem].invitedGuestsForDate": {
-                        "invitedGuestId": guestId,
-                        "invitedGuestName": request.body.guestName,
-                        "invitedGuestNumber": request.body.guestNumber,
-                        "invitedGuestPassScanned": false,
-                        "invitedGuestPassSent": false
-                    }
-                }
-            },
-            { arrayFilters: [{ "elem.date": request.body.guestDateOfVisit }] },
-        )
-            .then((result) => {
-                response.status(200).send({
-                    message: "Guest was added...",
-                    result,
-                });
-            })
-            .catch((error) => {
-                response.status(403).send({
-                    message: "Guest was not added...",
-                    error,
-                });
+    //     if (request.body.dateExists) {
+    //         Resident.updateOne(
+    //             { residentEmail: request.body.residentName },
+    //             {
+    //                 $push: {
+    //                     "invitedGuests.$[elem].invitedGuestsForDate": {
+    //                         "invitedGuestId": guestId,
+    //                         "invitedGuestName": request.body.guestName,
+    //                         "invitedGuestNumber": request.body.guestNumber,
+    //                         "invitedGuestPassScanned": false,
+    //                         "invitedGuestPassSent": false
+    //                     }
+    //                 }
+    //             },
+    //             { arrayFilters: [{ "elem.date": request.body.guestDateOfVisit }] },
+    //         )
+    //             .then((result) => {
+    //                 response.status(200).send({
+    //                     message: "Guest was added...",
+    //                     result,
+    //                 });
+    //             })
+    //             .catch((error) => {
+    //                 response.status(403).send({
+    //                     message: "Guest was not added...",
+    //                     error,
+    //                 });
 
-            })
-    }
-    else {
-        Resident.updateOne(
-            { residentEmail: request.body.residentName },
-            {
-                $push: {
-                    "invitedGuests": {
-                        'date': request.body.guestDateOfVisit,
-                        'invitedGuestsForDate': [{
-                            "invitedGuestId": guestId,
-                            "invitedGuestName": request.body.guestName,
-                            "invitedGuestNumber": request.body.guestNumber,
-                            "invitedGuestPassScanned": false,
-                            "invitedGuestPassSent": false
-                        }]
-                    }
-                }
-            },
-        )
-            .then((result) => {
-                response.status(200).send({
-                    message: "Guest was added to new date...",
-                    result,
-                });
-            })
-            .catch((error) => {
-                response.status(40).send({
-                    message: "Guest was not added...",
-                    error,
-                });
-            })
-    }
+    //             })
+    //     }
+    //     else {
+    //         Resident.updateOne(
+    //             { residentEmail: request.body.residentName },
+    //             {
+    //                 $push: {
+    //                     "invitedGuests": {
+    //                         'date': request.body.guestDateOfVisit,
+    //                         'invitedGuestsForDate': [{
+    //                             "invitedGuestId": guestId,
+    //                             "invitedGuestName": request.body.guestName,
+    //                             "invitedGuestNumber": request.body.guestNumber,
+    //                             "invitedGuestPassScanned": false,
+    //                             "invitedGuestPassSent": false
+    //                         }]
+    //                     }
+    //                 }
+    //             },
+    //         )
+    //             .then((result) => {
+    //                 response.status(200).send({
+    //                     message: "Guest was added to new date...",
+    //                     result,
+    //                 });
+    //             })
+    //             .catch((error) => {
+    //                 response.status(40).send({
+    //                     message: "Guest was not added...",
+    //                     error,
+    //                 });
+    //             })
+    //     }
 })
 
 
