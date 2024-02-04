@@ -272,11 +272,6 @@ function Add_Guest_Screen() {
               {(invitedGuestData.length != 0) ?
                 <Accordion>
                   {(!loading) ? invitedGuestData.map((date, dateIndex) => {
-                    // const dateObject = new Date(date.date);
-                    // const day = weekday[dateObject.getUTCDay()];
-                    // const month = months[dateObject.getMonth()];
-                    // const dayNumber = dateObject.getUTCDate();
-                    // const year = dateObject.getFullYear();
                     const invitedDate = moment(date.date, 'YYYY-MM-DD').format("dddd, MMMM D, YYYY")
                     return (
                       <>

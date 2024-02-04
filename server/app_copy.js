@@ -341,16 +341,6 @@ const deleteOldPasses = () => {
         })
 }
 
-// Scheduler to run function that deletes old passes
-const deleteOldPassesWorker = schedule.scheduleJob('10 48 18 * * *', () => {
-    console.log('Delete old passes task executed at 11 AM:', new Date().toLocaleTimeString());
-    deleteOldPasses()
-});
-
-
-
-
-
 
 const createQRCode = (invitedGuest) => {
     const passId = invitedGuest.invitedGuestId.toString();
@@ -483,8 +473,27 @@ const findPassesToSend = (date) => {
         })
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Scheduler to run function that deletes old passes
-const sendTodayPassesWorker = schedule.scheduleJob('00 43 21 * * *', () => {
+const deleteOldPassesWorker = schedule.scheduleJob('00 23 * * *', () => {
+    console.log('Delete old passes task executed at 11 AM:', new Date().toLocaleTimeString());
+    deleteOldPasses()
+});
+
+// Scheduler to run function that sends todays passes every 15 minutes
+const sendTodayPassesWorker = schedule.scheduleJob('*/15 * * * *', () => {
     console.log('Found passes task executed at 11 AM:', new Date().toLocaleTimeString());
     var now = moment().format('YYYY-MM-DD');
     findPassesToSend(now);
@@ -492,7 +501,14 @@ const sendTodayPassesWorker = schedule.scheduleJob('00 43 21 * * *', () => {
 
 
 // Scheduler to run function that sends tomorrows passes as noon
-const sendTomorrowsPassesWorkerMorning = schedule.scheduleJob('51 21 * * *', () => {
+const sendTomorrowsPassesWorkerMorning = schedule.scheduleJob('00 12 * * *', () => {
+    console.log('Task executed at 12:00PM:', new Date().toLocaleTimeString());
+    var tomorrow = moment().add(1, 'days').format('YYYY-MM-DD');
+    findPassesToSend(tomorrow);
+});
+
+// Scheduler to run function that sends tomorrows passes as 6PM
+const sendTomorrowsPassesWorkerEvening = schedule.scheduleJob('00 18 * * *', () => {
     console.log('Task executed at 12:00PM:', new Date().toLocaleTimeString());
     var tomorrow = moment().add(1, 'days').format('YYYY-MM-DD');
     findPassesToSend(tomorrow);

@@ -9,7 +9,7 @@ import { useState } from 'react';
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
-function Login_Module( { handleLoginClick, setUserLoggedIn }) {
+function Login_Module( { handleLoginClick, setUserLoggedIn, loginScreenBoolean }) {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("")
