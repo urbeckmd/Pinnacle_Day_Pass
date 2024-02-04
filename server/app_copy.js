@@ -128,66 +128,6 @@ app.get("/getSavedGuests", (request, response) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-const sendTodaysInvite = (request, guestId) => {
-    const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    var daysList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const today = new Date(new Date(request.body.guestDateOfVisit).toISOString())
-    console.log('line 124:', request.body);
-    // SEND AND EMAIL FIRST AND IF RESPONSE IS SUCCESS UPDATE THE DB
-    Resident.findOneAndUpdate(
-        { residentEmail: 'urbeckmd@gmail.com' },
-    )
-        .then((result2) => {
-            console.log(result2);
-            // const residentResult = result2[0]
-            // console.log('residentresult', residentResult);
-            // const residentFirstName = residentResult['residentFirstName'];
-            // const residentLastName = residentResult['residentLastName'];
-            // const residentId = residentResult['_id'].toString();
-            // residentResult["invitedGuests"].forEach((allGuests, dateIndex) => {
-            //     if (allGuests['date'].toISOString() == today.toISOString()) {
-            //         console.log('dateindex', dateIndex);
-            //         const dateOfVisit = allGuests['date'];
-            //         const day = ((dateOfVisit.getDay() + 1) < 7) ? (dateOfVisit.getDay() + 1) : 0;
-            //         const month = dateOfVisit.getMonth();
-            //         const date = dateOfVisit.getDate() + 1;
-            //         const year = dateOfVisit.getFullYear();
-            //         const fullDate = `${daysList[day]}, ${monthsList[month]} ${date}, ${year}`
-            //         console.log(fullDate);
-            //         allGuests['invitedGuestsForDate'].forEach((invitedGuest, guestIndex) => {
-            //             if (invitedGuest['invitedGuestId'].toString() == guestId.toString()) {
-            //                 console.log(invitedGuest, guestIndex);
-            //                 // SEND MESSAGE WITH PASS
-            //                 const guestName = invitedGuest['invitedGuestName'];
-            //                 const guestNumber = invitedGuest['invitedGuestNumber'];
-            //                 const passId = guestId.toString();
-            //                 makeQRCodeAndSendEmail(passId, guestName, residentFirstName, residentLastName, fullDate, residentId, dateIndex, guestIndex);
-
-            //             }
-            //         })
-            //     }
-            // })
-        })
-        .catch((error) => {
-            console.log('line 159', error);
-        })
-}
-
-
-
-
-
-
 // Add guest to array of invites guests
 app.put("/addGuest", (request, response) => {
     const guestId = new mongoose.Types.ObjectId();
@@ -374,7 +314,7 @@ app.post("/saveGuest", (request, response) => {
 
 // Delete the old passes each morning
 const deleteOldPasses = () => {
-    const previousDays = moment().add(14, 'days').format('YYYY-MM-DD')
+    const previousDays = moment().subtract(2, 'days').format('YYYY-MM-DD')
     console.log(previousDays);
 
     Passes.deleteOne(
@@ -402,14 +342,64 @@ const deleteOldPasses = () => {
 }
 
 // Scheduler to run function that deletes old passes
-const deleteOldPassesWorker = schedule.scheduleJob('00 32 16 * * *', () => {
-    console.log('Task executed at 11 AM:', new Date().toLocaleTimeString());
+const deleteOldPassesWorker = schedule.scheduleJob('10 48 18 * * *', () => {
+    console.log('Delete old passes task executed at 11 AM:', new Date().toLocaleTimeString());
     deleteOldPasses()
 });
 
 
+
+
+
+
+const createQRCode = (invitedGuest) => {
+    const passId = invitedGuest.invitedGuestId.toString();
+    QRCode.toFile(`./qr_code_images/${passId}.png`, passId, function (err, response) {
+        if (err) throw err;
+    })
+
+}
+
+const sendPass = (invitedGuest, date) => {
+    const passId = invitedGuest.invitedGuestId.toString();
+    var fullDate = moment(date, 'YYYY-MM-DD').format("dddd, MMMM D, YYYY");
+    var transporter = nodemailer.createTransport({
+        service: 'gmail.com',
+        auth: {
+            user: 'matt.d.urbeck@gmail.com',
+            pass: 'bwqv frxy suhh uxwf'
+        }
+    });
+
+    var mailOptions = {
+        from: 'matt.d.urbeck@gmail.com',
+        to: 'matt.d.urbeck@gmail.com',
+        subject: `Pinnacle Day Pass: ${fullDate}`,
+        attachments: [{
+            filename: `${passId}.png`,
+            path: `./qr_code_images/${passId}.png`,
+            cid: 'qr_code' //same cid value as in the html img src
+        }],
+        html: `<p>Hello ${invitedGuest.invitedGuestName},</p><p>${invitedGuest.residentFirstName} ${invitedGuest.residentLastName} invited you to Pinnacle Lake on ${fullDate}. Scan the QR Code at the gate to enter.</p><img src="cid:qr_code"/><p>(This code can only be scanned once. After scanning, it will be disabled and you can't reenter the property using this code)</p>`
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            // Send an email to me about details of failed message so I can do it manually
+            sendFailedEmailsToMe(invitedGuest, date);
+            console.log(error);
+        } else {
+            // Send the email and update the passSent field for resident and passes collection
+            console.log('Email sent: ' + info.response);
+        }
+    });
+}
+
+
 // Send details of failed emails to me
-const sendFailedEmailsToMe = (fullDate, passId, qr_code_path, guestName, residentFirstName, residentLastName) => {
+const sendFailedEmailsToMe = (guestInfo, date) => {
+    var passId = guestInfo.invitedGuestId.toString();
+    var fullDate = moment(date, 'YYYY-MM-DD').format("dddd, MMMM D, YYYY");
     var transporter = nodemailer.createTransport({
         service: 'gmail.com',
         auth: {
@@ -424,81 +414,88 @@ const sendFailedEmailsToMe = (fullDate, passId, qr_code_path, guestName, residen
         subject: `PASS FAILED TO SEND`,
         attachments: [{
             filename: `${passId}.png`,
-            path: qr_code_path,
+            path: `./qr_code_images/${passId}.png`,
             cid: 'qr_code' //same cid value as in the html img src
         }],
-        html: `<p>Resident Name: ${residentFirstName} ${residentLastName}</p><p>Guest Name: ${guestName}</p><p>Date: ${fullDate}</p><p>Pass ID: ${passId}</p><p>${qr_code_path}</p><img src="cid:qr_code"/>`
+        html: `<p>Resident Name: ${guestInfo.residentId.toString()} : ${guestInfo.residentFirstName} ${guestInfo.residentLastName}</p><p>Guest Name: ${guestName}</p><p>Date: ${fullDate}</p><p>Pass ID: ${passId}</p><p>./qr_code_images/${passId}.png</p><img src="cid:qr_code"/>`
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-            // Send an email to me about details of failed message so I can do it manually
+            // If the email also fails, recursively try until it works.
+            sendFailedEmailsToMe(guestInfo, date)
             console.log(error);
         } else {
             // Update the db to change passSent to True
-            console.log('Email sent: ' + info.response);
+            console.log('Email sent with failed information: ' + info.response);
         }
     });
 }
 
-// // Update the pass sent field after email is sent
-// const updateTodayPassSentField = (residentId, guestId, today) => {
-//     Resident.findOne(
-//         {"_id": new mongoose.Types.ObjectId(residentId)}
-//     )
-//     .then((result) => {
-//         const invitedGuestResult = result.invitedGuests
-//         invitedGuestResult.forEach((date, date_index) => {
-//             if (date['date'].toISOString() == new Date(today).toISOString()) {
-//                 date['invitedGuestsForDate'].forEach((guest, guestIndex) => {
-//                     console.log(guest);
-//                     if (guest['invitedGuestId'].toString() == guestId) {
-//                         console.log(`GUESTINDEX: ${guestIndex}`);
-//                         var query = `invitedGuests.${date_index}.invitedGuestsForDate.${guestIndex}.invitedGuestPassSent`
-//                         console.log(query);
-//                         var updateObj = {$set : {}};
-//                         updateObj.$set[query] = true;
-//                         Resident.updateOne(
-//                             {"_id": new mongoose.Types.ObjectId(residentId)},
-//                             updateObj
-//                         )
-//                         .then((result2) => {
-//                             console.log(result2);
-//                         })
-//                         .catch((error2) => {
-//                             console.log(error2);
-//                         })
-//                     }
-//                 })
-//             }
-//         })
-//     })
-//     .catch((error) => {
-//         console.log(error);
-//     })
-// }
 
 
-
-
-const updatePassSentField = (residentId, date_index, guest_index) => {
-    var query = `invitedGuests.${date_index}.invitedGuestsForDate.${guest_index}.invitedGuestPassSent`
-    console.log(query);
-    var updateObj = { $set: {} };
-    updateObj.$set[query] = true;
-    Resident.updateOne(
-        { "_id": new mongoose.Types.ObjectId(residentId) },
-        updateObj
+const updatePassSentField = (guestInfo, date) => {
+    Passes.updateOne(
+        { date: date },
+        { $set: { 'invitedGuestPass.$[guestId].invitedGuestPassSent': true } },
+        { arrayFilters: [{ "guestId": guestInfo.invitedGuestId }] }
     )
         .then((result) => {
-            console.log(result);
+            console.log("successfully set passSent to true for ", guestInfo.invitedGuestName);
         })
         .catch((error) => {
-            console.log(error);
+            console.log("failed to set passSent to true for ", guestInfo.invitedGuestName);
         })
 }
 
-// Make QR Code and send Email for guests coming tomorrow
+
+
+
+
+
+// Send the passes
+const findPassesToSend = (date) => {
+    // Takes the date of the passes we want to find ('YYYY-MM-DD')
+    Passes.findOne(
+        { passDate: date }
+    )
+        .then((result) => {
+            // If result is not null, loop though each guest
+            if (result != null) {
+                console.log('successfully found passes from Passes collection...');
+                var invitedGuestArray = result.invitedGuestPass
+                invitedGuestArray.forEach((guest, index) => {
+                    // Loop though each guest and send the email
+                    createQRCode(guest);
+                    console.log('successfully created qr code for ', guest.invitedGuestName, 'sent by ', guest.residentFirstName, guest.residentLastName);
+                    sendPass(guest, date)
+                    console.log("successfully sent email to ", guest.invitedGuestName);
+                })
+            } else {
+                console.log('The result was null. No guests were invited this day: ', date);
+            }
+        })
+        .catch((error) => {
+            console.log('failed to find passes from Passes collection...', error);
+        })
+}
+
+// Scheduler to run function that deletes old passes
+const sendTodayPassesWorker = schedule.scheduleJob('00 38 19 * * *', () => {
+    console.log('Found passes task executed at 11 AM:', new Date().toLocaleTimeString());
+    var now = moment().format('YYYY-MM-DD');
+    findPassesToSend(now);
+});
+
+
+
+
+
+
+
+
+
+
 const makeQRCodeAndSendEmail = (passId, guestName, residentFirstName, residentLastName, fullDate, residentId, dateIndex, guestIndex) => {
     QRCode.toFile(`./qr_code_images/${passId}.png`, passId, function (err) {
         if (err) throw err
@@ -543,7 +540,131 @@ const makeQRCodeAndSendEmail = (passId, guestName, residentFirstName, residentLa
     })
 }
 
-// updatePassSentField('6530689631f30a3de8962879', 0, 0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // Update the pass sent field after email is sent
+// const updateTodayPassSentField = (residentId, guestId, today) => {
+//     Resident.findOne(
+//         {"_id": new mongoose.Types.ObjectId(residentId)}
+//     )
+//     .then((result) => {
+//         const invitedGuestResult = result.invitedGuests
+//         invitedGuestResult.forEach((date, date_index) => {
+//             if (date['date'].toISOString() == new Date(today).toISOString()) {
+//                 date['invitedGuestsForDate'].forEach((guest, guestIndex) => {
+//                     console.log(guest);
+//                     if (guest['invitedGuestId'].toString() == guestId) {
+//                         console.log(`GUESTINDEX: ${guestIndex}`);
+//                         var query = `invitedGuests.${date_index}.invitedGuestsForDate.${guestIndex}.invitedGuestPassSent`
+//                         console.log(query);
+//                         var updateObj = {$set : {}};
+//                         updateObj.$set[query] = true;
+//                         Resident.updateOne(
+//                             {"_id": new mongoose.Types.ObjectId(residentId)},
+//                             updateObj
+//                         )
+//                         .then((result2) => {
+//                             console.log(result2);
+//                         })
+//                         .catch((error2) => {
+//                             console.log(error2);
+//                         })
+//                     }
+//                 })
+//             }
+//         })
+//     })
+//     .catch((error) => {
+//         console.log(error);
+//     })
+// }
+
+
+
+const sendTodaysInvite = (request, guestId) => {
+    const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var daysList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const today = new Date(new Date(request.body.guestDateOfVisit).toISOString())
+    console.log('line 124:', request.body);
+    // SEND AND EMAIL FIRST AND IF RESPONSE IS SUCCESS UPDATE THE DB
+    Resident.findOneAndUpdate(
+        { residentEmail: 'urbeckmd@gmail.com' },
+    )
+        .then((result2) => {
+            console.log(result2);
+            // const residentResult = result2[0]
+            // console.log('residentresult', residentResult);
+            // const residentFirstName = residentResult['residentFirstName'];
+            // const residentLastName = residentResult['residentLastName'];
+            // const residentId = residentResult['_id'].toString();
+            // residentResult["invitedGuests"].forEach((allGuests, dateIndex) => {
+            //     if (allGuests['date'].toISOString() == today.toISOString()) {
+            //         console.log('dateindex', dateIndex);
+            //         const dateOfVisit = allGuests['date'];
+            //         const day = ((dateOfVisit.getDay() + 1) < 7) ? (dateOfVisit.getDay() + 1) : 0;
+            //         const month = dateOfVisit.getMonth();
+            //         const date = dateOfVisit.getDate() + 1;
+            //         const year = dateOfVisit.getFullYear();
+            //         const fullDate = `${daysList[day]}, ${monthsList[month]} ${date}, ${year}`
+            //         console.log(fullDate);
+            //         allGuests['invitedGuestsForDate'].forEach((invitedGuest, guestIndex) => {
+            //             if (invitedGuest['invitedGuestId'].toString() == guestId.toString()) {
+            //                 console.log(invitedGuest, guestIndex);
+            //                 // SEND MESSAGE WITH PASS
+            //                 const guestName = invitedGuest['invitedGuestName'];
+            //                 const guestNumber = invitedGuest['invitedGuestNumber'];
+            //                 const passId = guestId.toString();
+            //                 makeQRCodeAndSendEmail(passId, guestName, residentFirstName, residentLastName, fullDate, residentId, dateIndex, guestIndex);
+
+            //             }
+            //         })
+            //     }
+            // })
+        })
+        .catch((error) => {
+            console.log('line 159', error);
+        })
+}
+
+
+
+
+// const updatePassSentField = (residentId, date_index, guest_index) => {
+//     var query = `invitedGuests.${date_index}.invitedGuestsForDate.${guest_index}.invitedGuestPassSent`
+//     console.log(query);
+//     var updateObj = { $set: {} };
+//     updateObj.$set[query] = true;
+//     Resident.updateOne(
+//         { "_id": new mongoose.Types.ObjectId(residentId) },
+//         updateObj
+//     )
+//         .then((result) => {
+//             console.log(result);
+//         })
+//         .catch((error) => {
+//             console.log(error);
+//         })
+// }
+
+
 
 // Send passes to all of tomorrows guests
 const findAllTomorrowsPasses = () => {
