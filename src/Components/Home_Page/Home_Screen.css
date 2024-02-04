@@ -36,6 +36,7 @@
     font-weight: bolder;
     font-size: 56px;
     text-align: left;
+    text-shadow: rgb(0, 0, 0) 0 0 56px;
 }
 
 .home_page_module_button, .login_module_button {
@@ -44,6 +45,7 @@
     border: none !important;
     border-radius: 10px !important;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 20px 40px -12px inset, rgba(0, 0, 0, 0.3) 0px 8px 26px -18px inset;
+
     font-size: 30px !important;
     letter-spacing: 1px;
     text-align: center !important;
@@ -100,6 +102,7 @@
     height: 50px;
     width: 120px;
     font-size: 25px !important;
+    
 }
 
 .login_module_forgot_password {
