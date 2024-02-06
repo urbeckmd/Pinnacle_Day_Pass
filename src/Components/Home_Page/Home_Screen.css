@@ -40,7 +40,7 @@
 }
 
 .home_page_module_button, .login_module_button {
-    width: 150px;
+    /* width: 150px; */
     background-color: #997949 !important;
     border: none !important;
     border-radius: 10px !important;
@@ -117,6 +117,7 @@
 
 .login_module_forgot_password:hover {
     cursor: pointer;
+    text-decoration: underline;
 }
 
 .home_page_module_button:hover, .login_module_button:hover {

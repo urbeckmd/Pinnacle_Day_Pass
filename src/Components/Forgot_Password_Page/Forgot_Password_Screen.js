@@ -9,9 +9,8 @@ import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import Button from 'react-bootstrap/Button';
 function Forgot_Password_Screen() {
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("")
     return (
-        <div className='home_screen_container'>
+        <div className='forgot_password_screen_container'>
             <div className="laptop_nav_bar">
                 <Nav_Bar loggedIn={false} />
             </div>
@@ -19,19 +18,19 @@ function Forgot_Password_Screen() {
                 <Phone_Nav_Bar loggedIn={false} />
             </span>
 
-            <div className="home_screen_module_container">
-                <div className='login_module_container' >
-                    <ArrowBackRoundedIcon className='float-start login_module_back_arrow' />
-                    <div className="login_module_form_container">
+            <div className="forgot_password_screen_module_container">
+                <div className='forgot_password_module_container' >
+                    <ArrowBackRoundedIcon className='float-start forgot_password_module_back_arrow' />
+                    <div className="forgot_password_module_form_container">
                         <Form>
                             <Form.Group className="mb-3">
-                                <Form.Label className='login_module_input_field_title float-start'>Email</Form.Label>
-                                <Form.Control type="email" className='login_module_input_field' value={email} onChange={(e) => setEmail(e.target.value)} />
+                                <Form.Label className='forgot_password_module_input_field_title float-start'>Email</Form.Label>
+                                <Form.Control type="email" className='forgot_password_module_input_field' value={email} onChange={(e) => setEmail(e.target.value)} />
                             </Form.Group>
                         </Form>
-                        <Button className='float-end login_module_button' size='lg' >Reset Password</Button>
+                        <Button className='float-end forgot_password_module_button' size='lg' >Reset Password</Button>
                     </div>
-                    <hr className='login_module_line_break' size="13" />
+                    <hr className='forgot_password_module_line_break' size="13" />
                 </div>
             </div>
         </div>
