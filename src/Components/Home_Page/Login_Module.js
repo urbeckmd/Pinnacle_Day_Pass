@@ -67,7 +67,7 @@ function Login_Module( { handleLoginClick, setUserLoggedIn, loginScreenBoolean }
                 <Button className='float-end login_module_button' size='lg' onClick={handleLoginRedirect}>Login</Button>
             </div>
             <hr className='login_module_line_break' size="13"/>
-            <div className="login_module_forgot_password">Forgot Password</div>
+            <div className="login_module_forgot_password" onClick={() => {navigate("/forgot_password")}}>Forgot Password</div>
         </div>
     )
 }
