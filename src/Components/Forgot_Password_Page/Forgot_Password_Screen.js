@@ -31,7 +31,7 @@ function Forgot_Password_Screen() {
                                 <Form.Control type="email" className='forgot_password_module_input_field' value={email} onChange={(e) => setEmail(e.target.value)} />
                             </Form.Group>
                         </Form>
-                        <Button className='float-end forgot_password_module_button' size='lg' >Reset Password</Button>
+                        <Button className='float-end forgot_password_module_button' size='lg' onClick={() => {console.log("Password Reset Clicked");}}>Reset Password</Button>
                     </div>
                     <hr className='forgot_password_module_line_break' size="13" />
                 </div>

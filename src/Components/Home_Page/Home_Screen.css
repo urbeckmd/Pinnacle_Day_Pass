@@ -45,12 +45,14 @@
 
 .home_page_module_button,
 .login_module_button {
-    width: 120px;
+    /* width: 120px; */
+    width: 100%;
     background-color: #997949 !important;
     border: none !important;
     border-radius: 10px !important;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 20px 40px -12px inset, rgba(0, 0, 0, 0.3) 0px 8px 26px -18px inset;
-
+}
+.home_page_module_button {
     font-size: 30px !important;
     /* letter-spacing: 1px; */
     /* text-align: center !important; */
@@ -100,14 +102,6 @@
     bottom: 38px;
     border: none;
     border-radius: 10px;
-}
-
-.login_module_button {
-    margin-top: 15px;
-    height: 50px;
-    width: 120px;
-    font-size: 25px !important;
-
 }
 
 .login_module_forgot_password {
@@ -243,7 +237,9 @@
         width: 100% !important;
         padding-top: 1px !important;
         padding-bottom: 1px !important;
-        height: 45px;
+        height: 46px;
         margin-top: 25px;
+        /* font-size: large !important;
+        font-weight: 600 !important; */
     }
 }
