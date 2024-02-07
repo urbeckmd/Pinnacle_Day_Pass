@@ -160,8 +160,8 @@ function Add_Guest_Screen() {
       setGuestNumber("(___) ___-____");
       setShowAddedGuestNotification(true)
       const timer = setTimeout(() => {
-        setShowAddedGuestNotification(false)
-      }, 2000);
+        // setShowAddedGuestNotification(false)
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }
@@ -445,7 +445,7 @@ function Add_Guest_Screen() {
       </div>
         {(showAddedGuestNotification) &&
         <div className="mobile_view_guest_add_notification" onClick={handleShow}>
-          {notificationName} was invited
+          {notificationName} has been added
         </div>
         }
 

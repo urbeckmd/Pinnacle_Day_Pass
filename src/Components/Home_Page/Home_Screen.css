@@ -41,6 +41,7 @@
     font-size: 56px;
     text-align: left;
     text-shadow: rgb(0, 0, 0) 0 0 56px;
+    margin-bottom: 20px;
 }
 
 .home_page_module_button,
@@ -54,8 +55,6 @@
 }
 .home_page_module_button {
     font-size: 30px !important;
-    /* letter-spacing: 1px; */
-    /* text-align: center !important; */
     padding-top: 4px !important;
     padding-bottom: 4px !important;
 }
@@ -152,6 +151,11 @@
 
     .login_module_container {
         right: 10% !important;
+    }
+
+    .login_module_button {
+        position: relative;
+        
     }
 }
 

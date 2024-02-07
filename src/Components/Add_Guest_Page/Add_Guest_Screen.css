@@ -491,6 +491,33 @@
         position: relative;
         top: -2px;
     }
+
+    .mobile_view_guest_add_notification {
+        background-color: white;
+        width: 70%;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 10px;
+        top: -100px;
+        animation: 3s forwards ease-in-out show_notification
+    }
+
+    @keyframes show_notification {
+        0% {
+            opacity: 0;
+        }
+        15% {
+            opacity: 1;
+        }
+        85% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+
 }
 
 
@@ -757,13 +784,35 @@
 
     .mobile_view_guest_add_notification {
         background-color: white;
-        width: 70%;
+        width: fit-content;
+        min-width: 80%;
         position: relative;
         left: 50%;
         transform: translateX(-50%);
         border-radius: 10px;
         top: -100px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        animation: 3s forwards ease-in-out show_notification;
     }
+
+    @keyframes show_notification {
+        0% {
+            opacity: 0;
+        }
+        15% {
+            opacity: 1;
+        }
+        85% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
     .mobile_add_guest_button_plus {
         position: relative;
         top: -2px;
