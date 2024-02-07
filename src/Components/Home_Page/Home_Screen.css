@@ -4,9 +4,12 @@
     max-width: 1200px;
     margin: auto;
     height: 100dvh;
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    user-select: none;
+    /* Standard syntax */
     overflow: hidden;
 }
 
@@ -22,7 +25,8 @@
 /* ============ HOME SCREEN MODULES ======================= */
 /* ======== HOME PAGE MODULE ==========*/
 
-.home_page_module_container, .login_module_container {
+.home_page_module_container,
+.login_module_container {
     background-color: rgba(240, 240, 240, 0.24);
     border-radius: 20px;
     padding: 30px 40px;
@@ -39,16 +43,17 @@
     text-shadow: rgb(0, 0, 0) 0 0 56px;
 }
 
-.home_page_module_button, .login_module_button {
-    /* width: 150px; */
+.home_page_module_button,
+.login_module_button {
+    width: 120px;
     background-color: #997949 !important;
     border: none !important;
     border-radius: 10px !important;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 20px 40px -12px inset, rgba(0, 0, 0, 0.3) 0px 8px 26px -18px inset;
 
     font-size: 30px !important;
-    letter-spacing: 1px;
-    text-align: center !important;
+    /* letter-spacing: 1px; */
+    /* text-align: center !important; */
     padding-top: 4px !important;
     padding-bottom: 4px !important;
 }
@@ -102,7 +107,7 @@
     height: 50px;
     width: 120px;
     font-size: 25px !important;
-    
+
 }
 
 .login_module_forgot_password {
@@ -110,9 +115,12 @@
     position: absolute;
     bottom: 15px;
     left: 70px;
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    user-select: none;
+    /* Standard syntax */
 }
 
 .login_module_forgot_password:hover {
@@ -120,25 +128,30 @@
     text-decoration: underline;
 }
 
-.home_page_module_button:hover, .login_module_button:hover {
+.home_page_module_button:hover,
+.login_module_button:hover {
     background-color: #6e5329 !important;
 }
 
-.home_page_module_button:focus-visible, .login_module_button:focus-visible {
-        box-shadow: 0 0 0 0.15rem #64491d7c;
+.home_page_module_button:focus-visible,
+.login_module_button:focus-visible {
+    box-shadow: 0 0 0 0.15rem #64491d7c;
 }
 
 /* ========================= BREAKPOINTS ==================================== */
 
 /* Larger than tablet */
 @media only screen and (min-width: 769px) {
-    .home_page_module_container, .login_module_container {
+
+    .home_page_module_container,
+    .login_module_container {
         height: 400px;
         aspect-ratio: 1;
         top: 50%;
         transform: translateY(-60%);
         box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
     }
+
     .home_page_module_container {
         right: 10%;
     }
@@ -153,7 +166,9 @@
     .home_screen_module_container {
         height: calc(100vh - 80px);
     }
-    .home_page_module_container, .login_module_container {
+
+    .home_page_module_container,
+    .login_module_container {
         width: 400px;
         aspect-ratio: 1;
         left: 50%;
@@ -162,7 +177,7 @@
         transform: translateX(-50%) translateY(-50%);
         box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
     }
-    
+
     .login_module_container {
         padding: 30px 10px !important;
     }
@@ -176,7 +191,8 @@
 /* For phones only */
 @media only screen and (max-width: 480px) {
 
-    .home_page_module_container, .login_module_container {
+    .home_page_module_container,
+    .login_module_container {
         width: 310px;
         height: 380px;
         max-height: 380px;
@@ -207,12 +223,13 @@
         /* left: -20px; */
         top: -5px;
     }
+
     .login_module_form_container {
         margin-top: 35px;
         width: 90%;
         min-width: 200px;
     }
-    
+
     .login_module_line_break {
         bottom: 33px;
     }
@@ -220,5 +237,13 @@
     .login_module_forgot_password {
         left: 55px;
         font-size: 14px;
+    }
+
+    .login_module_button {
+        width: 100% !important;
+        padding-top: 1px !important;
+        padding-bottom: 1px !important;
+        height: 45px;
+        margin-top: 25px;
     }
 }
