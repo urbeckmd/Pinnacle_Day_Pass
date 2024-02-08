@@ -11,6 +11,8 @@ const mongoose = require("mongoose");
 var QRCode = require('qrcode');
 var nodemailer = require('nodemailer');
 var moment = require('moment');
+const { unlink } = require('node:fs/promises');
+const { log } = require("node:console");
 
 dbConnect()
 moment().format();
@@ -317,11 +319,23 @@ const deleteOldPasses = () => {
     const previousDays = moment().subtract(2, 'days').format('YYYY-MM-DD')
     console.log(previousDays);
 
-    Passes.deleteOne(
+    Passes.findOneAndDelete(
         { passDate: previousDays }
     )
         .then((result) => {
             console.log('successfully deleted old passes from Passes collection...');
+            console.log(result);
+            var deletedGuests = result.invitedGuestPass;
+            // Delete the QR images for old guests if they exist (do not exist if email was never sent)
+            deletedGuests.forEach((guest, index) => {
+                try {
+                    var guestId = guest.invitedGuestId;
+                    unlink(`./qr_code_images/${guestId.toString()}.png`)
+                    console.log(`Successfully deleted QR code for ${guestId.toString()}`);
+                } catch {
+                    console.log("No file found...");
+                }
+            })
         })
         .catch((error) => {
             console.log('failed to delete old passes from Passes collection...');
