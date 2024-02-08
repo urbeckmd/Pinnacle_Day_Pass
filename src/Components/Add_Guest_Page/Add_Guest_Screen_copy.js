@@ -160,7 +160,7 @@ function Add_Guest_Screen() {
       setGuestNumber("(___) ___-____");
       setShowAddedGuestNotification(true)
       const timer = setTimeout(() => {
-        // setShowAddedGuestNotification(false)
+        setShowAddedGuestNotification(false)
       }, 3000);
       return () => clearTimeout(timer);
     }

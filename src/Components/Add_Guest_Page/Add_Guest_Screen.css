@@ -339,15 +339,15 @@
     }
 
     .mobile_add_guest_button {
-        width: 160px;
+        /* width: 160px; */
+        width: 100%;
         height: 50px;
         background-color: #816336 !important;
         border: none !important;
-        border-radius: 30px !important;
+        /* border-radius: 30px !important; */
         box-shadow: rgba(50, 50, 93, 0.25) 0px 20px 40px -12px inset, rgba(0, 0, 0, 0.3) 0px 8px 26px -18px inset;
         font-size: 24px !important;
         margin-top: 18px;
-        margin-right: 50px;
     }
 
     .mobile_add_guest_button:hover {
@@ -635,7 +635,7 @@
     }
 
     .mobile_add_guest_button {
-        width: 140px;
+        width: 100%;
         /* height: 40px; */
         background-color: #866b41 !important;
         border: none !important;
@@ -809,7 +809,7 @@
             opacity: 1;
         }
         100% {
-            opacity: 1;
+            opacity: 0;
         }
     }
 

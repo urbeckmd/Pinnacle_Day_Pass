@@ -155,7 +155,7 @@
 
     .login_module_button {
         position: relative;
-        
+        bottom: -20px;
     }
 }
 

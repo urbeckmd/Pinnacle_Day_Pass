@@ -18,6 +18,24 @@
 
 .nav_bar_link {
     font-size: large !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav_bar_about {
+    color: black;
+}
+
+.nav_bar_about:hover {
+    color: gray;
+    cursor: pointer;
+}
+
+.nav_bar_divider {
+    margin: 0 20px;
+    color: black;
+    font-size: 30px;
 }
 
 .nav_bar_logout_container {
@@ -30,6 +48,7 @@
 
 .nav_bar_logout_container:hover {
     cursor: pointer;
+    color: gray;
 }
 
 .nav_bar_home_icon {
@@ -48,6 +67,10 @@
         width: 100%;
         margin: 0 auto;
         padding: 0 25px !important;
+    }
+
+    .offcanvas-header, .offcanvas-body {
+        margin: 0 20%;
     }
 }
 
