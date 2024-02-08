@@ -55,10 +55,6 @@
     transform: scale(1.2);
 }
 
-.nav_bar_logout_text {
-    font-size: 20px;
-    font-weight: 500;
-}
 
 /* Larger than tablet */
 @media only screen and (min-width: 769px) {

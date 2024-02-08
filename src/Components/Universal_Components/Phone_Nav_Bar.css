@@ -47,6 +47,9 @@
     .phone_nav_bar_link {
         font-size: large !important;
     }
+    .nav_bar_offcanvas {
+        height: 40% !important;
+    }
 }
 
 /* Only for tablet */
@@ -76,5 +79,8 @@
     } 
     .phone_nav_bar_dropdown > .dropdown-toggle {
         border: none;
+    }
+    .nav_bar_offcanvas {
+        height: 80% !important;
     }
 }

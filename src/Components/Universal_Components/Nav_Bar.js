@@ -57,7 +57,7 @@ function Nav_Bar({ loggedIn }) {
                     When will the passes be sent to your guests?
                     <ul>
                         <li>Any guests that are added the day of their visit will receive the invite at the next quarter of the hour.</li>
-                        <li>Any guests that are added for a future date will receive their invite at either 12PM, 6PM or 11:55PM the day before their visit.</li>
+                        <li>Any guests that are added for a future date will receive their invite at either 12PM, 6PM or 11:55PM on the day before their visit.</li>
                     </ul>
                 </Offcanvas.Body>
             </Offcanvas>
